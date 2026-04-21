@@ -24,9 +24,10 @@ Read in this order. Missing files = abort and Slack the error.
 2. `memory/strategy.md`
 3. `memory/portfolio.md`
 4. `memory/plan.md`
-5. `memory/trade_log.md` — **last 30 days only**; move older entries to `memory/archive/trade_log_<YYYY-MM>.md`
-6. `memory/research_log.md` — **last 14 days only**; archive older similarly
-7. `memory/lessons.md`
+5. `memory/universe.md` — read by trading routines (`pre_market`, `market_open`, `midday`) as a read-only cache. Written only by `universe_refresh`. Loaded early because the cache freshness check gates whether the routine can run at all.
+6. `memory/trade_log.md` — **last 30 days only**; move older entries to `memory/archive/trade_log_<YYYY-MM>.md`
+7. `memory/research_log.md` — **last 14 days only**; archive older similarly
+8. `memory/lessons.md`
 
 ## Market calendar gate (every run, before anything else)
 
@@ -44,11 +45,14 @@ Read in this order. Missing files = abort and Slack the error.
 
 | Routine | May do | MUST NOT |
 |---------|--------|----------|
-| `pre_market` | Research, write `plan.md` | Place any orders |
+| `universe_refresh` | Rebuild `memory/universe.md` (Sundays 18:00 ET) | Place orders; edit any memory file other than `universe.md` and `research_log.md` |
+| `pre_market` | Research, write `plan.md` | Place any orders; re-screen the universe |
 | `market_open` | Execute orders in `plan.md`, set stops | Open positions absent from `plan.md` |
 | `midday` | Cut losers, tighten stops on winners | Open new positions |
 | `market_close` | Reconcile, log P&L, rotate logs | Place orders |
 | `weekly_review` | Write to `memory/lessons.md` | Place orders, edit `strategy.md`, edit `portfolio.md` |
+
+**Universe ownership rule.** Trading routines (`pre_market` through `market_close`) MUST NOT re-screen the universe — they consume `memory/universe.md` read-only. Only `universe_refresh` writes to `memory/universe.md`. If the universe cache is stale (`expires_on` in the past), `pre_market` aborts with a Slack notice rather than trading blind or triggering a mid-week rescreen.
 
 ## DRY_RUN mode
 

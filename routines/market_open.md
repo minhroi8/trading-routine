@@ -15,6 +15,7 @@ Per `CLAUDE.md` start-of-run order.
 1. GET `/v2/clock` — confirm `is_open: true`. Otherwise Slack "market closed" and exit.
 2. Run the position reconciliation step from `CLAUDE.md`. Abort on any divergence.
 3. Re-check each planned buy against `strategy.md` right before sending the order: 5% sizing using **current** equity from `/v2/account`, 90% cash floor, max concurrent 8, max new-per-week 3, 30% sector cap. Drop any that no longer fit — log the reason in `trade_log.md` notes column.
+4. **Halt / trading-status gate (per order).** For each ticker in `memory/plan.md` — both planned buys and planned sells — fetch Alpaca `GET /v2/assets/<TICKER>`. If `tradable` is false or `status` is not `active`: **skip the order**, append a skip row to `memory/trade_log.md` with rationale `"halted / not-tradable per /v2/assets (status=<status>, tradable=<bool>)"`, and post a warning to Slack `#trading-bot`. **Do not send the order.** A halted position you already hold stays put; it will be re-evaluated at midday or when the halt lifts.
 
 ## DRY_RUN check
 

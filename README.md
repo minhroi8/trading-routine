@@ -12,15 +12,16 @@ Each routine run is **stateless**. All memory lives as markdown files in this re
 4. Updates touched memory files.
 5. Commits and pushes to `main` — the next run sees the changes.
 
-## Routines (all US Eastern time, weekdays)
+## Routines (US Eastern time)
 
-| Time       | Routine                      | Scope                                                |
-| ---------- | ---------------------------- | ---------------------------------------------------- |
-| 07:00      | `routines/pre_market.md`     | Research, draft `plan.md` — **no trades**            |
-| 09:35      | `routines/market_open.md`    | Execute `plan.md`, set -8% stops                     |
-| 12:30      | `routines/midday.md`         | Cut losers past -5%, trail winners past +10%         |
-| 16:05      | `routines/market_close.md`   | Log P&L, archive plan, rotate logs, EOD Slack        |
-| Fri 16:30  | `routines/weekly_review.md`  | Score vs SPY, append to `lessons.md`                 |
+| Time           | Routine                         | Scope                                                     |
+| -------------- | ------------------------------- | --------------------------------------------------------- |
+| Sun 18:00      | `routines/universe_refresh.md`  | Rebuild `memory/universe.md` cache (7-day TTL)            |
+| 07:00 (wkday)  | `routines/pre_market.md`        | Research, draft `plan.md` from `universe.md` — **no trades** |
+| 09:35 (wkday)  | `routines/market_open.md`       | Execute `plan.md`, set -8% stops                          |
+| 12:30 (wkday)  | `routines/midday.md`            | Cut losers past -5%, trail winners past +10%              |
+| 16:05 (wkday)  | `routines/market_close.md`      | Log P&L, archive plan, rotate logs, EOD Slack             |
+| Fri 16:30      | `routines/weekly_review.md`     | Score vs SPY, append to `lessons.md`                      |
 
 ## Safety
 
@@ -47,11 +48,13 @@ memory/
   strategy.md             sizing, risk, universe, entry/exit rules (DRY_RUN flag)
   portfolio.md            current positions snapshot
   plan.md                 today's intended orders (pre_market → market_open handoff)
+  universe.md             weekly pre-computed tradable universe (7-day cache)
   trade_log.md            append-only ledger of every fill
   research_log.md         dated catalyst + macro notes
   lessons.md              weekly reviews
   archive/                rotated logs and archived daily plans
 routines/
+  universe_refresh.md
   pre_market.md
   market_open.md
   midday.md
