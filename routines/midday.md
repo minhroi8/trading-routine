@@ -12,14 +12,14 @@ Per `CLAUDE.md` start-of-run order.
 
 ## Gates
 
-1. GET `/v2/clock` — confirm market open. Otherwise Slack and exit.
+1. GET `/v2/clock` — confirm market open. Otherwise POST `{"content": "market closed — skipping"}` to `DISCORD_WEBHOOK_URL` and exit.
 2. Run the position reconciliation step from `CLAUDE.md`. Abort on any divergence.
 
 ## DRY_RUN check
 
 Read `DRY_RUN` from `memory/strategy.md`.
 
-- If `DRY_RUN: true`: record intended midday actions (cuts, trails, thesis exits) to `plan.md` under a `### Midday intentions` section, and post them to Slack. **Do not call any Alpaca order endpoint.** Skip to End-of-run.
+- If `DRY_RUN: true`: record intended midday actions (cuts, trails, thesis exits) to `plan.md` under a `### Midday intentions` section, and post them to Discord. **Do not call any Alpaca order endpoint.** Skip to End-of-run.
 - If `DRY_RUN: false`: proceed to Work.
 
 ## Work (live mode)
@@ -43,12 +43,10 @@ For each open position, GET the current quote:
 2. `git add -A`
 3. `git commit -m "midday: <YYYY-MM-DD> — <cuts/trails/no changes, tickers> (DRY_RUN: <true|false>)"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. Slack `#trading-bot`:
+5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
+```json
+{"content": "🕧 MIDDAY <YYYY-MM-DD> (DRY_RUN: <true|false>)\nCuts: <TICKER @ price, P&L%> ...\nTrails tightened: <TICKER trail 7%> ...\nStale flagged for tomorrow: <TICKER> ...\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
-🕧 MIDDAY <YYYY-MM-DD> (DRY_RUN: <true|false>)
-Cuts: <TICKER @ price, P&L%> ...
-Trails tightened: <TICKER trail 7%> ...
-Stale flagged for tomorrow: <TICKER> ...
-Commit: https://github.com/minhroi8/trading-routine/commit/<sha>
-```
+
+A 204 response means success. If the POST fails, log the failure but do NOT abort.

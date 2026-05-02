@@ -12,15 +12,15 @@ Per `CLAUDE.md` start-of-run order.
 
 ## Gates
 
-1. GET Alpaca `/v2/clock`. If `next_open` is not today (market holiday), Slack "market closed" and exit.
+1. GET Alpaca `/v2/clock`. If `next_open` is not today (market holiday), POST `{"content": "market closed — skipping"}` to `DISCORD_WEBHOOK_URL` and exit.
 2. Run the position reconciliation step from `CLAUDE.md`. Abort on any divergence.
-3. **Universe cache freshness.** Read `expires_on` from `memory/universe.md` frontmatter. If `expires_on` is in the past (or the file is empty / placeholder), post to Slack `#trading-bot`:
-   `"⚠️ Universe cache stale (expires_on=<date>) — skipping research. Next universe_refresh will fix it."`
+3. **Universe cache freshness.** Read `expires_on` from `memory/universe.md` frontmatter. If `expires_on` is in the past (or the file is empty / placeholder), POST to `DISCORD_WEBHOOK_URL`:
+   `{"content": "⚠️ Universe cache stale (expires_on=<date>) — skipping research. Next universe_refresh will fix it."}`
    Then exit 0. **Do not overwrite `plan.md`**, do not draft, do not research. Trading blind on stale data is worse than skipping a day.
 
 ## DRY_RUN check
 
-Not strictly needed here (this routine never trades), but still read `DRY_RUN` from `strategy.md` — the value is included in the Slack summary so the human knows which mode the day is running in.
+Not strictly needed here (this routine never trades), but still read `DRY_RUN` from `strategy.md` — the value is included in the Discord message so the human knows which mode the day is running in.
 
 ## Work
 
@@ -47,13 +47,10 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 2. `git add -A`
 3. `git commit -m "pre_market: <YYYY-MM-DD> — planned <TICKERS or 'no trades'>"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. Slack `#trading-bot`:
+5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
+```json
+{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
-🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)
-Universe: <N> tickers (expires <YYYY-MM-DD>)
-Planned buys: <TICKER qty @ limit, stop> ...
-Planned sells: <TICKER — reason> ...
-Top catalyst: <one line>
-Commit: https://github.com/minhroi8/trading-routine/commit/<sha>
-```
+
+A 204 response means success. If the POST fails, log the failure but do NOT abort.

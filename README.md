@@ -20,14 +20,14 @@ Each routine run is **stateless**. All memory lives as markdown files in this re
 | 07:00 (wkday)  | `routines/pre_market.md`        | Research, draft `plan.md` from `universe.md` — **no trades** |
 | 09:35 (wkday)  | `routines/market_open.md`       | Execute `plan.md`, set -8% stops                          |
 | 12:30 (wkday)  | `routines/midday.md`            | Cut losers past -5%, trail winners past +10%              |
-| 16:05 (wkday)  | `routines/market_close.md`      | Log P&L, archive plan, rotate logs, EOD Slack             |
+| 16:05 (wkday)  | `routines/market_close.md`      | Log P&L, archive plan, rotate logs, EOD Discord           |
 | Fri 16:30      | `routines/weekly_review.md`     | Score vs SPY, append to `lessons.md`                      |
 
 ## Safety
 
-- **`DRY_RUN: true`** flag in `memory/strategy.md` — for the first 14 days, `market_open` and `midday` write intended orders to `plan.md` and Slack but call no Alpaca order endpoint. Only a human edit to `strategy.md` flips it off.
+- **`DRY_RUN: true`** flag in `memory/strategy.md` — for the first 14 days, `market_open` and `midday` write intended orders to `plan.md` and post to Discord but call no Alpaca order endpoint. Only a human edit to `strategy.md` flips it off.
 - Hard scope per routine: `pre_market` cannot trade, `midday` cannot open new positions, `weekly_review` cannot edit `strategy.md`, etc.
-- Every run reconciles memory vs live Alpaca state; any divergence aborts the run and posts a `RECONCILIATION FAIL` to Slack.
+- Every run reconciles memory vs live Alpaca state; any divergence aborts the run and posts a `RECONCILIATION FAIL` to Discord.
 - Strategy guardrails: 5% max position size, 8 max concurrent, 3 max new-per-week, 30% sector cap, 10% cash floor, -8% hard stop. Full rules in `memory/strategy.md`.
 
 ## Secrets
@@ -37,6 +37,7 @@ Set these env vars in the routine environment — never in the repo:
 - `ALPACA_API_KEY_ID`
 - `ALPACA_SECRET_KEY`
 - `ALPACA_BASE_URL` (= `https://paper-api.alpaca.markets`)
+- `DISCORD_WEBHOOK_URL` — webhook for the #trading-bot channel (contains a secret token; never log or echo its value)
 
 `.gitignore` excludes `.env`, `.env.*`, `*.key`, and `secrets/`.
 
@@ -64,4 +65,4 @@ routines/
 
 ## Notifications
 
-Every routine ends with a summary posted to Slack `#trading-bot` (via the Claude Slack connector), including the commit SHA and a link to the commit on GitHub.
+Every routine ends with a summary posted to Discord `#trading-bot` via HTTP POST to `DISCORD_WEBHOOK_URL`, including the commit SHA and a link to the commit on GitHub.

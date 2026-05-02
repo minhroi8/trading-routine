@@ -12,13 +12,13 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 1. `CLAUDE.md`
 2. `memory/strategy.md` (for the filter thresholds)
-3. `memory/universe.md` (the existing cache — used only to diff against the new one for the Slack summary; never kept on failure)
+3. `memory/universe.md` (the existing cache — used only to diff against the new one for the Discord message; never kept on failure)
 
 ## Gates
 
 - **No market-clock check.** Market is closed on Sunday evening by design.
 - **No position reconciliation.** This routine never touches positions or orders.
-- **Failure mode:** if the run cannot complete a full rebuild, **do not overwrite `memory/universe.md` with a partial file**. Fail loudly to Slack so the human sees it before Monday pre-market, then exit non-zero. A stale-but-complete cache is safer than a half-written one (pre-market will catch the stale cache on Monday via `expires_on`).
+- **Failure mode:** if the run cannot complete a full rebuild, **do not overwrite `memory/universe.md` with a partial file**. POST an error to `DISCORD_WEBHOOK_URL` so the human sees it before Monday pre-market, then exit non-zero. A stale-but-complete cache is safer than a half-written one (pre-market will catch the stale cache on Monday via `expires_on`).
 
 ## Work
 
@@ -36,7 +36,7 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
    - "Date first added" to S&P 500 is < 180 days ago AND the ticker is a genuinely recent IPO (date added is an imperfect proxy — if unsure, web_search the actual listing date)
    - US primary listing is unclear (Wikipedia's list is US-primary by construction; this is a safety net for edge cases)
    - Missing bar data (fewer than 20 trading days returned) — treat as reject and record the reason
-   Record rejection reasons so the Slack summary can show the top 3–5 reasons.
+   Record rejection reasons so the Discord message can show the top 3–5 reasons.
 
 5. **Earnings lookup for passing tickers.** web_search each pass-filter ticker's next scheduled earnings date. Preferred sources: the company's Investor Relations page, Nasdaq, or Zacks earnings calendars. Record as ISO date (`YYYY-MM-DD`); if the lookup fails or is ambiguous, record `unknown` and move on — do not abort the run for a single missing earnings date.
 
@@ -58,7 +58,7 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 - Place, modify, or cancel orders.
 - Write to any file other than `memory/universe.md` and `memory/research_log.md`.
-- Leave a partially written `memory/universe.md` on disk if the run fails — keep the last good cache in place and fail to Slack.
+- Leave a partially written `memory/universe.md` on disk if the run fails — keep the last good cache in place and POST the failure to Discord.
 - Re-screen or refresh the universe from any other routine. That is this routine's exclusive job.
 
 ## End-of-run protocol (per `CLAUDE.md`)
@@ -67,12 +67,10 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 2. `git add -A`
 3. `git commit -m "universe_refresh: <YYYY-MM-DD> — <N> tickers passed filters"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. Slack `#trading-bot`:
+5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
+```json
+{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: <price<10: X | ADV<20M: Y | IPO<180d: Z | no bars: W>\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
-🔄 UNIVERSE REFRESH <YYYY-MM-DD>
-Passed: <N> | Rejected: <M> | Errors: <E>
-Top rejection reasons: <price<10: X | ADV<20M: Y | IPO<180d: Z | no bars: W>
-Expires: <YYYY-MM-DD>
-Commit: https://github.com/minhroi8/trading-routine/commit/<sha>
-```
+
+A 204 response means success. If the POST fails, log the failure but do NOT abort.

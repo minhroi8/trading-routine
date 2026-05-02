@@ -2,7 +2,7 @@
 
 ## Scope
 
-Reconcile, log the day's P&L, archive the day's plan, rotate old log entries, send the EOD Slack summary. **MUST NOT place orders.**
+Reconcile, log the day's P&L, archive the day's plan, rotate old log entries, send the EOD Discord summary. **MUST NOT place orders.**
 
 Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything below.
 
@@ -12,12 +12,12 @@ Per `CLAUDE.md` start-of-run order.
 
 ## Gates
 
-1. Run the position reconciliation step from `CLAUDE.md`. Abort on any divergence (but still post the Slack failure so the human sees it).
+1. Run the position reconciliation step from `CLAUDE.md`. Abort on any divergence (but still POST to Discord so the human sees it).
 2. No market-open check needed — this routine runs after 16:00 ET by design.
 
 ## DRY_RUN check
 
-This routine never trades, so `DRY_RUN` doesn't gate any action. Still read it and include the value in the Slack summary.
+This routine never trades, so `DRY_RUN` doesn't gate any action. Still read it and include the value in the Discord message.
 
 ## Work
 
@@ -39,12 +39,10 @@ This routine never trades, so `DRY_RUN` doesn't gate any action. Still read it a
 2. `git add -A`
 3. `git commit -m "market_close: <YYYY-MM-DD> — equity $<X>, day P&L <pct>% (DRY_RUN: <true|false>)"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. Slack `#trading-bot`:
+5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
+```json
+{"content": "🔚 CLOSE <YYYY-MM-DD> (DRY_RUN: <true|false>)\nEquity: $<X> | Day P&L: $<Y> (<z>%) | SPY day: <z>%\nPositions: <N> | Cash: <pct>%\nFills today: <TICKERS or 'none'>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
-🔚 CLOSE <YYYY-MM-DD> (DRY_RUN: <true|false>)
-Equity: $<X> | Day P&L: $<Y> (<z>%) | SPY day: <z>%
-Positions: <N> | Cash: <pct>%
-Fills today: <TICKERS or "none">
-Commit: https://github.com/minhroi8/trading-routine/commit/<sha>
-```
+
+A 204 response means success. If the POST fails, log the failure but do NOT abort.

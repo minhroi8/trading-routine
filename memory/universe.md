@@ -16,7 +16,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 - US primary listing
 - Not a recent IPO (< 180 days since listing)
 
-**Written only by `routines/universe_refresh.md`** (Sundays 18:00 ET). Consumed read-only by `pre_market`, `market_open`, and `midday`. The cache is valid for 7 days — if `expires_on` is in the past, trading routines abort with a Slack notice and wait for the next weekend refresh.
+**Written only by `routines/universe_refresh.md`** (Sundays 18:00 ET). Consumed read-only by `pre_market`, `market_open`, and `midday`. The cache is valid for 7 days — if `expires_on` is in the past, trading routines abort with a Discord notice and wait for the next weekend refresh.
 
 The `screened_on: 1970-01-01` placeholder above guarantees the cache reads as stale until the first real `universe_refresh` run.
 

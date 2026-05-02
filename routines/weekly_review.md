@@ -17,7 +17,7 @@ Per `CLAUDE.md` start-of-run order, plus last 14 days of `trade_log.md` and `res
 
 ## DRY_RUN check
 
-This routine never trades. Still read `DRY_RUN` and include it in the Slack summary.
+This routine never trades. Still read `DRY_RUN` and include it in the Discord message.
 
 ## Work
 
@@ -60,12 +60,10 @@ This routine never trades. Still read `DRY_RUN` and include it in the Slack summ
 2. `git add -A`
 3. `git commit -m "weekly_review: week of <YYYY-MM-DD> — port <pct>% vs SPY <pct>%"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. Slack `#trading-bot`:
+5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
+```json
+{"content": "📊 WEEKLY REVIEW — week of <YYYY-MM-DD> (DRY_RUN: <true|false>)\nPortfolio: <+/-X.X>% | SPY: <+/-Y.Y>% | Delta: <Z.Z> pts\nTrades: <N> (<W>W / <L>L, win rate <pct>%)\nTop lesson: <one line>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
-📊 WEEKLY REVIEW — week of <YYYY-MM-DD> (DRY_RUN: <true|false>)
-Portfolio: <+/-X.X>% | SPY: <+/-Y.Y>% | Delta: <Z.Z> pts
-Trades: <N> (<W>W / <L>L, win rate <pct>%)
-Top lesson: <one line>
-Commit: https://github.com/minhroi8/trading-routine/commit/<sha>
-```
+
+A 204 response means success. If the POST fails, log the failure but do NOT abort.
