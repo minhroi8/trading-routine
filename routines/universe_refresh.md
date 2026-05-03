@@ -1,6 +1,6 @@
 # Universe refresh routine — Sundays 18:00 ET
 
-Cron: `0 18 * * 0` (US Eastern).
+Cron: `0 18 * * 0` (US Eastern). UTC equivalent during EDT: `0 22 * * 0`. During EST: `0 23 * * 0`.
 
 ## Scope
 
@@ -22,9 +22,9 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 ## Work
 
-1. **Pull the S&P 500 list.** Primary source: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_500_companies`. It gives ticker, company name, GICS sector, and "date first added" in one table. Fallback: SlickCharts — `https://www.slickcharts.com/sp500`. Log the source URL and timestamp to `memory/research_log.md`.
+1. **Pull the S&P 500 list.** Primary source: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_500_companies`. It gives ticker, company name, GICS sector, and "date first added" in one table. Fallbacks (in order): SlickCharts (`https://www.slickcharts.com/sp500`), then the GitHub-hosted dataset (`https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv`). Log the source URL and timestamp to `memory/research_log.md`.
 
-2. **Fetch daily bars in batches** from Alpaca `/v2/stocks/bars` with `timeframe=1Day` and a start/end covering the last ~30 calendar days (to guarantee 20 trading days). Batch up to 100 symbols per request (Alpaca's multi-symbol bars API). Respect rate limits; parallelize carefully.
+2. **Fetch daily bars in batches** from Alpaca `/v2/stocks/bars` with `timeframe=1Day` and a start/end covering the last ~40 calendar days (to comfortably guarantee 20 trading days). Batch up to 100 symbols per request (Alpaca's multi-symbol bars API). Respect rate limits (~0.4s between batches). Use `feed=iex` (paper account default).
 
 3. **Compute per-ticker metrics.**
    - `last_price` = most recent daily close
@@ -38,12 +38,12 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
    - Missing bar data (fewer than 20 trading days returned) — treat as reject and record the reason
    Record rejection reasons so the Discord message can show the top 3–5 reasons.
 
-5. **Earnings lookup for passing tickers.** web_search each pass-filter ticker's next scheduled earnings date. Preferred sources: the company's Investor Relations page, Nasdaq, or Zacks earnings calendars. Record as ISO date (`YYYY-MM-DD`); if the lookup fails or is ambiguous, record `unknown` and move on — do not abort the run for a single missing earnings date.
+5. **Earnings lookup for passing tickers.** OPTIONAL at this layer. `pre_market` re-verifies earnings for every candidate before including it in `plan.md`, so a missing or stale `earnings_date_next` here is not blocking. If you do attempt the lookup, prefer the company's Investor Relations page, Nasdaq, or Zacks earnings calendars. Record as ISO date (`YYYY-MM-DD`); if the lookup fails or is ambiguous, record `unknown` and move on. Do not abort the run for any earnings lookup failure.
 
 6. **Halt / SEC check.** Optional at this layer. Regular-hours halts are intraday and unreliable to check on a Sunday evening; the trading routines web_search for halts on their candidate shortlist (small N) instead of here (500 tickers). If you do find a publicly known active SEC investigation against a ticker during the S&P 500 pull, exclude it and note the reason.
 
 7. **Write `memory/universe.md`** atomically (write to a temp path, then rename) with frontmatter:
-   ```yaml
+```yaml
    ---
    screened_on: <YYYY-MM-DD of today>
    expires_on: <YYYY-MM-DD, today + 7 days>
@@ -51,8 +51,10 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
    total_rejected: <M>
    source: <primary source URL used>
    ---
-   ```
+```
    Then the documentation block (copy from the template) and the table of passing tickers, one row per ticker, sorted by ticker symbol.
+
+   **Important:** Use `datetime.date.today()` for `screened_on` — never hardcode the date.
 
 ## MUST NOT
 
@@ -60,6 +62,7 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 - Write to any file other than `memory/universe.md` and `memory/research_log.md`.
 - Leave a partially written `memory/universe.md` on disk if the run fails — keep the last good cache in place and POST the failure to Discord.
 - Re-screen or refresh the universe from any other routine. That is this routine's exclusive job.
+- Hardcode the current date anywhere in the script. Always derive from `datetime.date.today()`.
 
 ## End-of-run protocol (per `CLAUDE.md`)
 
@@ -67,10 +70,10 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 2. `git add -A`
 3. `git commit -m "universe_refresh: <YYYY-MM-DD> — <N> tickers passed filters"`
 4. `git push origin main` (retry once on rebase conflict, then abort)
-5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
+5. POST to Discord per the **Discord webhook conventions** in `CLAUDE.md` (must include `User-Agent` header — bare `urllib` requests are blocked by Cloudflare with `403 / error 1010`). Body:
 
 ```json
-{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: <price<10: X | ADV<20M: Y | IPO<180d: Z | no bars: W>\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: price<10: X | ADV<20M: Y | IPO<180d: Z | no_bars: W\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success. If the POST fails, log the failure but do NOT abort.
