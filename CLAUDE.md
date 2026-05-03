@@ -62,6 +62,22 @@ Read in this order. Missing files = abort and post the error to Discord.
 - When `DRY_RUN: true`: `market_open` and `midday` write intended orders to `plan.md` and post to Discord — they **MUST NOT** call `/v2/orders`.
 - Only the human operator flips `DRY_RUN` to `false` via a direct edit to `memory/strategy.md`. You (the agent) must never set it.
 
+## Git push conventions
+
+All routines push directly to `main`. Do **not** create feature branches, do **not** open pull requests. The routine has unrestricted-push permission enabled and is the sole writer to its memory files within its scheduled window.
+
+End-of-run sequence:
+
+```bash
+git checkout main          # ensure on main, not a session branch
+git pull --rebase origin main
+git add -A
+git commit -m "<routine_name>: <YYYY-MM-DD> — <one-line summary>"
+git push origin main       # retry once on rebase conflict, then abort
+```
+
+If `git push origin main` fails with a permissions error, do NOT fall back to creating a branch. Instead, log the failure to the run output and POST an error to `DISCORD_WEBHOOK_URL` so the human can investigate.
+
 ## End-of-run protocol
 
 1. Update any memory files you touched.
