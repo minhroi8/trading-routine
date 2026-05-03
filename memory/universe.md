@@ -1,8 +1,8 @@
 ---
 screened_on: 2026-05-03
 expires_on: 2026-05-10
-total_passed: 241
-total_rejected: 262
+total_passed: 249
+total_rejected: 243
 source: https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv
 ---
 
@@ -51,17 +51,18 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | APH | $142.31 | $57,441,389 | Information Technology | unknown | 2026-05-03 |
 | APO | $130.49 | $35,364,798 | Financials | unknown | 2026-05-03 |
 | APP | $459.95 | $57,373,677 | Information Technology | unknown | 2026-05-03 |
+| ARES | $119.04 | $26,717,275 | Financials | unknown | 2026-05-03 |
 | AVGO | $421.21 | $245,029,857 | Information Technology | unknown | 2026-05-03 |
 | AXON | $402.31 | $20,350,821 | Industrials | unknown | 2026-05-03 |
 | AXP | $319.71 | $42,845,686 | Financials | unknown | 2026-05-03 |
-| AZO | $3595.95 | $31,637,422 | Consumer Discretionary | unknown | 2026-05-03 |
+| AZO | $3,595.95 | $31,637,422 | Consumer Discretionary | unknown | 2026-05-03 |
 | BA | $227.40 | $48,687,808 | Industrials | unknown | 2026-05-03 |
 | BAC | $53.23 | $96,194,048 | Financials | unknown | 2026-05-03 |
 | BDX | $149.44 | $25,529,611 | Health Care | unknown | 2026-05-03 |
 | BK | $133.76 | $24,304,237 | Financials | unknown | 2026-05-03 |
 | BKNG | $169.61 | $82,611,068 | Consumer Discretionary | unknown | 2026-05-03 |
 | BKR | $69.12 | $27,135,150 | Energy | unknown | 2026-05-03 |
-| BLK | $1062.20 | $45,417,132 | Financials | unknown | 2026-05-03 |
+| BLK | $1,062.20 | $45,417,132 | Financials | unknown | 2026-05-03 |
 | BMY | $58.20 | $30,384,221 | Health Care | unknown | 2026-05-03 |
 | BRK.B | $473.07 | $52,391,758 | Financials | unknown | 2026-05-03 |
 | BSX | $56.52 | $79,760,172 | Health Care | unknown | 2026-05-03 |
@@ -69,6 +70,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | C | $127.42 | $51,344,880 | Financials | unknown | 2026-05-03 |
 | CAH | $195.23 | $21,535,658 | Health Care | unknown | 2026-05-03 |
 | CARR | $67.64 | $29,572,946 | Industrials | unknown | 2026-05-03 |
+| CASY | $836.53 | $24,201,062 | Consumer Staples | unknown | 2026-05-03 |
 | CAT | $890.32 | $67,398,867 | Industrials | unknown | 2026-05-03 |
 | CB | $326.30 | $25,675,925 | Financials | unknown | 2026-05-03 |
 | CCL | $26.64 | $38,395,288 | Consumer Discretionary | unknown | 2026-05-03 |
@@ -78,21 +80,25 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | CFG | $64.42 | $20,531,781 | Financials | unknown | 2026-05-03 |
 | CHRW | $177.31 | $21,717,858 | Industrials | unknown | 2026-05-03 |
 | CHTR | $171.93 | $32,164,662 | Communication Services | unknown | 2026-05-03 |
+| CIEN | $535.82 | $58,681,255 | Information Technology | unknown | 2026-05-03 |
 | CL | $87.28 | $25,690,776 | Consumer Staples | unknown | 2026-05-03 |
 | CMCSA | $27.18 | $53,352,387 | Communication Services | unknown | 2026-05-03 |
 | CME | $289.63 | $36,926,473 | Financials | unknown | 2026-05-03 |
 | CMG | $32.99 | $38,580,779 | Consumer Discretionary | unknown | 2026-05-03 |
 | CMI | $657.83 | $31,191,704 | Industrials | unknown | 2026-05-03 |
 | COF | $191.90 | $49,820,169 | Financials | unknown | 2026-05-03 |
+| COHR | $329.65 | $77,902,981 | Information Technology | unknown | 2026-05-03 |
 | COIN | $191.37 | $37,650,978 | Financials | unknown | 2026-05-03 |
 | COP | $123.28 | $61,470,424 | Energy | unknown | 2026-05-03 |
 | COR | $304.08 | $24,841,245 | Health Care | unknown | 2026-05-03 |
-| COST | $1011.69 | $56,540,755 | Consumer Staples | unknown | 2026-05-03 |
+| COST | $1,011.69 | $56,540,755 | Consumer Staples | unknown | 2026-05-03 |
+| CRH | $115.47 | $24,820,120 | Materials | unknown | 2026-05-03 |
 | CRM | $183.78 | $91,951,177 | Information Technology | unknown | 2026-05-03 |
 | CRWD | $455.58 | $45,199,554 | Information Technology | unknown | 2026-05-03 |
 | CSCO | $91.85 | $74,343,485 | Information Technology | unknown | 2026-05-03 |
 | CSX | $45.08 | $39,450,697 | Industrials | unknown | 2026-05-03 |
 | CTRA | $35.37 | $20,692,162 | Energy | unknown | 2026-05-03 |
+| CVNA | $382.83 | $53,264,357 | Consumer Discretionary | unknown | 2026-05-03 |
 | CVS | $82.08 | $31,233,593 | Health Care | unknown | 2026-05-03 |
 | CVX | $190.66 | $71,174,540 | Energy | unknown | 2026-05-03 |
 | DAL | $68.98 | $34,095,181 | Industrials | unknown | 2026-05-03 |
@@ -112,7 +118,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | ELV | $372.82 | $31,158,515 | Health Care | unknown | 2026-05-03 |
 | EMR | $137.49 | $22,992,712 | Industrials | unknown | 2026-05-03 |
 | EOG | $139.01 | $29,713,830 | Energy | unknown | 2026-05-03 |
-| EQIX | $1085.18 | $38,517,637 | Real Estate | unknown | 2026-05-03 |
+| EQIX | $1,085.18 | $38,517,637 | Real Estate | unknown | 2026-05-03 |
 | EQT | $58.69 | $29,290,203 | Energy | unknown | 2026-05-03 |
 | ETN | $425.56 | $52,310,576 | Industrials | unknown | 2026-05-03 |
 | EW | $83.99 | $24,687,888 | Health Care | unknown | 2026-05-03 |
@@ -122,19 +128,20 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | FANG | $207.44 | $25,618,232 | Energy | unknown | 2026-05-03 |
 | FCX | $56.56 | $59,503,804 | Materials | unknown | 2026-05-03 |
 | FDX | $393.85 | $28,448,400 | Industrials | unknown | 2026-05-03 |
-| FICO | $1035.37 | $30,967,814 | Information Technology | unknown | 2026-05-03 |
+| FICO | $1,035.37 | $30,967,814 | Information Technology | unknown | 2026-05-03 |
 | FITB | $50.43 | $21,009,030 | Financials | unknown | 2026-05-03 |
+| FIX | $1,868.65 | $38,921,660 | Industrials | unknown | 2026-05-03 |
 | FTNT | $86.28 | $21,020,611 | Information Technology | unknown | 2026-05-03 |
 | GD | $345.86 | $26,619,552 | Industrials | unknown | 2026-05-03 |
 | GE | $286.53 | $98,155,982 | Industrials | unknown | 2026-05-03 |
-| GEV | $1063.32 | $99,237,194 | Industrials | unknown | 2026-05-03 |
+| GEV | $1,063.32 | $99,237,194 | Industrials | unknown | 2026-05-03 |
 | GILD | $131.63 | $26,895,749 | Health Care | unknown | 2026-05-03 |
 | GLW | $158.27 | $75,217,241 | Information Technology | unknown | 2026-05-03 |
 | GM | $75.78 | $29,674,733 | Consumer Discretionary | unknown | 2026-05-03 |
 | GOOG | $383.28 | $130,369,386 | Communication Services | unknown | 2026-05-03 |
 | GOOGL | $385.79 | $299,029,659 | Communication Services | unknown | 2026-05-03 |
 | GS | $923.71 | $63,409,096 | Financials | unknown | 2026-05-03 |
-| GWW | $1148.97 | $20,911,049 | Industrials | unknown | 2026-05-03 |
+| GWW | $1,148.97 | $20,911,049 | Industrials | unknown | 2026-05-03 |
 | HAL | $41.66 | $39,136,415 | Energy | unknown | 2026-05-03 |
 | HCA | $433.22 | $26,421,676 | Health Care | unknown | 2026-05-03 |
 | HD | $323.92 | $43,420,160 | Consumer Discretionary | unknown | 2026-05-03 |
@@ -158,7 +165,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | KDP | $29.10 | $23,606,241 | Consumer Staples | unknown | 2026-05-03 |
 | KEYS | $352.35 | $23,470,656 | Information Technology | unknown | 2026-05-03 |
 | KKR | $103.66 | $27,633,953 | Financials | unknown | 2026-05-03 |
-| KLAC | $1725.08 | $107,238,758 | Information Technology | unknown | 2026-05-03 |
+| KLAC | $1,725.08 | $107,238,758 | Information Technology | unknown | 2026-05-03 |
 | KMI | $32.53 | $22,959,365 | Energy | unknown | 2026-05-03 |
 | KO | $78.58 | $64,855,320 | Consumer Staples | unknown | 2026-05-03 |
 | LHX | $313.53 | $34,734,541 | Industrials | unknown | 2026-05-03 |
@@ -181,7 +188,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | MMM | $142.51 | $22,415,610 | Industrials | unknown | 2026-05-03 |
 | MO | $74.55 | $41,259,118 | Consumer Staples | unknown | 2026-05-03 |
 | MPC | $246.22 | $26,615,550 | Energy | unknown | 2026-05-03 |
-| MPWR | $1583.36 | $57,079,686 | Information Technology | unknown | 2026-05-03 |
+| MPWR | $1,583.36 | $57,079,686 | Information Technology | unknown | 2026-05-03 |
 | MRK | $112.17 | $46,418,969 | Health Care | unknown | 2026-05-03 |
 | MRSH | $166.21 | $21,420,213 | Financials | unknown | 2026-05-03 |
 | MS | $190.17 | $46,930,815 | Financials | unknown | 2026-05-03 |
@@ -235,7 +242,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | SYK | $294.70 | $45,553,138 | Health Care | unknown | 2026-05-03 |
 | SYY | $74.09 | $24,792,505 | Consumer Staples | unknown | 2026-05-03 |
 | T | $26.13 | $57,805,505 | Communication Services | unknown | 2026-05-03 |
-| TDG | $1154.51 | $30,174,197 | Industrials | unknown | 2026-05-03 |
+| TDG | $1,154.51 | $30,174,197 | Industrials | unknown | 2026-05-03 |
 | TEL | $207.60 | $43,349,188 | Information Technology | unknown | 2026-05-03 |
 | TER | $345.44 | $62,528,519 | Information Technology | unknown | 2026-05-03 |
 | TFC | $50.93 | $25,480,157 | Financials | unknown | 2026-05-03 |
@@ -256,6 +263,7 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 | USB | $56.30 | $32,154,582 | Financials | unknown | 2026-05-03 |
 | V | $328.08 | $129,907,017 | Financials | unknown | 2026-05-03 |
 | VLO | $246.87 | $38,311,545 | Energy | unknown | 2026-05-03 |
+| VRT | $328.18 | $76,880,761 | Industrials | unknown | 2026-05-03 |
 | VST | $155.32 | $25,721,084 | Utilities | unknown | 2026-05-03 |
 | VTR | $88.07 | $21,710,810 | Real Estate | unknown | 2026-05-03 |
 | VZ | $48.14 | $61,478,417 | Communication Services | unknown | 2026-05-03 |
