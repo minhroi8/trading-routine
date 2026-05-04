@@ -4,7 +4,7 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Date
 
-_YYYY-MM-DD_
+2026-05-04
 
 ## Planned buys
 
@@ -19,3 +19,7 @@ _YYYY-MM-DD_
 ## Notes
 
 _Free-form context: macro read, earnings this week, risks to watch._
+
+### Simulated fills
+
+_No planned orders in plan.md for 2026-05-04. Pre-market did not produce any buys or sells. No simulated fills to record. DRY_RUN: true — no /v2/orders calls made._
