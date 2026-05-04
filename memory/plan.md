@@ -47,3 +47,19 @@ _No open positions — no planned sells._
 - Sector cap: IT sector (AAPL + STX) ~9.2%; Communication Services (GOOGL) ~4.6%. No sector near 30% cap ✓
 - All tickers confirmed in universe.md (502-ticker cache, expires 2026-05-10) ✓
 - All tickers: Alpaca status=active, tradable=true ✓
+
+### Midday intentions
+
+**Run time**: 2026-05-04 ~12:19 ET | **DRY_RUN: true**
+
+**Reconciliation**: Alpaca /v2/positions = [] | portfolio.md = no open positions → match ✓
+
+**Cuts (midday -5% intraday rule)**: None — no open positions.
+
+**Trailing stops tightened (+10% rule)**: None — no open positions.
+
+**Thesis exits**: None — no open positions.
+
+**Stale-position flags (60+ days, <3% gain)**: None — no open positions.
+
+No midday actions required. All three planned buys (GOOGL, AAPL, STX) remain in planned-buys queue pending live market_open execution when DRY_RUN is disabled by the human operator.
