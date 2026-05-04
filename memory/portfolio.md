@@ -6,3 +6,5 @@ Snapshot of current open positions. Rewritten by `market_close` (and `market_ope
 |--------|-----|----------|------------|--------|-------------|-----------------|
 
 _No open positions._
+
+<!-- last_reconciled: 2026-05-04T16:05 ET — equity $100,000.00 | cash $100,000.00 | day P&L $0.00 (0.00%) | DRY_RUN: true -->
