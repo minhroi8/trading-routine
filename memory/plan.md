@@ -21,6 +21,23 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 _No open positions — no planned sells._
 
+## Simulated fills (DRY_RUN: true — market_open 2026-05-05 ~09:35 ET)
+
+_No real orders placed. Hypothetical fills based on latest trade prices at routine execution time._
+
+| ticker | side | qty | hypothetical_fill | stop_price | status | notes |
+|--------|------|-----|-------------------|------------|--------|-------|
+| GOOGL | buy | 12 | $387.00 | $356.04 | limit working — not immediately filled | Last trade $388.98 > limit $387.00; order would sit working and potentially fill if price dips |
+| AAPL | buy | 17 | $279.44 | $257.08 | simulated fill | Last trade $279.44 < limit $281.50; fills at market; stop = $279.44 × 0.92 |
+| PLTR | buy | 34 | $141.91 | $130.56 | simulated fill | Last trade $141.91 < limit $147.00; fills at market; stop = $141.91 × 0.92 |
+
+_Sizing re-check (equity $100,000 at run time):_
+- GOOGL 12 × $387.00 = $4,644.00 (4.64%) ✓
+- AAPL 17 × $279.44 = $4,750.48 (4.75%) ✓
+- PLTR 34 × $141.91 = $4,824.94 (4.82%) ✓
+- Total deployed: $14,219.42 (14.22%); cash floor: 85.78% ≥ 10% ✓
+- Concurrent positions: 3/8 ✓ | New this week: 3/3 ✓ | Sector caps: Comm. Svcs 4.64%, IT 9.57% — both < 30% ✓
+
 ## Notes
 
 **Date**: 2026-05-05 | **DRY_RUN: true** — market_open MUST NOT call /v2/orders; write intended orders to plan.md only.
