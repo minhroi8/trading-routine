@@ -21,3 +21,4 @@ Append-only dated notes: catalysts, earnings, macro reads, universe snapshots. E
 | 2026-05-05 | Alpaca /v2/assets + MarketBeat | AAPL | Earnings date re-verified: July 30, 2026 confirmed. No rating changes post-earnings. tradable=True, status=active. Thesis intact. |
 | 2026-05-05 | Alpaca /v2/assets + StockTitan | STX | Earnings date re-verified: ~Jul 16 2026 (estimated). No new halt or negative news. tradable=True, status=active. Dropped from plan (up 147% YTD, post-earnings pop already captured); retained as strong alternative. |
 | 2026-05-05 | Alpaca /v2/assets | PLTR | Halt check: tradable=True, status=active. No SEC investigation or halt news in last 30 days. |
+| 2026-05-05 | Alpaca /v2/account + data.alpaca.markets/v2/stocks/SPY/bars | ALL | EOD 2026-05-05 — equity $100,000.00, day P&L $0.00 (0.00%), SPY day +0.99% ($717.68→$724.75). No positions held (DRY_RUN: true). |
