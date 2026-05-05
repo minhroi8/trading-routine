@@ -1,5 +1,5 @@
 ---
-DRY_RUN: true
+DRY_RUN: false
 ---
 
 # Strategy
