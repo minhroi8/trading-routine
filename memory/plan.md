@@ -4,22 +4,49 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Date
 
-_To be filled by next pre_market run._
+2026-05-05
 
 ## Planned buys
 
 | ticker | target_qty | limit_price | stop_price | thesis_ref |
 |--------|------------|-------------|------------|------------|
-
-_No buys planned._
+| GOOGL | 12 | $387.00 | $356.04 | Q1 2026 blowout: EPS $5.11 vs $2.63 est (+94%), revenue $109.9B +22% YoY; Search +19%, Cloud +63% YoY; AI ROI now clearly visible; CapEx guidance raised to $180-190B signalling conviction; next earnings ~July 22 2026. Freedom Broker downgraded Buy→Hold May 4 but Citizens raised PT to $515; majority consensus remains bullish. |
+| AAPL | 17 | $281.50 | $258.98 | Q2 FY2026 beat: revenue $111.2B +17% YoY, iPhone +22% (record cycle driven by iPhone 17), Services ATH $31B; June-qtr guidance raised to 14-17% vs 9.5% consensus; next earnings July 30 2026 confirmed. No rating changes post-earnings; thesis intact. |
+| PLTR | 34 | $147.00 | $135.24 | Q1 2026 blowout reported May 4 after close: EPS $0.33 vs $0.28 (+18%), revenue $1.63B +85% YoY (+6% vs est); US Commercial rev +130% YoY; FY2026 guidance raised to 71% growth ($7.65-7.66B) vs $7.27B consensus; muted +2-4% initial reaction despite massive beat creates entry opportunity; next earnings ~Aug 10 2026. |
 
 ## Planned sells
 
 | ticker | reason | notes |
 |--------|--------|-------|
 
-_No sells planned._
+_No open positions — no planned sells._
 
 ## Notes
 
-_To be filled by next pre_market run._
+**Date**: 2026-05-05 | **DRY_RUN: true** — market_open MUST NOT call /v2/orders; write intended orders to plan.md only.
+
+**Universe cache**: expires 2026-05-10 ✓
+
+**Macro environment**: Iran-UAE missile exchange escalated overnight; WTI crude +4.4% to $106.42, Brent +5.8% to $114.44. S&P 500 -0.41%, Dow -1.13% on May 4. All three planned picks (GOOGL, AAPL, PLTR) are tech/software companies with minimal direct commodity exposure. NFP report due Friday May 8 — key macro catalyst to watch.
+
+**Earnings risk tickers dropped (within 3-day window as of 2026-05-05)**:
+- AMD: reports tonight (May 5) after close — dropped
+- SBUX: earnings_date_next = 2026-05-05 after close — dropped
+- DIS: earnings_date_next = 2026-05-06 — dropped
+- MCD: reports May 7 — dropped
+
+**PLTR vs STX decision (3rd slot)**:
+- STX remains a strong candidate (Q3 FY2026 beat, AI nearline HDD demand) but is already up 147% YTD at all-time highs — initial post-earnings pop largely captured (reported Apr 28, surged ~5% on results and hit ATH ~$728 on May 1).
+- PLTR is a fresher catalyst (reported last night May 4), with a far more muted initial reaction (+2-4%) despite 85% revenue growth and a massive guidance raise — better risk/reward setup. STX noted for human review as strong alternative.
+
+**Halt / trading-status checks (Alpaca /v2/assets)**:
+- GOOGL: tradable=True, status=active ✓
+- AAPL: tradable=True, status=active ✓
+- PLTR: tradable=True, status=active ✓
+
+**Sanity checks**:
+- Cash floor: deploy ~$14,428 (GOOGL $4,644 + AAPL $4,785.50 + PLTR $4,998) → 14.4% equity deployed, 85.6% cash. Floor ≥ 10% ✓
+- Max concurrent positions: 0 existing + 3 new = 3. Max 8 ✓
+- Max new per week: 0 fills in trade_log this week + 3 planned = 3. Cap is 3 ✓
+- Sector cap: Communication Services (GOOGL) 4.6%; Information Technology (AAPL + PLTR) 9.8%. No sector near 30% ✓
+- All tickers confirmed in universe.md (502-ticker cache, expires 2026-05-10) ✓
