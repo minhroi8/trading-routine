@@ -18,13 +18,30 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 - **No market-clock check.** Market is closed on Sunday evening by design.
 - **No position reconciliation.** This routine never touches positions or orders.
-- **Failure mode:** if the run cannot complete a full rebuild, **do not overwrite `memory/universe.md` with a partial file**. POST an error to `DISCORD_WEBHOOK_URL` so the human sees it before Monday pre-market, then exit non-zero. A stale-but-complete cache is safer than a half-written one (pre-market will catch the stale cache on Monday via `expires_on`).
+- **Failure mode:** if the run cannot complete a full rebuild, **do not overwrite `memory/universe.md` with a partial file**. POST an error to `DISCORD_WEBHOOK_URL` so the human sees it before Monday pre-market, then exit non-zero. A stale-but-complete cache is safer than a half-written one.
 
 ## Work
 
-1. **Pull the S&P 500 list.** Primary source: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_500_companies`. It gives ticker, company name, GICS sector, and "date first added" in one table. Fallbacks (in order): SlickCharts (`https://www.slickcharts.com/sp500`), then the GitHub-hosted dataset (`https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv`). Log the source URL and timestamp to `memory/research_log.md`.
+1. **Pull the S&P 1500 list (combined: S&P 500 large-cap + S&P 400 mid-cap + S&P 600 small-cap).** Fetch all three indexes and combine into one ticker list. Sources in priority order for each index:
 
-2. **Fetch daily bars in batches** from Alpaca `/v2/stocks/bars` with `timeframe=1Day` and a start/end covering the last ~40 calendar days (to comfortably guarantee 20 trading days). Batch up to 100 symbols per request (Alpaca's multi-symbol bars API). Respect rate limits (~0.4s between batches). Use `feed=iex` (paper account default).
+   **S&P 500 (large-cap, ~500 tickers):**
+   - Primary: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_500_companies`
+   - Fallback 1: SlickCharts — `https://www.slickcharts.com/sp500`
+   - Fallback 2: GitHub dataset — `https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv`
+
+   **S&P 400 (mid-cap, ~400 tickers):**
+   - Primary: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_400_companies`
+   - Fallback: SlickCharts — `https://www.slickcharts.com/indices/sp-400`
+
+   **S&P 600 (small-cap, ~600 tickers):**
+   - Primary: Wikipedia — `https://en.wikipedia.org/wiki/List_of_S%26P_600_companies`
+   - Fallback: SlickCharts — `https://www.slickcharts.com/indices/sp-600`
+
+   Combine all three into a single deduplicated ticker list. Tag each ticker with its source index (large/mid/small) for the universe.md output. Log the source URLs and timestamps to `memory/research_log.md`.
+
+   **If any index fails entirely (all fallbacks blocked):** abort the run, keep the existing universe.md, and POST a failure message to Discord. Do not produce a partial S&P 500-only universe under the new spec — that would silently regress the change.
+
+2. **Fetch daily bars in batches** from Alpaca `/v2/stocks/bars` with `timeframe=1Day` and a start/end covering the last ~40 calendar days. Batch up to 100 symbols per request. Respect rate limits (~0.4s between batches). Use `feed=iex` (paper account default). Note: with ~1,500 symbols, this means ~15 batches and ~6-10 minutes of fetch time. Plan accordingly.
 
 3. **Compute per-ticker metrics.**
    - `last_price` = most recent daily close
@@ -32,27 +49,31 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 4. **Apply universe filters from `strategy.md`.** Exclude a ticker if any of:
    - `last_price < 10`
-   - `avg_dollar_volume_20d < 20_000_000`
-   - "Date first added" to S&P 500 is < 180 days ago AND the ticker is a genuinely recent IPO (date added is an imperfect proxy — if unsure, web_search the actual listing date)
-   - US primary listing is unclear (Wikipedia's list is US-primary by construction; this is a safety net for edge cases)
+   - `avg_dollar_volume_20d < 20_000_000` (this filter does the heavy lifting at S&P 1500 scale — most S&P 600 small-caps will be rejected by ADV)
+   - "Date first added" to its index is < 180 days ago AND the ticker is a genuinely recent IPO
+   - US primary listing is unclear (the S&P indexes are US-primary by construction; this is a safety net)
    - Missing bar data (fewer than 20 trading days returned) — treat as reject and record the reason
    Record rejection reasons so the Discord message can show the top 3–5 reasons.
 
-5. **Earnings lookup for passing tickers.** OPTIONAL at this layer. `pre_market` re-verifies earnings for every candidate before including it in `plan.md`, so a missing or stale `earnings_date_next` here is not blocking. If you do attempt the lookup, prefer the company's Investor Relations page, Nasdaq, or Zacks earnings calendars. Record as ISO date (`YYYY-MM-DD`); if the lookup fails or is ambiguous, record `unknown` and move on. Do not abort the run for any earnings lookup failure.
+5. **Earnings lookup for passing tickers.** OPTIONAL at this layer. `pre_market` re-verifies earnings for every candidate. Record `unknown` and move on if lookup fails.
 
-6. **Halt / SEC check.** Optional at this layer. Regular-hours halts are intraday and unreliable to check on a Sunday evening; the trading routines web_search for halts on their candidate shortlist (small N) instead of here (500 tickers). If you do find a publicly known active SEC investigation against a ticker during the S&P 500 pull, exclude it and note the reason.
+6. **Halt / SEC check.** Optional at this layer. Trading routines web_search halts on their candidate shortlist instead.
 
-7. **Write `memory/universe.md`** atomically (write to a temp path, then rename) with frontmatter:
+7. **Write `memory/universe.md`** atomically with frontmatter:
 ```yaml
    ---
    screened_on: <YYYY-MM-DD of today>
    expires_on: <YYYY-MM-DD, today + 7 days>
    total_passed: <N>
    total_rejected: <M>
-   source: <primary source URL used>
+   universe_scope: S&P 1500 (S&P 500 + S&P 400 + S&P 600)
+   source_500: <primary source URL used>
+   source_400: <primary source URL used>
+   source_600: <primary source URL used>
    ---
 ```
-   Then the documentation block (copy from the template) and the table of passing tickers, one row per ticker, sorted by ticker symbol.
+
+   Include a `cap_tier` column in the table (`large` / `mid` / `small`) so trading routines can apply tier-aware logic if needed in the future. Sort by ticker symbol.
 
    **Important:** Use `datetime.date.today()` for `screened_on` — never hardcode the date.
 
@@ -60,20 +81,19 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
 - Place, modify, or cancel orders.
 - Write to any file other than `memory/universe.md` and `memory/research_log.md`.
-- Leave a partially written `memory/universe.md` on disk if the run fails — keep the last good cache in place and POST the failure to Discord.
-- Re-screen or refresh the universe from any other routine. That is this routine's exclusive job.
+- Leave a partially written `memory/universe.md` on disk if the run fails.
+- Re-screen or refresh the universe from any other routine.
 - Hardcode the current date anywhere in the script. Always derive from `datetime.date.today()`.
+- Produce a partial universe (e.g., S&P 500 only) if S&P 400 or S&P 600 fetches fail. Either fully succeed or abort and keep the existing cache.
 
 ## End-of-run protocol (per `CLAUDE.md`)
 
-1. `git pull --rebase origin main`
-2. `git add -A`
-3. `git commit -m "universe_refresh: <YYYY-MM-DD> — <N> tickers passed filters"`
-4. `git push origin main` (retry once on rebase conflict, then abort)
-5. POST to Discord per the **Discord webhook conventions** in `CLAUDE.md` (must include `User-Agent` header — bare `urllib` requests are blocked by Cloudflare with `403 / error 1010`). Body:
+Per the standard `CLAUDE.md` end-of-run protocol — `git pull --rebase`, commit directly to main, push, and POST to Discord with User-Agent header.
+
+Discord body:
 
 ```json
-{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: price<10: X | ADV<20M: Y | IPO<180d: Z | no_bars: W\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nScope: S&P 1500\nPassed: <N> | Rejected: <M> | Errors: <E>\nBy tier: large=<X>, mid=<Y>, small=<Z>\nTop rejection reasons: price<10: A | ADV<20M: B | IPO<180d: C | no_bars: D\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
-A 204 response means success. If the POST fails, log the failure but do NOT abort.
+A 204 response means success.
