@@ -25,7 +25,7 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 
 ## Universe
 
-- **S&P 500 constituents only.** `pre_market` pulls the current list via web_search from a reliable source (SlickCharts or Wikipedia) and caches it for the day in `research_log.md`.
+- **S&P 1500 constituents (S&P 500 + S&P 400 + S&P 600) only.** `pre_market` pulls the current list via web_search from a reliable source (SlickCharts or Wikipedia) and caches it for the day in `research_log.md`.
 - Minimum price: **$10/share**
 - Minimum 20-day average dollar volume: **$20M/day**
 - US primary listing only
