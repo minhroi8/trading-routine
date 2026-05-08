@@ -51,6 +51,21 @@ Research completed; all passed earnings-date and halt gates. Re-verify Monday pr
 
 **PLTR watchlist:** Q1 2026 blowout confirmed (EPS $0.33 vs $0.28 est, revenue +85% YoY) but stock −7.1% on "sell the news." Wait for close above ~$140 for 2+ consecutive sessions before re-shortlisting. Next earnings ~Aug 10 2026.
 
+### Midday check (2026-05-08 ~12:07 ET)
+
+Reconciliation: PASS (GOOGL 12 ✓, AAPL 17 ✓, AMD 11 ✓). DRY_RUN: false.
+
+| ticker | intraday P&L% | vs avg_cost% | cut? | trail? | thesis? | stale? |
+|--------|--------------|--------------|------|--------|---------|--------|
+| GOOGL | +0.19% | +0.77% | no (<−5%) | no (<+10%) | intact | no (2d held) |
+| AAPL | +1.78% | +3.34% | no (<−5%) | no (<+10%) | intact | no (2d held) |
+| AMD | +7.66% | +4.31% | no (<−5%) | no (<+10%) | intact | no (2d held) |
+
+No midday actions taken. Thesis notes:
+- **GOOGL**: UK ad-tech lawsuit ongoing (pre-existing, not new); analysts maintain bullish PTs; Q1 results thesis intact.
+- **AAPL**: Wedbush raised PT $350→$400 (new street-high). New CEO John Ternus (since ~Apr 20) is a positive for AI/hardware execution; stock +5%+ since appointment. No guidance cut.
+- **AMD**: Morgan Stanley raised PT; Rackspace AI infrastructure deal announced (positive). Data center demand intact. AMD +7.66% intraday on continued post-Q1 momentum.
+
 ### Sanity check (per strategy.md)
 
 | rule | status |
