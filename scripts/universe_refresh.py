@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Universe refresh routine — rebuilds memory/universe.md from scratch."""
+"""Universe refresh routine — rebuilds memory/universe.md for S&P 1500."""
 
 import csv
+import io
 import os
 import json
 import time
@@ -19,7 +20,7 @@ ALPACA_HEADERS = {
 }
 
 # ── constants ──────────────────────────────────────────────────────────────────
-TODAY            = datetime.date(2026, 5, 3)
+TODAY            = datetime.date.today()
 SCREENED_ON      = TODAY.isoformat()
 EXPIRES_ON       = (TODAY + datetime.timedelta(days=7)).isoformat()
 START_DATE       = (TODAY - datetime.timedelta(days=40)).isoformat()
@@ -30,14 +31,22 @@ MIN_ADV_20D      = 20_000_000
 MIN_LISTING_DAYS = 180
 BATCH_SIZE       = 100
 
-REPO_ROOT     = '/home/user/trading-routine'
-SP500_CSV     = f'{REPO_ROOT}/scripts/sp500_source.csv'
-UNIVERSE_PATH = f'{REPO_ROOT}/memory/universe.md'
-UNIVERSE_TMP  = f'{REPO_ROOT}/memory/universe.md.tmp'
-SOURCE_URL    = 'https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv'
+REPO_ROOT      = '/home/user/trading-routine'
+SP500_CSV      = f'{REPO_ROOT}/scripts/sp500_source.csv'
+UNIVERSE_PATH  = f'{REPO_ROOT}/memory/universe.md'
+UNIVERSE_TMP   = f'{REPO_ROOT}/memory/universe.md.tmp'
+
+SOURCE_500 = 'https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv'
+SOURCE_400 = 'https://www.ishares.com/us/products/239763/ishares-core-sp-midcap-etf/1467271812596.ajax?fileType=csv&fileName=IJH_holdings&dataType=fund'
+SOURCE_600 = 'https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf/1467271812596.ajax?fileType=csv&fileName=IJR_holdings&dataType=fund'
+
+BROWSER_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Referer': 'https://www.ishares.com/',
+}
 
 
-# ── load S&P 500 list from local CSV ──────────────────────────────────────────
+# ── S&P 500 loader (local CSV) ─────────────────────────────────────────────────
 def load_sp500():
     tickers = []
     with open(SP500_CSV, newline='') as f:
@@ -52,13 +61,75 @@ def load_sp500():
                 except ValueError:
                     pass
             tickers.append({
-                'ticker':     sym,
-                'sector':     row.get('sector', '').strip(),
-                'date_added': date_added,
+                'ticker':        sym,
+                'sector':        row.get('sector', '').strip(),
+                'cap_tier':      'large',
+                'date_added':    date_added,
                 'date_added_str': raw_date,
             })
-    print(f"[csv] loaded {len(tickers)} S&P 500 tickers from local CSV")
+    print(f'[sp500] loaded {len(tickers)} tickers from local CSV')
     return tickers
+
+
+# ── iShares holdings CSV loader (S&P 400 and S&P 600) ─────────────────────────
+def load_ishares(url, cap_tier, name):
+    try:
+        r = requests.get(url, headers=BROWSER_HEADERS, timeout=30)
+        r.raise_for_status()
+    except Exception as e:
+        raise RuntimeError(f'Failed to fetch {name} from iShares: {e}')
+
+    lines = r.text.split('\n')
+    try:
+        header_idx = next(
+            i for i, l in enumerate(lines)
+            if 'Ticker' in l and 'Name' in l
+        )
+    except StopIteration:
+        raise RuntimeError(f'Could not find header row in {name} iShares CSV')
+
+    reader = csv.DictReader(io.StringIO('\n'.join(lines[header_idx:])))
+    tickers = []
+    for row in reader:
+        ticker = (row.get('Ticker') or '').strip()
+        asset_class = (row.get('Asset Class') or '').strip()
+        sector = (row.get('Sector') or '').strip()
+        if ticker and ticker != '-' and 'Equity' in asset_class:
+            tickers.append({
+                'ticker':        ticker,
+                'sector':        sector,
+                'cap_tier':      cap_tier,
+                'date_added':    None,
+                'date_added_str': '',
+            })
+    print(f'[{cap_tier}] loaded {len(tickers)} tickers from {name}')
+    return tickers
+
+
+# ── combine all three indexes ──────────────────────────────────────────────────
+def load_all_indexes():
+    sp500 = load_sp500()
+    sp400 = load_ishares(SOURCE_400, 'mid', 'S&P 400 (IJH)')
+    sp600 = load_ishares(SOURCE_600, 'small', 'S&P 600 (IJR)')
+
+    # Deduplicate: large-cap wins over mid/small if ticker appears in multiple
+    seen = {}
+    for t in sp500 + sp400 + sp600:
+        sym = t['ticker']
+        if sym not in seen:
+            seen[sym] = t
+        else:
+            # Keep large > mid > small priority
+            tier_rank = {'large': 0, 'mid': 1, 'small': 2}
+            if tier_rank[t['cap_tier']] < tier_rank[seen[sym]['cap_tier']]:
+                seen[sym] = t
+
+    combined = list(seen.values())
+    print(f'[combined] {len(combined)} unique tickers '
+          f'(large={sum(1 for t in combined if t["cap_tier"]=="large")}, '
+          f'mid={sum(1 for t in combined if t["cap_tier"]=="mid")}, '
+          f'small={sum(1 for t in combined if t["cap_tier"]=="small")})')
+    return combined
 
 
 # ── Alpaca bars ────────────────────────────────────────────────────────────────
@@ -79,7 +150,7 @@ def fetch_bars_batch(symbols, start, end, retries=3):
                                 params=params, timeout=60)
             if resp.status_code == 429:
                 wait = 30 * (attempt + 1)
-                print(f"  [rate-limit] waiting {wait}s")
+                print(f'  [rate-limit] waiting {wait}s')
                 time.sleep(wait)
                 continue
             if resp.status_code == 400 and len(symbols) > 1:
@@ -97,26 +168,25 @@ def fetch_bars_batch(symbols, start, end, retries=3):
         except Exception as e:
             if attempt == retries - 1:
                 raise
-            print(f"  [retry {attempt+1}] {e}")
+            print(f'  [retry {attempt+1}] {e}')
             time.sleep(5)
     return {}
 
 
 def fetch_all_bars(symbols, start, end):
     all_bars = {}
-    total = len(symbols)
-    total_batches = (total + BATCH_SIZE - 1) // BATCH_SIZE
-    for i in range(0, total, BATCH_SIZE):
+    total_batches = (len(symbols) + BATCH_SIZE - 1) // BATCH_SIZE
+    for i in range(0, len(symbols), BATCH_SIZE):
         batch = symbols[i:i + BATCH_SIZE]
         bn = i // BATCH_SIZE + 1
-        print(f"[alpaca] batch {bn}/{total_batches}: {len(batch)} symbols")
+        print(f'[alpaca] batch {bn}/{total_batches}: {len(batch)} symbols')
         try:
             bars = fetch_bars_batch(batch, start, end)
             all_bars.update(bars)
         except Exception as e:
-            print(f"  [ERROR] batch {bn} failed: {e} — symbols will be no_bars")
+            print(f'  [ERROR] batch {bn} failed: {e} — symbols will be no_bars')
         time.sleep(0.4)
-    print(f"[alpaca] received bars for {len(all_bars)} symbols")
+    print(f'[alpaca] received bars for {len(all_bars)} symbols')
     return all_bars
 
 
@@ -132,8 +202,8 @@ def compute_metrics(all_bars):
         if len(last_20) < 20:
             metrics[ticker] = {'error': f'only {len(last_20)} trading days'}
             continue
-        last_close   = last_20[-1]['c']
-        avg_dv       = sum(b['c'] * b['v'] for b in last_20) / 20
+        last_close = last_20[-1]['c']
+        avg_dv     = sum(b['c'] * b['v'] for b in last_20) / 20
         metrics[ticker] = {
             'last_price':            last_close,
             'avg_dollar_volume_20d': avg_dv,
@@ -142,15 +212,15 @@ def compute_metrics(all_bars):
 
 
 # ── filter logic ───────────────────────────────────────────────────────────────
-def apply_filters(sp500, metrics, today):
+def apply_filters(all_tickers, metrics):
     passing  = []
     rejected = []
-    for t in sp500:
+    for t in all_tickers:
         ticker  = t['ticker']
         reasons = []
 
         if t['date_added'] is not None:
-            age = (today - t['date_added']).days
+            age = (TODAY - t['date_added']).days
             if age < MIN_LISTING_DAYS:
                 reasons.append(f'IPO<180d (added {t["date_added_str"]}, {age}d ago)')
 
@@ -180,32 +250,34 @@ def tally_reasons(rejected):
     counts = {}
     for r in rejected:
         for reason in r['reject_reasons']:
-            key = ('price<10' if 'price<10' in reason
-                   else 'ADV<20M' if 'ADV<20M' in reason
-                   else 'IPO<180d' if 'IPO<180d' in reason
-                   else 'no_bars' if 'no_bars' in reason
-                   else reason)
+            key = ('price<10'  if 'price<10'  in reason else
+                   'ADV<20M'   if 'ADV<20M'   in reason else
+                   'IPO<180d'  if 'IPO<180d'  in reason else
+                   'no_bars'   if 'no_bars'   in reason else reason)
             counts[key] = counts.get(key, 0) + 1
     return counts
 
 
 # ── universe.md writer ─────────────────────────────────────────────────────────
-HEADER = """\
+HEADER_TMPL = """\
 ---
 screened_on: {screened_on}
 expires_on: {expires_on}
 total_passed: {total_passed}
 total_rejected: {total_rejected}
-source: {source}
+universe_scope: S&P 1500 (S&P 500 + S&P 400 + S&P 600)
+source_500: {source_500}
+source_400: {source_400}
+source_600: {source_600}
 ---
 
 # Universe
 
 Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 
-- S&P 500 constituent
+- S&P 1500 constituent (S&P 500 large-cap + S&P 400 mid-cap + S&P 600 small-cap)
 - Price ≥ $10/share
-- 20-day average dollar volume ≥ $20M
+- 20-day average dollar volume ≥ $20M (IEX feed)
 - US primary listing
 - Not a recent IPO (< 180 days since listing)
 
@@ -215,23 +287,28 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 
 - `ticker` — symbol
 - `last_price` — most recent daily close used in screening (USD)
-- `avg_dollar_volume_20d` — mean of `close × volume` across the last 20 trading days (USD)
-- `sector` — GICS sector from the S&P 500 list source
-- `earnings_date_next` — next scheduled earnings report (ISO date; `unknown` if lookup failed). `pre_market` re-verifies this for every candidate before including it in `plan.md`.
+- `avg_dollar_volume_20d` — mean of `close × volume` across the last 20 trading days (USD, IEX feed)
+- `sector` — GICS sector
+- `cap_tier` — index tier: `large` (S&P 500), `mid` (S&P 400), `small` (S&P 600)
+- `earnings_date_next` — next scheduled earnings report (`unknown`; `pre_market` re-verifies)
 - `screened_on` — date the row was produced
 
-| ticker | last_price | avg_dollar_volume_20d | sector | earnings_date_next | screened_on |
-|--------|------------|-----------------------|--------|---------------------|-------------|
+| ticker | last_price | avg_dollar_volume_20d | sector | cap_tier | earnings_date_next | screened_on |
+|--------|------------|-----------------------|--------|----------|--------------------|-------------|
 """
 
 
-def write_universe(passing, rejected, source_url):
-    header = HEADER.format(
+def write_universe(passing, rejected):
+    by_tier = {tier: sum(1 for p in passing if p['cap_tier'] == tier)
+               for tier in ('large', 'mid', 'small')}
+    header = HEADER_TMPL.format(
         screened_on=SCREENED_ON,
         expires_on=EXPIRES_ON,
         total_passed=len(passing),
         total_rejected=len(rejected),
-        source=source_url,
+        source_500=SOURCE_500,
+        source_400=SOURCE_400,
+        source_600=SOURCE_600,
     )
     rows = []
     for p in passing:
@@ -239,65 +316,72 @@ def write_universe(passing, rejected, source_url):
         rows.append(
             f"| {p['ticker']} | ${m['last_price']:.2f} | "
             f"${m['avg_dollar_volume_20d']:,.0f} | {p['sector']} | "
-            f"{p['earnings_date_next']} | {SCREENED_ON} |"
+            f"{p['cap_tier']} | {p['earnings_date_next']} | {SCREENED_ON} |"
         )
     content = header + '\n'.join(rows) + '\n'
 
     with open(UNIVERSE_TMP, 'w') as f:
         f.write(content)
     os.rename(UNIVERSE_TMP, UNIVERSE_PATH)
-    print(f"[write] universe.md written — {len(passing)} tickers, {len(rejected)} rejected")
+    print(f'[write] universe.md written — {len(passing)} passed, {len(rejected)} rejected')
+    print(f'[write] by tier: large={by_tier["large"]}, mid={by_tier["mid"]}, small={by_tier["small"]}')
+    return by_tier
 
 
 # ── research_log append ────────────────────────────────────────────────────────
-def append_research_log(source_url, n_passed, n_rejected):
+def append_research_log(n_passed, n_rejected):
     log_path = f'{REPO_ROOT}/memory/research_log.md'
     with open(log_path) as f:
         content = f.read()
-    note = (f'universe_refresh: {n_passed} passed, {n_rejected} rejected; '
-            f'source: {source_url}')
-    new_row = f'| {SCREENED_ON} | {source_url} | ALL | {note} |'
+    note = (f'universe_refresh S&P 1500: {n_passed} passed, {n_rejected} rejected; '
+            f'sources: IJH (S&P 400) + IJR (S&P 600) + local CSV (S&P 500)')
+    new_row = f'| {SCREENED_ON} | {SOURCE_500} | ALL | {note} |'
     if '|------|' in content:
         content = content.replace(
             '|------|--------|--------|------|',
-            '|------|--------|--------|------|\n' + new_row,
+            '|------|--------|--------|------|\'\n' + new_row,
         )
     else:
         content = content.rstrip('\n') + '\n' + new_row + '\n'
     with open(log_path, 'w') as f:
         f.write(content)
-    print("[log] research_log.md updated")
+    print('[log] research_log.md updated')
 
 
 # ── main ───────────────────────────────────────────────────────────────────────
 def main():
-    print(f"=== universe_refresh  {SCREENED_ON} ===")
+    print(f'=== universe_refresh  {SCREENED_ON} ===')
 
-    sp500 = load_sp500()
-    symbols = [t['ticker'] for t in sp500]
+    # Load all three indexes — abort if any fails
+    try:
+        all_tickers = load_all_indexes()
+    except RuntimeError as e:
+        print(f'[ABORT] Index load failed: {e}')
+        raise
 
+    symbols  = [t['ticker'] for t in all_tickers]
     all_bars = fetch_all_bars(symbols, START_DATE, END_DATE)
     metrics  = compute_metrics(all_bars)
 
-    passing, rejected = apply_filters(sp500, metrics, TODAY)
+    passing, rejected = apply_filters(all_tickers, metrics)
     passing.sort(key=lambda x: x['ticker'])
     reason_counts = tally_reasons(rejected)
     errors = sum(1 for r in rejected
                  if any('no_bars' in rr for rr in r['reject_reasons']))
 
-    print(f"[filter] passed={len(passing)}  rejected={len(rejected)}  no_bars={errors}")
-    print(f"[filter] breakdown: {json.dumps(reason_counts)}")
+    print(f'[filter] passed={len(passing)}  rejected={len(rejected)}  no_bars={errors}')
+    print(f'[filter] breakdown: {json.dumps(reason_counts)}')
 
-    write_universe(passing, rejected, SOURCE_URL)
-    append_research_log(SOURCE_URL, len(passing), len(rejected))
+    by_tier = write_universe(passing, rejected)
+    append_research_log(len(passing), len(rejected))
 
     return {
         'passed':        len(passing),
         'rejected':      len(rejected),
         'errors':        errors,
         'reason_counts': reason_counts,
+        'by_tier':       by_tier,
         'expires_on':    EXPIRES_ON,
-        'source_url':    SOURCE_URL,
     }
 
 
