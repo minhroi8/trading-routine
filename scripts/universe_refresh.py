@@ -37,12 +37,11 @@ UNIVERSE_PATH  = f'{REPO_ROOT}/memory/universe.md'
 UNIVERSE_TMP   = f'{REPO_ROOT}/memory/universe.md.tmp'
 
 SOURCE_500 = 'https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv'
-SOURCE_400 = 'https://www.ishares.com/us/products/239763/ishares-core-sp-midcap-etf/1467271812596.ajax?fileType=csv&fileName=IJH_holdings&dataType=fund'
-SOURCE_600 = 'https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf/1467271812596.ajax?fileType=csv&fileName=IJR_holdings&dataType=fund'
+SOURCE_400 = 'https://en.wikipedia.org/wiki/List_of_S%26P_400_companies'
+SOURCE_600 = 'https://en.wikipedia.org/wiki/List_of_S%26P_600_companies'
 
 BROWSER_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    'Referer': 'https://www.ishares.com/',
 }
 
 
@@ -71,46 +70,69 @@ def load_sp500():
     return tickers
 
 
-# ── iShares holdings CSV loader (S&P 400 and S&P 600) ─────────────────────────
-def load_ishares(url, cap_tier, name):
+# ── Wikipedia index loader (S&P 400 and S&P 600) ──────────────────────────────
+import re as _re
+
+def load_wikipedia_index(url, cap_tier, name):
     try:
         r = requests.get(url, headers=BROWSER_HEADERS, timeout=30)
         r.raise_for_status()
     except Exception as e:
-        raise RuntimeError(f'Failed to fetch {name} from iShares: {e}')
+        raise RuntimeError(f'Failed to fetch {name} from Wikipedia: {e}')
 
-    lines = r.text.split('\n')
-    try:
-        header_idx = next(
-            i for i, l in enumerate(lines)
-            if 'Ticker' in l and 'Name' in l
-        )
-    except StopIteration:
-        raise RuntimeError(f'Could not find header row in {name} iShares CSV')
+    tables = _re.findall(
+        r'<table[^>]*wikitable[^>]*>(.*?)</table>',
+        r.text, _re.DOTALL | _re.IGNORECASE,
+    )
+    if not tables:
+        raise RuntimeError(f'No wikitable found in {name} page')
 
-    reader = csv.DictReader(io.StringIO('\n'.join(lines[header_idx:])))
+    # First table is the holdings list (Symbol, Security, GICS Sector, ...)
+    t = tables[0]
+    rows = _re.findall(r'<tr>(.*?)</tr>', t, _re.DOTALL)
+
     tickers = []
-    for row in reader:
-        ticker = (row.get('Ticker') or '').strip()
-        asset_class = (row.get('Asset Class') or '').strip()
-        sector = (row.get('Sector') or '').strip()
-        if ticker and ticker != '-' and 'Equity' in asset_class:
-            tickers.append({
-                'ticker':        ticker,
-                'sector':        sector,
-                'cap_tier':      cap_tier,
-                'date_added':    None,
-                'date_added_str': '',
-            })
-    print(f'[{cap_tier}] loaded {len(tickers)} tickers from {name}')
+    for row in rows[1:]:  # skip header row
+        cells = _re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', row, _re.DOTALL)
+        cleaned = [_re.sub(r'<[^>]+>', '', c).strip() for c in cells]
+        if len(cleaned) < 3:
+            continue
+        symbol = cleaned[0].strip()
+        sector = cleaned[2].strip()
+        if not symbol or not symbol.isidentifier() and not all(c.isalnum() or c == '.' for c in symbol):
+            continue
+        if len(symbol) > 6 or not symbol:
+            continue
+        tickers.append({
+            'ticker':         symbol,
+            'sector':         sector,
+            'cap_tier':       cap_tier,
+            'date_added':     None,
+            'date_added_str': '',
+        })
+
+    if len(tickers) < 100:
+        raise RuntimeError(
+            f'Too few tickers ({len(tickers)}) parsed from {name} — '
+            f'page structure may have changed'
+        )
+    print(f'[{cap_tier}] loaded {len(tickers)} tickers from {name} (Wikipedia)')
     return tickers
 
 
 # ── combine all three indexes ──────────────────────────────────────────────────
 def load_all_indexes():
     sp500 = load_sp500()
-    sp400 = load_ishares(SOURCE_400, 'mid', 'S&P 400 (IJH)')
-    sp600 = load_ishares(SOURCE_600, 'small', 'S&P 600 (IJR)')
+
+    try:
+        sp400 = load_wikipedia_index(SOURCE_400, 'mid', 'S&P 400')
+    except RuntimeError as e:
+        raise RuntimeError(f'S&P 400 load failed (all sources exhausted): {e}')
+
+    try:
+        sp600 = load_wikipedia_index(SOURCE_600, 'small', 'S&P 600')
+    except RuntimeError as e:
+        raise RuntimeError(f'S&P 600 load failed (all sources exhausted): {e}')
 
     # Deduplicate: large-cap wins over mid/small if ticker appears in multiple
     seen = {}
@@ -331,20 +353,11 @@ def write_universe(passing, rejected):
 # ── research_log append ────────────────────────────────────────────────────────
 def append_research_log(n_passed, n_rejected):
     log_path = f'{REPO_ROOT}/memory/research_log.md'
-    with open(log_path) as f:
-        content = f.read()
     note = (f'universe_refresh S&P 1500: {n_passed} passed, {n_rejected} rejected; '
-            f'sources: IJH (S&P 400) + IJR (S&P 600) + local CSV (S&P 500)')
+            f'sources: Wikipedia (S&P 400) + Wikipedia (S&P 600) + GitHub CSV (S&P 500)')
     new_row = f'| {SCREENED_ON} | {SOURCE_500} | ALL | {note} |'
-    if '|------|' in content:
-        content = content.replace(
-            '|------|--------|--------|------|',
-            '|------|--------|--------|------|\'\n' + new_row,
-        )
-    else:
-        content = content.rstrip('\n') + '\n' + new_row + '\n'
-    with open(log_path, 'w') as f:
-        f.write(content)
+    with open(log_path, 'a') as f:
+        f.write(new_row + '\n')
     print('[log] research_log.md updated')
 
 
