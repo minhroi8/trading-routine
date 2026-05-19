@@ -4,13 +4,13 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Date
 
-2026-05-18
+2026-05-19
 
 ## Planned buys
 
 | ticker | target_qty | limit_price | stop_price | thesis_ref |
 |--------|------------|-------------|------------|------------|
-| GLW | 26 | $191.50 | $176.18 | Q1 2026 blowout (April 28): core sales $4.35B +18% YoY, core EPS $0.70 +30% vs $0.69 est; Optical Communications +36% YoY driven by AI hyperscaler demand; Meta $6B multi-year deal + 2 additional hyperscale mega-deals of similar size; Nvidia partnership (May 6) with $3.2B investment, 10x US optical capacity expansion, 3 new factories (NC/TX); Q2 guidance raised to ~$4.6B +14% YoY, EPS $0.73–0.77 +25% YoY. Stock pulled back ~14% from post-Nvidia-deal high on profit-taking and broad market weakness — buy-the-dip entry on an intact AI infrastructure thesis. J.P. Morgan Technology Conference presentation May 19. Next earnings July 28, 2026 (>70 days). No halt, tradable=True, status=active. |
+| GEV | 4 | $1,015.00 | $933.80 | Q1 2026 blowout (April 30): EPS $2.01 vs $1.67 est (+20% beat), revenue $9.34B +16% YoY; orders $18.3B (+71% YoY, nearly fully booked through 2027); Electrification segment booked $2.4B in Q1 data center orders alone (exceeding entire 2025 data center total); FY2026 revenue guidance raised to $44.5–$45.5B; EBITDA margin guide raised to 12–14% (+1pp). Structural AI data center power demand — uniquely positioned as US grid electrification accelerates. Stock pulled back from $1,048.81 (May 15 close, universe reference) to $1,012.36 (May 18 close, −3.5%) on macro weakness. Industrials sector provides portfolio diversification from tech-heavy holdings. Next earnings July 29, 2026 (>70 days, confirmed). tradable=True, status=active (Alpaca confirmed), no halt or SEC investigation. |
 
 ## Planned sells
 
@@ -20,51 +20,51 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Notes
 
-### Sizing and constraint checks (equity $100,183.51 as of 08:01 ET pre-market)
+### Sizing and constraint checks (equity $99,775.52, cash $75,748.26 as of pre-market 08:04 ET)
 
 | check | value | limit | status |
 |-------|-------|-------|--------|
-| GLW position size | 26 × $191.50 = $4,979 (4.97% equity) | ≤5% | ✓ |
-| Cash floor after GLW | ($76,014.70 − $4,979) / $100,183 = 71.0% | ≥10% | ✓ |
-| Concurrent positions after GLW | 5 existing + 1 new = 6 | ≤8 | ✓ |
-| New positions this week (May 18–22) | 1 / 3 | ≤3 | ✓ |
-| IT sector after GLW | AAPL $4,813 + AMD $4,638 + CSCO $4,932 + GLW ~$4,979 = $19,362 / $100,183 = 19.3% | ≤30% | ✓ |
-| Comm Services | GOOGL $4,749 = 4.7% | ≤30% | ✓ |
-| Consumer Discretionary | AMZN $4,855 = 4.8% | ≤30% | ✓ |
+| GEV position size | 4 × $1,015.00 = $4,060 (4.07% equity) | ≤5% | ✓ |
+| Cash floor after GEV | ($75,748.26 − $4,060) / $99,775.52 = 71.8% | ≥10% | ✓ |
+| Concurrent positions after GEV | 5 existing + 1 new = 6 | ≤8 | ✓ |
+| New positions this week (May 18–22) | GLW (opened+cut May 18 = 1) + GEV = 2/3 | ≤3 | ✓ |
+| Industrials sector after GEV | GEV $4,060 / $99,775.52 = 4.1% | ≤30% | ✓ |
+| IT sector | AAPL $5,031 + AMD $4,546 + CSCO $4,928 = $14,505 / $99,775 = 14.5% | ≤30% | ✓ |
+| Comm Services | GOOGL $4,786 = 4.8% | ≤30% | ✓ |
+| Consumer Discretionary | AMZN $4,737 = 4.7% | ≤30% | ✓ |
+
+### Prior-day exit criteria review (no exits planned)
+
+| ticker | unrealized (pre-market) | stop | 60d rotation | status |
+|--------|-------------------------|------|--------------|--------|
+| GOOGL | +0.78% ($398.80 vs $395.72) | $364.07 (−8.7% cushion) | no (13d old) | Hold ✓ |
+| AAPL | +4.54% ($295.94 vs $283.10) | $260.45 (−11.9% cushion) | no (13d old) | Hold ✓ |
+| AMD | −1.97% ($413.30 vs $421.59) | $387.86 (−6.1% cushion) | no (13d old) | Hold ✓ |
+| AMZN | −2.44% ($263.14 vs $269.71) | $248.14 (−5.7% cushion) | no (5d old) | Hold ✓ |
+| CSCO | −0.07% ($117.33 vs $117.42) | $108.10 (−7.9% cushion) | no (5d old) | Hold ✓ |
+
+No hard stops triggered, no midday cuts pending (pre-market), no trailing stop triggers (AAPL +4.54%, trigger at +10% = $311.41 not reached), no 60-day rotation candidates. All theses intact.
 
 ### Candidates dropped
 
 | ticker | reason |
 |--------|--------|
-| APP | Active SEC investigation into data collection practices (confirmed active Feb 2026, ongoing as of May 2026) — hard NO per strategy.md |
-| NVDA | Q3 earnings May 20, 2026 — within 3-day window |
-| ADI | Q2 earnings May 20, 2026 — within 3-day window |
-| TJX, LOW, INTU | Earnings May 20, 2026 — within 3-day window |
-| DE | Q2 earnings May 21, 2026 — within 3-day window; also Q2 EPS expected −12.5% YoY (no positive fundamentals signal) |
-| WMT, TGT | Earnings May 21, 2026 — within 3-day window |
-| MSFT | Q3 FY2026 beat (April 29): EPS +5.2% vs est, Azure +40%, AI ARR $37B +123%. BUT market sold off on $190B capex (+61% YoY); stock down 12% YTD with no recovery. Rising yields (4.63%) are headwind for capex-heavy mega-tech. Watchlist — revisit week of May 25 if yields stabilize. |
-| META | Q1 2026 beat (April 29): EPS $7.31 vs $6.79 est, revenue $56.3B vs $55.5B est. BUT stock fell ~7% post-earnings on user growth miss and $125–145B capex increase. Same pattern as MSFT. Watchlist — revisit next week. |
+| STX | Negative catalyst May 18: CEO Dave Mosley rejected factory expansion plans at JPMorgan conference ("would take too long"); stock fell 7.5%–8.87% to ~$736. Capacity ceiling concern partially damages the AI HDD demand growth thesis. Dropped. |
+| SBUX | Current price ~$106.73 is above analyst consensus average PT ~$104.93; limited upside to consensus. Turnaround thesis intact (Q2 rev +9%, comp +6.2%, EPS $0.50 +22%) but no margin of safety at current entry. Watchlist — revisit on analyst PT upgrade cycle. |
+| MSFT | Capex overhang + 10-yr yield ~4.60% (Moody's Aa1 downgrade aftershock) headwind for capex-heavy mega-tech ($190B capex guidance). Stock down ~12% YTD despite Q3 beat. Revisit week of May 25 if yields stabilize. |
+| META | Same capex-selloff pattern as MSFT; still ~23% below April 2026 high of ~$796; not yet technically stabilized. 96% analyst Buy, avg PT $839 (37% upside). Revisit next week. |
+| PLTR | 97× forward PE makes it acutely yield-sensitive; rate cut expectations nearly priced out (40% probability +25bps hike). Moody's downgrade = further yield pressure. Fundamental thesis excellent but valuation headwind severe. Watchlist. |
+| NVDA | Q1 FY2027 earnings May 20, 2026 (tomorrow) — within 3-day window. No entry. |
 
 ### Macro and risk flags for market_open
 
-- **Bearish macro today**: S&P 500 futures −0.5%, Dow −0.7%, Nasdaq −0.4%; Brent crude >$110/bbl; 10-yr yield 4.63% (highest since Feb 2025); Iran drone attack on UAE nuclear plant — no peace deal imminent. Expect weak/volatile open.
-- **GLW limit strategy**: Limit set at $191.50 (below May 17 close of $191.92) to account for macro-driven downward drift. If GLW opens below $191 and the open is broadly volatile, market_open may hold the limit or tighten further — judgement call per conditions.
-- **NVDA earnings Wednesday May 20**: Big catalyst for AI infrastructure broadly (positive or negative read-through for GLW optical demand thesis). If NVDA data-center guidance disappoints, GLW may trade lower — stop at $176.18 (−8%) provides protection.
-- **AAPL trailing stop pre-alert**: AAPL at +5.54% ($298.77 vs avg_cost $283.10 at pre-market). Trigger: +10% = $311.41. Currently ~4.2% below trigger. Not imminent today, but market_open should be ready to immediately convert stop order to trailing stop if AAPL hits $311.41 intraday.
-- **AMZN monitoring**: −2.62% vs cost; stop $248.14 (~5.8% cushion). If AMZN falls below $260 on macro weakness, stop at $248.14 will be tested (~4.9% additional decline needed). Thesis (AWS +28% YoY, Q2 guide $194–199B) remains intact.
-
-### Prior-day exit criteria review (no exits planned)
-
-| ticker | unrealized | stop | 60d rotation | status |
-|--------|-----------|------|--------------|--------|
-| GOOGL | −0.23% ($394.80 vs $395.72) | $364.07 (−7.8% cushion) | no (12d old) | Hold ✓ |
-| AAPL | +5.54% ($298.77 vs $283.10) | $260.45 (−12.8% cushion) | no (12d old) | Hold ✓ |
-| AMD | +0.94% ($425.55 vs $421.59) | $387.86 (−8.9% cushion) | no (12d old) | Hold ✓ |
-| AMZN | −2.62% ($262.65 vs $269.71) | $248.14 (−5.5% cushion) | no (4d old) | Hold ✓ |
-| CSCO | +0.18% ($117.63 vs $117.42) | $108.10 (−8.1% cushion) | no (4d old) | Hold ✓ |
-
-No hard stops triggered, no midday cuts pending (pre-market), no trailing stop triggers, no 60-day rotation candidates. Thesis intact for all five positions.
+- **Risk-off environment**: S&P 500 futures −0.4%, Nasdaq 100 futures −0.6%; chip stocks continuing to sell off. Moody's downgraded US sovereign debt to Aa1 Friday May 15 after close — 10-yr yield ~4.60%, 30-yr briefly >5.01% Monday May 18. Rate cut expectations nearly priced out; ~40% implied probability of a +25bps hike in 2026. Oil modestly lower on Trump-Iran news (WTI −1.4% to $102.90, Brent −1.8% to $110.10).
+- **NVDA earnings TOMORROW (May 20, after close)**: Consensus $78B revenue / $1.77 EPS / $73B data center; whisper $80B+; options pricing 8–10% implied move. If NVDA disappoints, broad AI/tech sell-off could affect AMD, GOOGL, CSCO (directly) and GEV (indirectly via data center demand sentiment). market_open should assess sector tone before committing to GEV limit order.
+- **GEV limit note**: Limit $1,015 is set just above May 18 close ($1,012.36). GEV is NYSE-listed Industrials (power grid/electrification infrastructure) — less correlated to chip-sector NVDA event than pure semis. However, if broad market sells off sharply (S&P 500 −1.5%+), consider holding the order. Limit is already conservative; do not chase above $1,020.
+- **AAPL trailing stop pre-alert**: AAPL +4.54% ($295.94 vs avg_cost $283.10). Trigger: +10% = $311.41. Currently ~5.2% below trigger. Not imminent today, but market_open should be prepared to immediately convert stop order to trailing stop 7% below peak if AAPL hits $311.41 intraday.
+- **AMD sector sympathy**: AMD at −1.97% vs cost ($413.30 current); chip sector under pressure ahead of NVDA earnings May 20. Stop $387.86 active (~6.1% below current). If AMD sells off −5%+ intraday ahead of NVDA, midday will flag for cut threshold check.
+- **AMZN monitoring**: −2.44% vs cost ($263.14); stop $248.14 (5.6% below current). AWS thesis intact; no immediate stop risk at normal market movements.
 
 ### DRY_RUN
 
-DRY_RUN: false — market_open WILL call /v2/orders for the GLW limit order.
+DRY_RUN: false — market_open WILL call /v2/orders for the GEV limit order, subject to conditions judgment at open.
