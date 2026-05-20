@@ -26,7 +26,11 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 **Weekly new-position cap:** GLW opened May 18 (1st) + GEV opened May 19 (2nd) + MSFT today (3rd) = **3/3 at weekly cap**. market_open MUST NOT open any additional positions this week regardless of opportunity.
 
-**AAPL trailing-stop pre-alert:** AAPL avg_cost $283.10; current $298.33 (+5.38%). Trailing-stop trigger fires at +10% from avg_cost = $311.41. Pre-alert threshold (+8% = $305.75) not yet reached, but market_open should have a trailing GTC order ready to submit the moment AAPL crosses $311.41 intraday (convert hard stop $260.45 to trailing 7% below peak).
+**AAPL trailing-stop pre-alert:** AAPL avg_cost $283.10; midday $299.18 (+5.68%). Trailing-stop trigger fires at +10% from avg_cost = $311.41. Pre-alert threshold (+8% = $305.75) not yet reached, but market_open should have a trailing GTC order ready to submit the moment AAPL crosses $311.41 intraday (convert hard stop $260.45 to trailing 7% below peak).
+
+**AMD trailing-stop PRE-ALERT (URGENT):** AMD avg_cost $421.59; midday $448.43 (+6.37%). Trailing-stop trigger = avg_cost × 1.10 = **$463.75**. Current price is only **$15.32 below trigger**. OpenAI 6GW MI450 commitment + Meta $60B multi-year deal announced today — AMD could gap through $463.75 at tomorrow's open. market_open MUST: (1) monitor AMD immediately at open; (2) if AMD opens or trades at/above $463.75, cancel hard stop $387.86 and place trailing_stop sell, trail_percent=7, time_in_force=gtc. Do NOT wait for midday.
+
+**MSFT ex-dividend May 21:** MSFT goes ex-dividend tomorrow ($0.91/share, 11 shares = $10.01). Stock expected to open ~$0.91 lower at tomorrow's open (normal dividend adjustment). Stop $379.62 remains appropriate; no adjustment needed (hard stop is set vs. entry price, not adjusted for dividends in our strategy).
 
 **AMZN stop cushion:** Current $259.88, stop $248.14 (~4.5% cushion). Risk-off macro and high yields increase the probability this is tested. Monitor closely at midday; cut if intraday unrealized falls below −5%.
 
