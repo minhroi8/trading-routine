@@ -4,6 +4,7 @@ Append-only dated notes: catalysts, earnings, macro reads, universe snapshots. E
 
 | date | source | ticker | note |
 |------|--------|--------|------|
+| 2026-05-24 | https://en.wikipedia.org/wiki/List_of_S%26P_500_companies | ALL | universe_refresh S&P 1500: 306 passed, 1228 rejected; sources: Wikipedia/GitHub (S&P 500) + Wikipedia (S&P 400) + Wikipedia (S&P 600); tier: large=278, mid=26, small=2; top rejections: ADV<20M: 1147 | price<10: 57 | no_bars: 24 | insufficient_history: 0; expires 2026-05-31 |
 | 2026-05-17 | https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv | ALL | universe_refresh S&P 1500: 289 passed, 1217 rejected; sources: Wikipedia (S&P 400) + Wikipedia (S&P 600) + GitHub CSV (S&P 500) |
 | 2026-05-10 | https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv | ALL | universe_refresh S&P 1500: 273 passed, 1232 rejected; sources: IJH (S&P 400) + IJR (S&P 600) + local CSV (S&P 500) |
 | 2026-05-09 | https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv | ALL | universe_refresh S&P 1500: 273 passed, 1232 rejected; sources: IJH (S&P 400) + IJR (S&P 600) + local CSV (S&P 500) |
