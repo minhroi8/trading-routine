@@ -11,7 +11,7 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 ## Capital & sizing
 
 - Starting paper capital: **$100,000**
-- Max position size at entry: **25%** of current portfolio equity
+- Max position size at entry: **11%** of current portfolio equity
 - Max concurrent positions: **8**
 - Max new positions opened per week: **3**
 - Cash floor: never deploy more than **90%** of equity (keep 10% dry powder)
