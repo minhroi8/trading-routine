@@ -22,7 +22,8 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 - **Midday cut: if an open position is down > 5% intraday unrealized, exit at the midday check** rather than waiting for the hard stop.
 - **Trailing stop on winners:** once a position is up +10%, convert the stop to a trailing stop 7% below peak.
 - **Single-sector cap:** no more than 30% of portfolio in any one GICS sector.
-
+- **Macro deferral rule:** if S&P 500 futures are down >0.4% AND the 10-year Treasury yield is at a multi-month high in the same pre-market session, defer all new entries by 1 trading day. Both conditions must be present simultaneously to trigger the deferral.
+  
 ## Universe
 
 - **S&P 1500 constituents (S&P 500 + S&P 400 + S&P 600) only.** `pre_market` pulls the current list via web_search from a reliable source (SlickCharts or Wikipedia) and caches it for the day in `research_log.md`.
