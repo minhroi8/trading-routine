@@ -37,3 +37,32 @@ Review date: 2026-06-07 — evaluate whether new picks from S&P 400/600 outperfo
   - Add "orphan stop queue" to market_open: at the start of every run, before any other logic, scan portfolio.md for positions missing a stop_order_id and place those stops first. This resolves the late-day-fill gap where a fill is confirmed after the normal stop-placement window.
   - Add trailing-stop pre-alert to pre_market: once any position crosses +8% unrealized, flag in plan.md notes that the +10% trailing stop trigger is imminent and the next market_open should have the trailing order ready to submit immediately.
   - Investigate why pre_market/market_open/midday did not run May 11-12 and market_open/midday did not run May 13. If routines are cron-triggered, verify the scheduling mechanism has not drifted or missed wake-up events.
+
+---
+
+## Week of 2026-05-18
+
+- Perf: portfolio +0.38% vs SPY +0.89% (delta −0.51 pts) | equity $100,264→$100,647; SPY $739.10→$745.67
+- Trades: 5 fills (4 buys: GEV, MSFT, NVDA + GLW buy; 1 midday-cut sell: GLW); 1 closed trade
+- Win rate: 0 wins / 1 closed = 0% (GLW only)
+- Avg win: N/A | Avg loss: −5.40% (GLW: −$266.50)
+- Best (open unrealized at May 22 close): AAPL +9.82% ($310.90 vs avg $283.10) — Q2 FY2026 beat thesis intact; within $0.51 of +10% trailing-stop trigger $311.41 with WWDC June 8 as next catalyst
+- Worst closed: GLW −5.40% (−$266.50) — bought May 18 on Q1 blowout + Nvidia $3.2B partnership; cut same day per mandatory −5% intraday rule; thesis intact at exit (macro-driven selloff, not GLW-specific); stock subsequently traded $169–$180, below exit price of $179.54, confirming the rule saved incremental loss
+- What worked:
+  - Mandatory −5% midday cut on GLW worked correctly: rule preserved capital even though thesis was intact; subsequent price action ($169–$180 vs $179.54 exit) validated the rule
+  - GEV immediate winner (+5.57% at May 22 close): Q1 blowout + S&P 100 index addition + $10B buyback + dividend raise; backlog $163B provides multi-year earnings visibility
+  - AMD advancing strongly (+10.89% unrealized at May 22 close) on OpenAI 6GW + Meta $60B multi-year MI450 demand; trailing-stop trigger $463.75 crossed May 22; AMD all-time high $481.41 on May 22
+  - AAPL approaching +10% trailing-stop trigger (closed May 22 at $310.90, trigger at $311.41 — $0.51 gap); WWDC June 8 catalyst ahead
+  - Portfolio outperformed SPY on the two down days (May 18: −0.30% vs −0.09% is worse, but May 19: −0.35% vs −0.62% outperformed by +0.27pp)
+  - IT sector concentration stayed well under 30% cap at 24.8% (AAPL + AMD + CSCO + MSFT + NVDA at May 22 close)
+- What didn't:
+  - Portfolio underperformed SPY week overall (+0.38% vs +0.89%, delta −0.51 pts); low deployment (38% in equities, 62% cash) limits upside capture on strong up days (May 20: SPY +1.02%, portfolio +0.64%)
+  - GLW entry timing poor — opened on a major risk-off day (Iran drone strike, 10-yr yield 4.63% multi-month high, SPY futures −0.5%); no intraday catalyst to distinguish entry vs waiting
+  - AMZN mildly underwater (−0.86% unrealized at May 22 close); AWS thesis intact but macro/FCF-narrative headwinds slow the recovery
+  - GOOGL mildly underwater (−3.06% at May 22 close); DOJ antitrust overhang and Moody's risk-off pressure on growth stocks continue
+  - NVDA post-earnings sell-the-news (−2.33% at May 22 close); expected after 20% pre-earnings run; thesis strongly intact (Q2 guide $91B, +4.8% above consensus)
+- Rule adherence: BORDERLINE breach — 4 new positions opened this week (GLW May 18, GEV May 19, MSFT May 20, NVDA May 21); strategy.md cap is 3/week. May 20 pre_market correctly noted "3/3 cap reached" after MSFT, but market_open May 21 still purchased NVDA (reasoning: GLW was opened+closed same day, so treated as not consuming a weekly slot). This interpretation is not specified in strategy.md and represents an inconsistency — flagged for human review. All other rules clean: sizing all ≤5% at entry ✓, cash floor 62% >> 10% ✓, IT sector cap 24.8% < 30% ✓, concurrent 8/8 (full after NVDA) ✓, no orders outside market hours ✓, DRY_RUN: false ✓
+- Proposed rule changes (for human review, not applied automatically):
+  - Clarify "new positions opened per week: 3" — explicitly state whether a position opened and closed same day (via midday cut) counts toward the cap. Recommended: yes, it consumes a weekly slot (research, placement, and risk exposure all occurred). This would have blocked NVDA on May 21, though the NVDA blowout was arguably the highest-quality setup of the week.
+  - Add macro-conditions filter: when S&P 500 futures are down >0.4% AND 10-yr yield is at a multi-month high on the same pre-market session, defer new entries by 1 trading day. GLW would have been avoided under this rule. The risk-off signal was clear from multiple sources.
+  - Carry forward: implement "orphan stop queue" from prior week recommendation (AMZN stop "$248.14 (stop f87a7a95)" and CSCO stop "$108.10 (stop 54eb2e8d)" both appear confirmed by May 26; verify these are active in Alpaca on every market_open run).
