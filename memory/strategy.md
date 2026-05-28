@@ -53,7 +53,6 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 ## Exit criteria (any one triggers an exit)
 
 - Hard stop hit (-8%)
-- Midday threshold hit (-5% intraday)
 - Trailing stop triggered
 - Thesis invalidated (bad earnings, guidance cut, negative catalyst)
 - Held 60+ days with < 3% gain (opportunity cost — rotate capital)
