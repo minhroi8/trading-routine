@@ -19,10 +19,11 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 ## Risk controls
 
 - **Hard stop-loss: -8% from entry.** Placed as a stop order at Alpaca immediately after fill in `market_open`.
-- **Midday cut: if an open position is down > 5% intraday unrealized, exit at the midday check** rather than waiting for the hard stop.
+- **Midday cut: only exit early if the hard stop (-8%) is hit OR the thesis is genuinely broken** (guidance cut, earnings miss, fraud, material negative catalyst). Do NOT cut on temporary intraday weakness alone. Backtest data shows positions held to 42 days win 65.8% of the time — patience is the edge.
 - **Trailing stop on winners:** once a position is up +10%, convert the stop to a trailing stop 7% below peak.
 - **Single-sector cap:** no more than 30% of portfolio in any one GICS sector.
-- **Macro deferral rule:** if S&P 500 futures are down >0.4% AND the 10-year Treasury yield is at a multi-month high in the same pre-market session, defer all new entries by 1 trading day. Both conditions must be present simultaneously to trigger the deferral.
+- **Sector deprioritization:** Utilities and Real Estate picks require EPS surprise >20% to qualify — these sectors historically underperform on PEAD strategy. All other sectors use the standard 15% threshold.
+- **Macro deferral rule:** if S&P 500 futures are down >0.4% AND the 10-year Treasury yield is at a multi-month high in the same pre-market session, raise the EPS surprise threshold to >20% for that day only. Do NOT skip entries entirely — bear regime entries historically outperform bull regime entries. Only the highest-conviction setups enter on stressed macro days.
   
 ## Universe
 
@@ -45,6 +46,7 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 ## Entry criteria (thesis required for every buy)
 
 - Positive fundamentals signal in the last **30 days**: earnings beat, guidance raise, positive analyst revision, or clear catalyst
+- **EPS surprise must exceed 15% above consensus estimate** for earnings-driven entries. Analyst revision or partnership catalyst entries are exempt from this threshold.
 - **Not within 3 days** of an upcoming earnings report (avoid event risk)
 - 2–3 sentence thesis logged in `trade_log.md` **before** the order is placed
 
