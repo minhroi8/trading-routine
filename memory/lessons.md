@@ -66,3 +66,34 @@ Review date: 2026-06-07 — evaluate whether new picks from S&P 400/600 outperfo
   - Clarify "new positions opened per week: 3" — explicitly state whether a position opened and closed same day (via midday cut) counts toward the cap. Recommended: yes, it consumes a weekly slot (research, placement, and risk exposure all occurred). This would have blocked NVDA on May 21, though the NVDA blowout was arguably the highest-quality setup of the week.
   - Add macro-conditions filter: when S&P 500 futures are down >0.4% AND 10-yr yield is at a multi-month high on the same pre-market session, defer new entries by 1 trading day. GLW would have been avoided under this rule. The risk-off signal was clear from multiple sources.
   - Carry forward: implement "orphan stop queue" from prior week recommendation (AMZN stop "$248.14 (stop f87a7a95)" and CSCO stop "$108.10 (stop 54eb2e8d)" both appear confirmed by May 26; verify these are active in Alpaca on every market_open run).
+
+---
+
+## Week of 2026-05-26 (first trading day; Mon May 25 = Memorial Day — 4-day week)
+
+- Perf: portfolio +0.62% vs SPY +1.43% (delta −0.81 pts) | equity $100,647→$101,269; SPY $745.67→$756.34
+- Trades: 0 fills, 0 closed trades (2 trailing stop conversions: AMD May 26, AAPL May 27); win rate N/A
+- Avg win: N/A | Avg loss: N/A (no closed trades)
+- Best (open unrealized): AMD +22.16% ($421.59 avg_cost; trailing stop HWM $527.20, stop $490.30) — OpenAI 6GW + Meta $60B MI450 multi-year demand thesis; conversion executed cleanly May 26 at +14.52% trigger
+- Worst (open unrealized): NVDA −4.79% ($223.30 avg_cost, current $212.59) — post-earnings sell-the-news pattern after 20% pre-earnings run; stop $205.43 ACTIVE with 5.4% cushion
+- What worked:
+  - AMD trailing stop conversion executed cleanly May 26 (trigger $463.75 crossed at open); Alpaca auto-managed HWM $480.79→$527.20 over the week, stop lifting to $490.30 — protecting +22% gain on a position that was entered at +14.5%
+  - AAPL trailing stop conversion executed May 27 ($311.41 trigger crossed at 09:39); HWM $315.00, stop $292.95; position now +9.94% with downside protected by Alpaca trailing
+  - MSFT inflected strongly this week (+8.79% unrealized by week-end, was +1.52% Monday open); Bill Ackman $2B+ Pershing Square disclosure May 28 + Microsoft Build 2026 catalyst ahead; trailing trigger $453.89 within striking distance ($11.17 gap at close)
+  - CSCO turned comfortably positive (+2.84%); BofA PT $135 intact; HSBC double-upgraded to Buy (PT $137 from $77) on May 26–27; AI hyperscaler order momentum well-supported
+  - AMZN recovered from −2.21% Monday to +0.31% Friday; Snowflake $6B AWS deal + ARK/institutional buying signals; thesis intact
+  - Pre-market thesis checks caught all key catalyst events: MSFT trailing trigger imminence, NVDA stop proximity, GEV first bearish analyst note — no surprises at market_open on any day
+  - 10-yr yield eased significantly: 4.67% peak (May 20) → 4.44% (May 29); macro tailwind for high-multiple growth names building into next week
+  - All 8 stop orders confirmed active at every market_open and midday check; zero reconciliation failures all week
+- What didn't:
+  - Portfolio underperformed SPY all 4 trading days and week overall (+0.62% vs +1.43%, −0.81 pts delta); primary structural cause: 61.5% cash drag — market rallied and the majority of capital sat uninvested
+  - NVDA sell-the-news continued (−4.79% unrealized); stop $205.43 is the tightest cushion in the portfolio (5.4%); this is expected behavior after a 20% pre-earnings run but the stop proximity makes NVDA the weekly risk watch
+  - GOOGL underperforming (−3.85% unrealized) despite Q1 EPS +94% beat thesis; DOJ antitrust appellate process + AI search monetization uncertainty are persistent valuation headwinds; thesis intact but mark-to-market drag
+  - GEV gave back gains (−2.82% unrealized from entry); first bearish analyst valuation note emerged May 28; UBS $1,400 PT thesis intact, but valuation debate between electrification growth bulls and "disconnected from physical limitations" bears is now active
+  - 8/8 concurrent capacity cap blocked entry into PWR (Q1 +35% EPS beat, record backlog $48.5B, PT UBS $900) and ANET (Q1 +10.1% beat, 27.7% revenue growth guidance) — both high-conviction setups fully researched and waiting; opportunity cost clearly visible
+  - AMZN slow to recover despite the strongest fundamental catalyst of any position (Q1 EPS +70% beat); FCF compression narrative persists as overhang even though it's capex-cycle-driven
+- Rule adherence: clean — 0 new positions this week (0/3 weekly cap ✓); all 8 stops confirmed active every session ✓; no orders outside regular market hours ✓; all positions ≤5.0% of equity at entry and current (well under 11% cap ✓); IT sector 25.3% of equity (AAPL+AMD+CSCO+MSFT+NVDA) < 30% cap ✓; cash floor 61.5% >> 10% ✓; trailing stop conversions correctly executed per plan ✓; DRY_RUN: false ✓
+- Proposed rule changes (for human review, not applied automatically):
+  - Consider raising max concurrent positions from 8 to 10: with 8 slots continuously full and high-quality post-earnings setups (PWR, ANET, ETN) waiting on the bench, the cap is generating visible opportunity cost drag every week. The existing risk guardrails — 11% size cap, 10% cash floor, 30% sector cap — already prevent concentration risk from additional positions. Adding 2 slots would allow ~$9–10K more equity deployment without breaching any sector or sizing limit.
+  - MSFT trailing stop alert for next pre_market (May 30 or next open): trigger $453.89 is +10% vs avg_cost $412.63; current $448.92 (gap $4.97/1.1% at this snapshot); next market_open must be ready to immediately cancel stop 790e2653 and place trailing stop at 7% below peak if MSFT opens ≥$453.89.
+  - NVDA stop monitoring: $205.43 hard stop (5.4% cushion from $212.59 current) remains the portfolio's primary daily risk; trailing stop trigger is +10% = $245.62 (still $33 away). No rule change needed — just flag as the highest-priority daily watch item for every pre_market and market_open scan until cushion widens above 8%.
