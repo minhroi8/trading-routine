@@ -30,7 +30,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 4. **Earnings re-verification (shortlist only).** For each shortlisted candidate, web_search the next earnings date to confirm it is NOT within 3 days. The cached `earnings_date_next` in `universe.md` may be up to 7 days stale; earnings are often scheduled mid-week. Drop any candidate whose earnings now fall inside the 3-day window. Record the reason.
 4b. **Halt / trading-status check (shortlist only).** For each surviving candidate, web_search `"<TICKER> stock halt"` AND fetch Alpaca `GET /v2/assets/<TICKER>`. Drop the candidate if any of: `tradable` is false, `status` is not `active`, or recent halt news is present. Record the reason in `research_log.md` and omit from `plan.md`.
 5. **Draft `memory/plan.md`** for each surviving candidate:
-   - Planned buy: ticker, `target_qty` sized to ≤ 5% of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`, and a 2–3 sentence thesis.
+   - Planned buy: ticker, target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`, and a 2–3 sentence thesis.
    - Planned sells: any positions whose exit criteria (per `strategy.md`) have fired since `market_close` — e.g. thesis invalidation, 60-day-with-<3%-gain rotation flag from midday.
 6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 3 (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
 
