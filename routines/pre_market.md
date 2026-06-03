@@ -26,7 +26,17 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
 1. **Load the universe.** Read the ticker table from `memory/universe.md`. These are the only tickers this routine may consider. **Do not re-screen, do not refetch the S&P 500 list, do not recompute filters** — `universe_refresh` owns all of that.
 
-2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note).
+1b. **Load the watchlist.** Read `memory/watchlist.md`. For each ticker 
+    with `status: active`, treat it identically to a universe ticker 
+    for the rest of this routine — it may be shortlisted, researched, 
+    and planned just like any universe name. All strategy.md rules 
+    still apply. Log watchlist tickers considered in research_log.md.
+    
+2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note). If a compelling catalyst appears for a ticker NOT in universe.md 
+    AND NOT in watchlist.md: add a new row to memory/watchlist.md 
+    with status: pending_review and post a Discord note flagging it 
+    for human review. Do NOT plan a trade on it until status is 
+    changed to active by the human operator.
 
 3. **Shortlist 3–5 candidates from `universe.md`** with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst from the news sweep). Apply all of the following scoring filters — higher-scoring candidates rank above lower-scoring ones:
 
@@ -54,7 +64,10 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 ## MUST NOT
 
 - Call Alpaca `/v2/orders`.
-- Consider tickers not in `memory/universe.md`. If a compelling catalyst appears for a ticker outside the universe, note it in `research_log.md` for the human to review — do not plan a trade on it.
+- Consider tickers not in `memory/universe.md` OR `memory/watchlist.md`.
+  If a compelling catalyst appears for a ticker outside both lists, 
+  add it to watchlist.md with status: pending_review and POST a Discord 
+  flag — do not plan a trade until human sets status to active.
 - Re-run any universe filters. That's `universe_refresh`'s job.
 - Leave `plan.md` blank if you had candidates — if nothing qualified, write that reason explicitly under Notes.
 
