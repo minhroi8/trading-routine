@@ -2,7 +2,7 @@
 
 ## Scope
 
-Research overnight news and draft today's trade plan in `memory/plan.md`, using ONLY the tickers in `memory/universe.md`. **MUST NOT place any orders. MUST NOT re-screen the universe.**
+Research overnight news and draft today's trade plan in `memory/plan.md`, using ONLY the tickers in `memory/universe.md` and `memory/watchlist.md`. **MUST NOT place any orders. MUST NOT re-screen the universe.**
 
 Read `CLAUDE.md` and `memory/strategy.md` at the start of this run — they supersede anything below.
 
@@ -24,39 +24,45 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
 ## Work
 
-1. **Load the universe.** Read the ticker table from `memory/universe.md`. These are the only tickers this routine may consider. **Do not re-screen, do not refetch the S&P 500 list, do not recompute filters** — `universe_refresh` owns all of that.
+1. **Load the universe.** Read the ticker table from `memory/universe.md`. These are the only tickers this routine may consider unless also on the watchlist. **Do not re-screen, do not refetch the S&P 500 list, do not recompute filters** — `universe_refresh` owns all of that.
 
-1b. **Load the watchlist.** Read `memory/watchlist.md`. For each ticker 
-    with `status: active`, treat it identically to a universe ticker 
-    for the rest of this routine — it may be shortlisted, researched, 
-    and planned just like any universe name. All strategy.md rules 
-    still apply. Log watchlist tickers considered in research_log.md.
-    
-2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note). If a compelling catalyst appears for a ticker NOT in universe.md 
-    AND NOT in watchlist.md: add a new row to memory/watchlist.md 
-    with status: pending_review and post a Discord note flagging it 
-    for human review. Do NOT plan a trade on it until status is 
-    changed to active by the human operator.
+1b. **Load the watchlist.** Read `memory/watchlist.md`. For each ticker with `status: active`, treat it identically to a universe ticker for the rest of this routine — it may be shortlisted, researched, and planned just like any universe name. All strategy.md rules still apply. Log watchlist tickers considered in `memory/research_log.md`.
 
-3. **Shortlist 3–5 candidates from `universe.md`** with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst from the news sweep). Apply all of the following scoring filters — higher-scoring candidates rank above lower-scoring ones:
+2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md` and `watchlist.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note). If a compelling catalyst appears for a ticker NOT in `universe.md` AND NOT in `watchlist.md`: add a new row to `memory/watchlist.md` with `status: pending_review` and POST a Discord flag — do NOT plan a trade on it until human sets status to `active`.
 
-   - **EPS surprise threshold:** Per `strategy.md`, earnings-driven entries require >15% EPS surprise (>20% for Utilities and Real Estate). Analyst revision or partnership catalyst entries are exempt.
+3. **Shortlist 3–5 candidates** from universe + active watchlist tickers with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst). Apply all scoring filters below — higher-scoring candidates rank above lower-scoring ones.
 
-   - **52-week high recency (priority filter):** Prefer candidates whose 52-week high was achieved within the last 45 days. Research shows PEAD is 74% stronger when the stock is near or at new highs at time of earnings beat. A stock making new highs on earnings beats a recovering stock every time. web_search `"<TICKER> 52-week high"` to verify. Downrank candidates whose 52-week high was more than 90 days ago.
+   **Deep research protocol — run steps a through g for EVERY candidate before scoring:**
 
-   - **Earnings announcement volume spike:** web_search `"<TICKER> earnings volume"` or check Alpaca bars for the announcement date. If announcement-day volume was ≥1.5x the 20-day average volume, treat as high-conviction. If announcement-day volume was below average, downrank the candidate — weak institutional participation means weaker drift.
+   a. **Earnings data (full article fetch):** web_search `"<TICKER> Q[N] [year] earnings results"`. Fetch the full article from the top result (prefer Seeking Alpha, MotleyFool, or company IR page over aggregators). Extract: exact EPS beat %, exact revenue beat %, guidance language verbatim, and any forward commentary from management. Do not rely on snippet alone.
 
-   - **Relative strength vs SPY:** web_search `"<TICKER> stock performance this week"` and compare to SPY over the same 5-day window since earnings. If the stock is underperforming SPY since the earnings beat, the drift signal is weak — drop or downrank the candidate. Strong PEAD requires the stock to already be leading the market, not lagging it.
+   b. **Earnings call tone (full fetch):** web_search `"<TICKER> earnings call transcript summary [year]"`. Fetch the top result in full. Look for verbatim management quotes about demand, guidance, and competitive position. Record specific phrases — not just "positive" or "negative" but the actual words used. Examples of bullish language: "accelerating," "record demand," "raising again," "strong visibility," "ahead of schedule." Examples of cautious language: "monitoring closely," "uncertain environment," "cautious about second half," "headwinds."
 
-   - **Earnings call tone:** web_search `"<TICKER> earnings call highlights"` or `"<TICKER> Q[N] [year] conference call summary"`. Look for confident management language: "accelerating," "record demand," "raising again," "strong visibility," "ahead of schedule." Downrank candidates where management used hedging language: "monitoring closely," "uncertain environment," "cautious about second half," "headwinds." Tone provides signal beyond the raw EPS number.
+   c. **Analyst reactions (full fetch):** web_search `"<TICKER> analyst upgrade rating [month] [year]"`. Fetch the top 2 results in full. Record which firms upgraded, their new price targets, and their specific reasoning. Note any downgrades or cautious notes from bears. A stock with 5 upgrades and 0 downgrades post-earnings scores higher than one with 2 upgrades and 1 downgrade.
 
-4. **Earnings re-verification (shortlist only).** For each shortlisted candidate, web_search the next earnings date to confirm it is NOT within 3 days. The cached `earnings_date_next` in `universe.md` may be up to 7 days stale; earnings are often scheduled mid-week. Drop any candidate whose earnings now fall inside the 3-day window. Record the reason.
+   d. **52-week high recency:** web_search `"<TICKER> 52-week high"`. Also fetch Alpaca bars for the last 252 trading days (`GET /v2/stocks/{ticker}/bars?timeframe=1Day&limit=252&feed=iex`) to calculate the exact 52-week high date and price. Record how many days ago the high occurred. Stocks where 52-week high was within 45 days: top priority. 46–90 days: normal priority. Over 90 days: downrank.
 
-4b. **Halt / trading-status check (shortlist only).** For each surviving candidate, web_search `"<TICKER> stock halt"` AND fetch Alpaca `GET /v2/assets/<TICKER>`. Drop the candidate if any of: `tradable` is false, `status` is not `active`, or recent halt news is present. Record the reason in `research_log.md` and omit from `plan.md`.
+   e. **Volume confirmation:** Fetch Alpaca bars for the earnings announcement date and the 20 days prior. Calculate: announcement-day volume ÷ 20-day average volume. Record the exact ratio. ≥2x: strong institutional confirmation. 1.5–2x: moderate confirmation. <1.5x: weak — downrank candidate.
+
+   f. **Relative strength vs SPY:** Fetch Alpaca bars for both the ticker and SPY (`bars?timeframe=1Day&limit=5&feed=iex`) for the last 5 trading days since earnings. Calculate exact % return for each. Record the spread (ticker return minus SPY return). Positive spread = outperforming → proceed. Negative spread = underperforming → drop or heavily downrank.
+
+   g. **Risk check (full fetch):** web_search `"<TICKER> risks concerns [month] [year]"`. Fetch the top result in full. Note any material risks: regulatory, competitive, supply chain, customer concentration, insider selling. If any risk could plausibly break the thesis within 42 days, drop the candidate entirely and log why.
+
+   **After completing a–g, score each candidate 1–10:**
+   - Signal quality (EPS surprise size, guidance raise magnitude): 1–3 pts
+   - Momentum (52-week recency, relative strength vs SPY): 1–3 pts
+   - Confirmation (volume ratio, analyst conviction count): 1–2 pts
+   - Risk (lower risk = higher score): 1–2 pts
+
+   **Only proceed with candidates scoring ≥6/10.** If fewer than 3 candidates score ≥6, plan fewer buys rather than lowering the bar.
+
+4. **Earnings re-verification (shortlist only).** For each shortlisted candidate, web_search the next earnings date to confirm it is NOT within 3 days. The cached `earnings_date_next` in `universe.md` may be up to 7 days stale. Drop any candidate inside the 3-day window. Record the reason.
+
+4b. **Halt / trading-status check (shortlist only).** For each surviving candidate, web_search `"<TICKER> stock halt"` AND fetch Alpaca `GET /v2/assets/<TICKER>`. Drop if `tradable` is false, `status` is not `active`, or recent halt news is present. Record the reason in `research_log.md`.
 
 5. **Draft `memory/plan.md`** for each surviving candidate:
-   - Planned buy: ticker, `target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`, and a 2–3 sentence thesis.
-   - Include in the thesis: EPS surprise %, announcement-day volume vs average, 52-week high recency, relative strength vs SPY, and one-line earnings call tone assessment.
+   - Planned buy: ticker, `target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`.
+   - Full thesis must include: score X/10, EPS surprise %, revenue beat %, volume ratio vs 20-day avg, 52-week high recency (days ago), relative strength vs SPY (5-day spread %), analyst upgrade count, one verbatim management quote from earnings call, and top risk flagged.
    - Planned sells: any positions whose exit criteria (per `strategy.md`) have fired since `market_close` — e.g. thesis invalidation, 60-day-with-<3%-gain rotation flag from midday.
 
 6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 3 (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
@@ -64,12 +70,10 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 ## MUST NOT
 
 - Call Alpaca `/v2/orders`.
-- Consider tickers not in `memory/universe.md` OR `memory/watchlist.md`.
-  If a compelling catalyst appears for a ticker outside both lists, 
-  add it to watchlist.md with status: pending_review and POST a Discord 
-  flag — do not plan a trade until human sets status to active.
+- Consider tickers not in `memory/universe.md` OR `memory/watchlist.md`. If a compelling catalyst appears for a ticker outside both lists, add it to `watchlist.md` with `status: pending_review` and POST a Discord flag — do not plan a trade until human sets status to `active`.
 - Re-run any universe filters. That's `universe_refresh`'s job.
 - Leave `plan.md` blank if you had candidates — if nothing qualified, write that reason explicitly under Notes.
+- Score a candidate ≥6 without completing all of steps a–g. Incomplete research = automatic disqualification.
 
 ## End-of-run protocol (per `CLAUDE.md`)
 
@@ -80,7 +84,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
 ```json
-{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop | score X/10 | EPS +X% | vol Xx | RS +X% vs SPY> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nWatchlist flags: <TICKER added as pending_review — reason> or none\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success. If the POST fails, log the failure but do NOT abort.
