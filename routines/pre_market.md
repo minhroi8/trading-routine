@@ -25,13 +25,30 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 ## Work
 
 1. **Load the universe.** Read the ticker table from `memory/universe.md`. These are the only tickers this routine may consider. **Do not re-screen, do not refetch the S&P 500 list, do not recompute filters** — `universe_refresh` owns all of that.
+
 2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note).
-3. **Shortlist 3–5 candidates from `universe.md`** with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst from the news sweep).
+
+3. **Shortlist 3–5 candidates from `universe.md`** with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst from the news sweep). Apply all of the following scoring filters — higher-scoring candidates rank above lower-scoring ones:
+
+   - **EPS surprise threshold:** Per `strategy.md`, earnings-driven entries require >15% EPS surprise (>20% for Utilities and Real Estate). Analyst revision or partnership catalyst entries are exempt.
+
+   - **52-week high recency (priority filter):** Prefer candidates whose 52-week high was achieved within the last 45 days. Research shows PEAD is 74% stronger when the stock is near or at new highs at time of earnings beat. A stock making new highs on earnings beats a recovering stock every time. web_search `"<TICKER> 52-week high"` to verify. Downrank candidates whose 52-week high was more than 90 days ago.
+
+   - **Earnings announcement volume spike:** web_search `"<TICKER> earnings volume"` or check Alpaca bars for the announcement date. If announcement-day volume was ≥1.5x the 20-day average volume, treat as high-conviction. If announcement-day volume was below average, downrank the candidate — weak institutional participation means weaker drift.
+
+   - **Relative strength vs SPY:** web_search `"<TICKER> stock performance this week"` and compare to SPY over the same 5-day window since earnings. If the stock is underperforming SPY since the earnings beat, the drift signal is weak — drop or downrank the candidate. Strong PEAD requires the stock to already be leading the market, not lagging it.
+
+   - **Earnings call tone:** web_search `"<TICKER> earnings call highlights"` or `"<TICKER> Q[N] [year] conference call summary"`. Look for confident management language: "accelerating," "record demand," "raising again," "strong visibility," "ahead of schedule." Downrank candidates where management used hedging language: "monitoring closely," "uncertain environment," "cautious about second half," "headwinds." Tone provides signal beyond the raw EPS number.
+
 4. **Earnings re-verification (shortlist only).** For each shortlisted candidate, web_search the next earnings date to confirm it is NOT within 3 days. The cached `earnings_date_next` in `universe.md` may be up to 7 days stale; earnings are often scheduled mid-week. Drop any candidate whose earnings now fall inside the 3-day window. Record the reason.
+
 4b. **Halt / trading-status check (shortlist only).** For each surviving candidate, web_search `"<TICKER> stock halt"` AND fetch Alpaca `GET /v2/assets/<TICKER>`. Drop the candidate if any of: `tradable` is false, `status` is not `active`, or recent halt news is present. Record the reason in `research_log.md` and omit from `plan.md`.
+
 5. **Draft `memory/plan.md`** for each surviving candidate:
-   - Planned buy: ticker, target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`, and a 2–3 sentence thesis.
+   - Planned buy: ticker, `target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`, and a 2–3 sentence thesis.
+   - Include in the thesis: EPS surprise %, announcement-day volume vs average, 52-week high recency, relative strength vs SPY, and one-line earnings call tone assessment.
    - Planned sells: any positions whose exit criteria (per `strategy.md`) have fired since `market_close` — e.g. thesis invalidation, 60-day-with-<3%-gain rotation flag from midday.
+
 6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 3 (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
 
 ## MUST NOT
