@@ -6,13 +6,9 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 2026-06-04
 
-⚠️ **Override note:** This plan was written at ~15:45 ET on June 3, 2026 under human-operator override of the market-gate check. AVGO/CRWD earnings were not yet released at time of writing — entry criteria are conditional and must be verified by market_open June 4 once results are known.
-
 ## Planned buys
 
-| ticker | target_qty | limit_price | stop_price | thesis_ref |
-|--------|------------|-------------|------------|------------|
-| AVGO | 22 | $535 | entry × 0.92 | CONDITIONAL — execute only if ALL gate criteria in Notes are satisfied at market_open June 4. Score 7–8/10 IF criteria met. |
+_(none — no candidates scored ≥6/10; see Notes)_
 
 ## Planned sells
 
@@ -24,101 +20,103 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 | ticker | current_stop_id | current_stop_price | action | target_new_stop | basis |
 |--------|-----------------|-------------------|--------|-----------------|-------|
-| CSCO | 54eb2e8d | $108.10 | Convert to 7% trailing stop GTC if CSCO trades at or above $129.16 | Cancel 54eb2e8d; place trailing_stop 42@7% trail_percent GTC | CSCO closed $127.27 (+8.39%); trigger $129.16 = 1.49% above close. Monitor intraday; convert immediately when crossed. |
+| CSCO | 54eb2e8d | $108.10 | Convert to 7% trailing stop GTC if CSCO trades at or above $129.16 | Cancel 54eb2e8d; place trailing_stop 42@7% trail_percent GTC | CSCO pre-market $127.969 (+8.99% vs cost); trigger $129.16 = $1.19/0.93% above pre-market price. Monitor from open; convert immediately when crossed. |
 
 ## Notes
 
 ---
 
-### AVGO — Conditional buy (binary gate; verify at market_open June 4)
+### AVGO — EPS gate failed → Discord flag, no entry; monitor June 8
 
-**Background:** AVGO (Broadcom) Q2 FY2026 reports after close June 3. Universe-listed (large cap). 44/47 analysts Buy, consensus PT ~$480–$487. Q2 estimates: EPS $2.40, revenue $22.04–$22.12B, AI chip revenue ~$10.7B (+140% YoY). Current price ~$481–$497 (as of June 3 intraday).
-
-**Pre-earnings score estimate (IF criteria met): 7–8/10**
-- Signal quality (EPS ≥$2.76 + AI rev ≥$10.7B): 3/3 pts
-- Momentum (52-week high within 1–2 days; new ATH territory): 3/3 pts
-- Confirmation (44/47 analysts Buy; volume at open TBD): 1–2/2 pts
-- Risk (options ±10.65% implied move; historical avg beat ~1.93%; "priced for perfection"): 1/2 pts
-
-**Binary gate — market_open June 4 must verify ALL before placing order:**
-1. **EPS ≥ $2.76:** Non-GAAP EPS +15% above $2.40 consensus (strategy.md earnings-entry threshold). If EPS $2.44–$2.75 (modest beat) but call discloses a NEW hyperscaler ASIC partnership contract not previously disclosed: post Discord flag for human confirmation, do NOT auto-execute.
-2. **AI revenue ≥ $10.7B:** Confirms 140% YoY growth thesis.
-3. **Q3 FY2026 guide ≥ $23.0B:** Acceleration from $22B Q2 run-rate.
-4. **Stock opens ≤ $535:** Do NOT chase if euphoric gap pushes above $535.
-5. **Next earnings ≥ 3 days away:** Confirm Q3 FY2026 ~September 2026 (expected ✓).
-6. **Alpaca tradable=True, status=active:** Verify /v2/assets/AVGO.
-
-**If ALL criteria met — execute:**
-- Limit buy 22 shares AVGO @ $535
-- Stop: fill × 0.92 (−8% hard stop), GTC
-- Sector: IT. Post-buy IT: AAPL+CSCO+NVDA+AVGO ≈ 26.3% of equity (< 30% ✓)
-- Uses the final weekly slot (3/3; week resets June 8)
-- Include full thesis in trade_log.md: score, EPS actual, AI rev actual, volume ratio at open, management verbatim quote, risk flagged
-
-**If criteria NOT met:** No buys for June 4. Post Discord note. Monitor AVGO for June 8 pre_market (3 weekly slots reset).
+AVGO Q2 FY2026 reported after close June 3:
+- **Non-GAAP EPS: $2.44** vs $2.40 est = **+1.7% beat** → FAR below +15% threshold requiring **$2.76** → **GATE FAILS**
+- AI semiconductor revenue: **$10.8B** (+143% YoY) ✓ (exceeds $10.7B gate)
+- Q3 FY2026 guide: **$29.4B** (+84% YoY) — extraordinary; far exceeds $23.0B gate criterion
+- No NEW hyperscaler ASIC partnerships disclosed (Google/Anthropic/OpenAI/Meta all pre-existing)
+- Per plan.md rules: EPS $2.44 is in the "$2.44–$2.75 modest beat" range but **no new hyperscaler ASIC partnership disclosed** → per plan.md branch: **no auto-entry; Discord flag posted** for human confirmation
+- Stock: −14% AH, ~$413 pre-market (low ~$405.51, high ~$496.02 intraday June 4)
+- Hock Tan verbatim: *"Bookings for AI semiconductors were over $30 billion against the $10.8 billion we shipped."* *"Our visibility runs all the way to 2028 right now."*
+- FY2027 AI revenue guide: "more than $100 billion" — extraordinary forward-looking signal
+- **If human confirms entry**: re-evaluate June 8 (3 weekly slots reset); limit price ~$420 area (stock more attractive than original $535 plan); stop = fill × 0.92
+- Next earnings: Q3 FY2026 ~September 2026 ✓ (>3 days)
+- Alpaca: tradable=True, status=active ✓
 
 ---
 
-### CRWD — DROPPED
+### CRWD — EPS gate failed → DISQUALIFIED
 
-Reports tonight June 3. **Two independent disqualifiers:**
-1. **IT sector cap:** AAPL+CSCO+NVDA+AVGO = 26.3%; adding CRWD = 37.3%+ → exceeds 30% cap.
-2. **Extreme sell-the-news risk:** +72% pre-earnings in 30 days; DZ Bank Strong Sell; options 7–10% implied move.
-If AVGO does NOT qualify and CRWD beats EPS ≥ $1.23 (+15% above $1.07) with Net New ARR ≥ $250M AND stock holds after-hours: flag for June 8 pre_market, do NOT enter June 4.
-
----
-
-### CRM (Salesforce) — DROPPED
-
-Already reported May 27 (prior plan.md error said tonight). EPS $3.88 vs $3.12 (+24% beat) but guidance disappointed; stock fell −4.5%. Negative 5-day RS vs SPY → disqualified per routine step f.
+CrowdStrike Q1 FY2027 reported after close June 3:
+- EPS: **$1.10** vs $1.07 est = **+2.8% beat** → below +15% threshold requiring **$1.23** → **GATE FAILS**
+- Net New ARR: $256M (+32% YoY) ✓; Revenue $1.39B (+26% YoY) ✓
+- Stock: −9 to −11% AH on billings miss; +60% YTD pre-earnings (extreme sell-the-news)
+- 4-for-1 stock split announced (July 2026)
+- **DISQUALIFIED** (EPS 2.8% vs 15% required; stock falling materially)
+- Monitor for June 8 pre_market if stock stabilizes; note IT sector cap concerns if AVGO also considered
 
 ---
 
-### MRVL (watchlist, status: active) — DROPPED, score 4/10
+### CIEN — Deep research score 5/10 → DISQUALIFIED (dropped at step g)
 
-Deep research steps a–g completed:
-- (a) May 27 EPS: $0.80 vs $0.75 est = **+6.67% — below 15% threshold**
-- (b) Call tone: "unprecedented visibility" — bullish, but no new contract
-- (c) Analysts: 44 Buy, mean PT $233 vs current $301 — all targets exceeded
-- (d) 52-week high: within 1 day (top priority) ✓
-- (e) Volume June 2: 59.4M vs 20-day avg 42.51M = **1.40x — below 1.5x weak threshold** ✗
-- (f) RS vs SPY: massively positive ✓
-- (g) Risk: GF Value $106.26 fair value vs $301 current; reversal risk after +50% in 2 days ✗
-- **Score: 4/10 — DISQUALIFIED (need ≥6)**
+Ciena Q2 2026 reported before open June 4 (universe member, last screened $582.13 May 31):
 
----
+**Steps a–g completed:**
 
-### CSCO trailing stop — monitor at market_open
+**(a) Earnings data:** EPS **$1.64** vs $1.45 est = **+13.1% beat** (below 15% earnings-entry threshold); revenue $1.57B vs $1.50B (+4.7%, +40% YoY); FY2026 guide raised to $6.3B ±$100M (+32% YoY at midpoint); Q3 guide $1.625B ±$50M.
 
-CSCO closed $127.27 (+8.39%; trigger $129.16 = 1.49% away). At market_open June 4:
-1. Check CSCO opening price
-2. If CSCO ≥ $129.16 at any point: cancel stop 54eb2e8d, place 7% trail_percent GTC trailing stop; log order ID and initial HWM/stop
-3. If below: monitor intraday
+**(b) Earnings call tone:** CEO Gary Smith: *"Our long-term strategy to be the global leader in high-speed connectivity—both across the WAN and in and around the data center—is tightly aligned to the structural, multi-year opportunities created by AI-driven demand."* Also: "disciplined execution in a dynamic supply environment." Bullish but somewhat cautious undertone.
 
----
+**(c) Analyst reactions:** Pre-earnings: Citi PT $658 (May 18, +91% raise), TD Cowen PT $675 (May 26, +59% raise), BofA PT $660 (May 26), Stifel PT $585 (May 5). BUT **Morgan Stanley maintains PT $405** — 33% below current ~$620. B. Riley: Neutral, PT $531. 14 analysts Buy consensus.
 
-### NVDA ex-dividend June 4
+**(d) 52-week high recency:** $637.51 on **June 3** (1 day ago — TOP PRIORITY) ✓
 
-$0.25/share × 22 shares = **$5.50 cash credit** (Alpaca-managed, no action needed). NVDA closed $216.30 (−3.40% unrealized), stop $205.43 = 4.77% cushion — **monitor at market_open.**
+**(e) Volume confirmation:** Data unavailable — Alpaca bars returned null for CIEN. Cannot calculate earnings-day volume ratio. Unconfirmed → partial deduction.
+
+**(f) Relative strength vs SPY:** CIEN +53% last month vs SPY flat-to-slightly-up → massively positive RS ✓
+
+**(g) Risk check — DROPPED HERE:** P/E **399x vs 5-year median 40x (884% above historical)**; GuruFocus "significantly overvalued"; Morgan Stanley PT $405 = 33% below current ~$620; insider selling $27.2M last 3 months; GF Value implies extreme overvaluation. Morgan Stanley's credible $405 target constitutes a risk that **could plausibly break the thesis within 42 days** (any sector rotation, macro headwind, or guidance miss could trigger -20% to -33% reversion). **DROPPED under step (g).**
+
+**Score: 2 (signal) + 3 (momentum) + 1 (confirmation) + 0 (risk) = 5/10 → DISQUALIFIED (need ≥6/10)**
+
+Alpaca: tradable=True, status=active ✓. Next earnings Q3 FY2026 ~Sep 2026 ✓. EPS +13.1% below 15% threshold for earnings-driven entry; analyst revision exemption argument noted but overridden by step (g) drop.
 
 ---
 
-### Portfolio sanity check — June 4 (using market_close June 3 data)
+### ORCL — No qualifying catalyst → NOT shortlisted
 
-- Equity: **$99,788.72** | Cash: **$69,776.57 (69.9%)** > 10% floor ✓
-- Concurrent: **5/8** ✓ | Weekly slots: **2/3** (HPE+PWR June 2) → 1 remaining ✓
-- IT: AAPL+CSCO+NVDA = **~15.5%** ✓ | Industrials: GEV+PWR = **~14.7%** ✓
-- If AVGO added: IT ≈ **26.3%** ✓ | concurrent 6/8 ✓ | weekly 3/3 ✓
+Oracle Q4 FY2026 reports June 10 after close (6 calendar days away; outside 3-day window on June 4). Last earnings was Q3 FY2026 in March 2026 (>30 days ago) — no qualifying fundamental signal within 30-day window. No analyst revision within 30 days identified. NOT shortlisted.
+
+---
+
+### MRVL (watchlist, status: active) — carried forward
+
+Score 4/10 from June 3 deep research (EPS +6.67% below 15% threshold; volume 1.40x below 1.5x threshold; GF Value $106 vs current ~$301). No change to June 3 conclusion. Monitor; re-evaluate June 8 pre_market.
+
+---
+
+### Portfolio sanity check — June 4
+
+- Equity: **$99,483.65** | Cash: **$69,776.55 (70.1%)** > 10% floor ✓
+- Concurrent: **5/8** ✓ | Weekly slots: **2/3** (HPE+PWR June 2) → 1 remaining ✓ (no qualified candidates today)
+- IT: AAPL+CSCO+NVDA ≈ **15.5%** ✓ | Industrials: GEV+PWR ≈ **14.4%** ✓
+- All sector caps well under 30% ✓
 - DRY_RUN: false
 
 ---
 
-### Upcoming catalysts
+### Macro context — June 4
 
-- **AAPL WWDC June 8–12** (rebuilt Siri / AI platform — key trailing stop management decision)
-- **NVDA ex-div June 4** ($5.50 credit, Alpaca-managed)
-- **CSCO trailing stop** — monitor; trigger $129.16 = 1.49% from $127.27 close
-- **GEV ex-div June 16** ($0.50 × 4 = $2.00 credit, Alpaca-managed)
-- **FOMC June 6–7** (Warsh first meeting; no rate cut expected)
-- **NFP June 6** (nonfarm payrolls — potential volatility)
-- **Weekly slots reset June 8** (0/3 used next week)
+- S&P 500 futures: slightly softer pre-market (prediction markets 86% probability of opening down)
+- 10-yr yield: ~4.48% (NOT multi-month high; peak 4.70% May 20) → macro deferral rule **NOT triggered**
+- Economic data today: Q1 nonfarm productivity, Challenger May job cuts
+- Upcoming: **NFP June 6** (nonfarm payrolls — potential volatility), **FOMC Warsh June 6–7** (no rate cut expected)
+
+---
+
+### Portfolio stop watch — critical market_open actions
+
+1. **CSCO trailing trigger**: $127.969 pre-market vs trigger $129.16 (0.93% away). If CSCO ≥ $129.16 at any point today: cancel stop 54eb2e8d, place 7% trail_percent GTC trailing stop on 42 shares; log new order ID, initial HWM and stop price.
+2. **NVDA ex-div June 4**: $0.25 × 22 shares = **$5.50 cash credit** (Alpaca-managed; verify credit in account balance at market_open).
+3. **GEV stop proximity**: $949.00 current vs $916.75 stop = 3.40% cushion — WATCH. Ex-div June 16 ($0.50 × 4 = $2.00) approaching.
+4. **NVDA stop proximity**: $212.63 current vs $205.43 stop = 3.39% cushion — WATCH.
+5. **AAPL WWDC June 8–12**: Key trailing stop management decision ahead — rebuilt Siri/Gemini AI platform could push stock to $365-$385 analyst targets (BofA $380, Morgan Stanley).
+6. **AVGO**: No entry today. Discord flag posted. Hock Tan quote logged.
