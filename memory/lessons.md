@@ -97,3 +97,35 @@ Review date: 2026-06-07 — evaluate whether new picks from S&P 400/600 outperfo
   - Consider raising max concurrent positions from 8 to 10: with 8 slots continuously full and high-quality post-earnings setups (PWR, ANET, ETN) waiting on the bench, the cap is generating visible opportunity cost drag every week. The existing risk guardrails — 11% size cap, 10% cash floor, 30% sector cap — already prevent concentration risk from additional positions. Adding 2 slots would allow ~$9–10K more equity deployment without breaching any sector or sizing limit.
   - MSFT trailing stop alert for next pre_market (May 30 or next open): trigger $453.89 is +10% vs avg_cost $412.63; current $448.92 (gap $4.97/1.1% at this snapshot); next market_open must be ready to immediately cancel stop 790e2653 and place trailing stop at 7% below peak if MSFT opens ≥$453.89.
   - NVDA stop monitoring: $205.43 hard stop (5.4% cushion from $212.59 current) remains the portfolio's primary daily risk; trailing stop trigger is +10% = $245.62 (still $33 away). No rule change needed — just flag as the highest-priority daily watch item for every pre_market and market_open scan until cushion widens above 8%.
+
+---
+
+## Week of 2026-06-01
+
+- Perf: portfolio −2.80% vs SPY −2.50% (delta −0.30 pts) | equity $101,269→$98,430; SPY $757.30→$738.34
+- Trades: 11 fills (6 closed, 3 new opened); 2 stop-converts (MSFT Jun 1, CSCO Jun 5); win rate 2/6 = 33.3%
+- Avg win: +10.70% | Avg loss: −8.20%
+- Best: AMD +16.33% (+$757.31) — BIS export control Jun 1 closed third-country MI350x loophole; Alpaca-managed trailing stop fired at $490.30 (HWM $527.20); core US demand thesis (OpenAI 6GW, Meta $60B) intact at exit; held 26 days; clean execution
+- Worst: GOOGL −8.71% (−$413.92) — Alphabet $80B equity offering (Jun 2 pre-market) gapped stock below $364.07 stop at open; holding period 27 days; dilutive raise mirrors META/MSFT selloff pattern from prior weeks; thesis partially invalidated
+- What worked:
+  - AMD trailing stop executed cleanly — converted at +14.52% on May 26, Alpaca auto-ran HWM to $527.20 and stop to $490.30; exit at +16.33% (peak +22.16%) without manual intervention
+  - Mechanical stops worked exactly as designed on every exit: all four losses (GOOGL, HPE, AMZN, NVDA) hit −8% per strategy; no rule overrides or "just this once" exceptions
+  - MSFT trailing stop converted Jun 1 at +12.30% (trigger $453.89 crossed in pre-market); stop fired Jun 3 morning at +5.07% — exited a winning position without discretionary interference
+  - Portfolio outperformed SPY on the worst day of the week (Jun 5: −1.55% vs SPY −2.46%, +0.91 pp alpha); multi-sector positioning cushioned the selloff
+  - Sector and concentration discipline held all week: IT peaked at 26.3% < 30% cap ✓; all 3 new entries (HPE, PWR, SNDK) within weekly 5-slot cap; cash floor 62–70% well above 10% minimum ✓
+- What didn't:
+  - Portfolio underperformed SPY for the week (−2.80% vs −2.50%, −0.30 pts); four of six closed trades hit the maximum −8% stop — stop cluster in a single week is the model's primary source of drawdown when it occurs
+  - HPE same-day blowup: entered at gap-up open (Jun 2), sizing correction added shares at 10:53 ET, stop fired after hours at 16:22 ET after the stock completed its full gap fill; thesis was intact at market close; the after-hours GTC fill on a paper account is a known risk that converted an intraday winning position into a max-loss outcome
+  - Three unrelated macro/regulatory events drove three separate stops in five sessions: GOOGL $80B equity raise (Jun 2), AMZN continued macro decline (Jun 3), NVDA export-control selloff + SPY −2.46% (Jun 5) — bad-luck clustering, but the four simultaneous −8% outcomes in a week underscore why the 10% cash floor and 11% position cap exist
+  - Export controls impacted AMD (Jun 1 BIS loophole closure) and NVDA (Jun 5 broader regulatory selloff) within the same week; this risk factor has now appeared in three separate sessions and is structural for semiconductor holdings
+  - GOOGL $80B equity offering was not foreshadowed in pre_market; no screening step currently checks for pending SEC shelf registrations or prospectus filings that could indicate an imminent dilutive raise
+- Rule adherence: mostly clean
+  - HPE initial position undersized (~5% vs 11% target) due to routine prompt error; corrected same session at 10:53 ET with second buy and stop re-placement; wash-trade sequencing (cancel-stop → buy → new-stop) executed correctly; brief window with no stop during correction ⚠️
+  - CSCO trailing stop conversion carried 1 day (Jun 4 close trigger → Jun 5 open; hard stop 54eb2e8d remained active overnight — stop coverage was continuous throughout) — minor timing ✓
+  - HPE GTC stop fired at 16:22 ET (after regular-hours close): paper-account behavior; flagged for human review; no explicit strategy.md rule on after-hours GTC fills; stop was placed correctly per rules
+  - New positions 3/5 this week (HPE + PWR + SNDK) ✓; concurrent peak 8/8 (Jun 1–2, now 5/8 ✓); all sector caps clean ✓; DRY_RUN: false ✓
+- Proposed rule changes (for human review, not applied automatically):
+  - Add SEC EDGAR shelf-registration check to pre_market catalyst scan for each existing position: scan 424B, S-3, and S-1 filings in the prior 30 days. The GOOGL $80B offering (424B1 filed Jun 2 morning) gapped the stop by $2.85 at open — a pre-market flag would have allowed a proactive exit above the stop price.
+  - Add export control monitoring to pre_market thesis check for all semiconductor and IT positions: Commerce Dept BIS guidance updates, Entity List changes, and executive orders affecting chip exports. AMD (Jun 1) and NVDA (Jun 5) were both impacted in the same week; this risk is now demonstrated as material and recurring.
+  - Review GTC stop behavior on paper account for after-hours fills: HPE stop fired at 16:22 ET (22 min after close). If paper account consistently fills GTC stops after hours, consider requiring DAY stops (re-entered each session) or adding logic to cancel and re-enter stops at market_close to avoid unintended after-hours fills.
+  - Clarify sizing-correction process in market_open: when a pre_market position sizing calculation uses a different equity basis than the actual open equity (resulting in wrong share count), the correction buy should be logged as part of the original entry with full thesis re-verification, not treated as a separate decision. Add explicit share-count validation step to market_open before submitting any order.
