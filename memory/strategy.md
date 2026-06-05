@@ -20,7 +20,12 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 
 - **Hard stop-loss: -8% from entry.** Placed as a stop order at Alpaca immediately after fill in `market_open`.
 - **Midday cut: only exit early if the hard stop (-8%) is hit OR the thesis is genuinely broken** (guidance cut, earnings miss, fraud, material negative catalyst). Do NOT cut on temporary intraday weakness alone. Backtest data shows positions held to 42 days win 65.8% of the time — patience is the edge.
-- **Trailing stop on winners:** once a position is up +10%, convert the stop to a trailing stop 7% below peak.
+- **Trailing stop on winners:** once a position is up +10%, convert 
+  the stop to a trailing stop. Trail width depends on sector:
+  - AI/semiconductor/high-momentum names (IT sector): 12% below peak
+  - All other sectors: 7% below peak
+  High-momentum names require more room to run without being 
+  shaken out by normal volatility.
 - **Single-sector cap:** no more than 30% of portfolio in any one GICS sector.
 - **Sector deprioritization:** Utilities and Real Estate picks require EPS surprise >20% to qualify — these sectors historically underperform on PEAD strategy. All other sectors use the standard 15% threshold.
 - **Macro deferral rule:** if S&P 500 futures are down >0.4% AND the 10-year Treasury yield is at a multi-month high in the same pre-market session, raise the EPS surprise threshold to >20% for that day only. Do NOT skip entries entirely — bear regime entries historically outperform bull regime entries. Only the highest-conviction setups enter on stressed macro days.
