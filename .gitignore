@@ -5,3 +5,7 @@ secrets/
 __pycache__/
 *.pyc
 .claude/
+
+# Backtest artifacts: large local data cache + transient run logs
+data_cache/
+*_run.log
