@@ -1,0 +1,31 @@
+ticker,sector,name,is_it,earn_date,entry_date,entry_price,exit_date,exit_price,exit_reason,holding_days,return_pct,return_dollar,ret_trail7,ret_trail12,surprise_pct,vol_ratio,rs_value,days_to_next_earn,f_surprise15,f_vol15x,f_rs,f_52w,f_nearearn,spy_bull_regime
+AES,Utilities,AES Corporation,False,2026-03-02,2026-03-04,14.0073,2026-04-15,14.274,time,42,1.9,209.45,1.9,1.9,33.04,7.53,0.67,62,True,True,True,True,True,True
+BKR,Energy,Baker Hughes,False,2026-04-23,2026-04-27,69.7667,2026-05-07,63.53,hard_stop,10,-8.94,-983.33,-8.94,-8.94,90.5,1.53,6.13,85,True,True,True,True,True,True
+CASY,Consumer Staples,Casey's,False,2026-03-09,2026-03-11,688.7521,2026-04-22,782.3672,time,42,13.59,1495.12,13.59,13.59,16.64,2.13,3.98,90,True,True,True,True,True,True
+FIX,Industrials,Comfort Systems USA,False,2026-02-19,2026-02-23,1461.6676,2026-03-06,1278.5591,hard_stop,11,-12.53,-1378.01,-12.53,-12.53,38.71,1.89,5.74,59,True,True,True,True,True,True
+CVS,Health Care,CVS Health,False,2026-05-06,2026-05-08,88.0,2026-05-26,90.73,trail_stop,18,3.1,341.25,3.1,7.75,16.48,2.12,0.88,83,True,True,True,True,True,True
+DVA,Health Care,DaVita,False,2026-05-05,2026-05-07,194.32,2026-06-04,192.17,data_end,28,-1.11,-121.71,-1.11,-1.11,23.18,3.27,22.07,90,True,True,True,True,True,True
+DELL,Information Technology,Dell Technologies,True,2026-05-28,2026-06-01,426.15,2026-06-04,422.05,data_end,3,-0.96,-105.83,-0.96,-0.96,63.99,3.97,32.51,94,True,True,True,True,True,True
+EME,Industrials,Emcor,False,2026-04-29,2026-05-01,899.9,2026-05-29,826.82,hard_stop,28,-8.12,-893.3,-8.12,-8.12,17.1,1.76,6.0,90,True,True,True,True,True,True
+FDX,Industrials,FedEx,False,2026-03-19,2026-03-23,294.1176,2026-05-04,288.3159,time,42,-1.97,-216.99,-1.97,-1.97,25.52,2.98,2.2,92,True,True,True,True,True,False
+BEN,Financials,Franklin Resources,False,2026-01-30,2026-02-03,26.6899,2026-03-12,23.4276,hard_stop,37,-12.22,-1344.54,-12.22,-12.22,23.96,5.28,1.19,84,True,True,True,True,True,True
+GEV,Industrials,GE Vernova,False,2026-04-22,2026-04-24,1161.02,2026-04-29,1063.11,hard_stop,5,-8.43,-927.64,-8.43,-8.43,771.56,1.87,2.34,89,True,True,True,True,True,True
+GNRC,Industrials,Generac,False,2026-04-29,2026-05-01,260.02,2026-06-04,278.14,data_end,34,6.97,766.56,6.97,6.97,25.68,3.31,1.5,89,True,True,True,True,True,True
+HAL,Energy,Halliburton,False,2026-01-21,2026-01-23,34.4161,2026-03-06,33.9058,time,42,-1.48,-163.13,-1.48,-1.48,26.32,1.99,0.56,88,True,True,True,True,True,True
+HAS,Consumer Discretionary,Hasbro,False,2026-02-10,2026-02-12,104.3106,2026-03-05,94.5953,hard_stop,21,-9.31,-1024.53,-9.31,-9.31,59.28,3.12,1.89,97,True,True,True,True,True,True
+HSY,Consumer Staples,Hershey Company (The),False,2026-02-05,2026-02-09,228.9056,2026-03-19,208.9734,hard_stop,38,-8.71,-957.83,-8.71,-8.71,21.77,2.91,1.27,80,True,True,True,True,True,True
+HPE,Information Technology,Hewlett Packard Enterprise,True,2026-06-01,2026-06-03,54.18,2026-06-04,53.69,data_end,1,-0.9,-99.48,-0.9,-0.9,195.76,5.65,19.33,92,True,True,True,True,True,True
+IRM,Real Estate,Iron Mountain,False,2026-04-30,2026-05-04,126.82,2026-06-04,130.25,data_end,31,2.7,297.51,2.7,2.7,15.76,3.58,0.68,93,True,True,True,True,True,True
+LITE,Information Technology,Lumentum,True,2026-02-03,2026-02-05,436.22,2026-03-04,680.8,trail_stop,27,56.07,6167.48,59.19,56.07,18.56,1.73,7.48,89,True,True,True,True,True,True
+PFE,Health Care,Pfizer,False,2026-02-03,2026-02-05,26.3255,2026-03-19,26.9649,time,42,2.43,267.19,2.43,2.43,16.18,1.83,4.4,89,True,True,True,True,True,True
+PNW,Utilities,Pinnacle West Capital,False,2026-02-25,2026-02-27,98.7643,2026-04-10,102.6796,time,42,3.96,436.07,3.96,3.96,162.15,1.57,0.3,66,True,True,True,True,True,True
+PNC,Financials,PNC Financial Services,False,2026-01-16,2026-01-21,220.3969,2026-03-04,212.2297,time,42,-3.71,-407.63,-3.71,-3.71,15.36,2.31,1.8,84,True,True,True,True,True,True
+PWR,Industrials,Quanta Services,False,2026-04-30,2026-05-04,749.6,2026-06-01,687.48,hard_stop,28,-8.29,-911.58,-8.29,-8.29,44.56,2.7,1.71,87,True,True,True,True,True,True
+ROK,Industrials,Rockwell Automation,False,2026-02-05,2026-02-09,408.7751,2026-03-06,368.6927,hard_stop,25,-9.81,-1078.61,-9.81,-9.81,16.83,3.6,0.13,85,True,True,True,True,True,True
+SNDK,Information Technology,Sandisk,True,2026-01-29,2026-02-02,588.81,2026-02-04,584.55,trail_stop,2,-0.72,-79.58,-0.72,-0.72,74.97,1.52,7.15,87,True,True,True,True,True,True
+STX,Information Technology,Seagate Technology,True,2026-04-28,2026-04-30,655.18,2026-05-19,733.35,trail_stop,19,11.93,1312.42,13.07,11.93,16.76,1.69,11.12,89,True,True,True,True,True,True
+TPR,Consumer Discretionary,"Tapestry, Inc.",False,2026-02-05,2026-02-09,150.6547,2026-03-23,144.0087,time,42,-4.41,-485.25,-4.41,-4.41,20.72,2.95,4.3,87,True,True,True,True,True,True
+TGT,Consumer Staples,Target Corporation,False,2026-05-20,2026-05-22,127.49,2026-06-04,123.85,data_end,13,-2.86,-314.06,-2.86,-2.86,17.31,4.2,2.92,89,True,True,True,True,True,True
+TER,Information Technology,Teradyne,True,2026-02-02,2026-02-04,283.4843,2026-03-06,272.9469,trail_stop,30,-3.72,-408.88,7.27,-3.72,30.11,2.29,14.25,83,True,True,True,True,True,True
+TXN,Information Technology,Texas Instruments,True,2026-04-22,2026-04-24,286.3749,2026-06-04,305.37,data_end,41,6.63,729.62,2.38,6.63,24.41,2.02,19.82,89,True,True,True,True,True,True
+VRT,Industrials,Vertiv,False,2026-04-22,2026-04-24,328.0,2026-05-18,339.73,trail_stop,24,3.58,393.38,3.58,-1.64,15.67,1.84,5.83,96,True,True,True,True,True,True
