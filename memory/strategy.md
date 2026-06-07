@@ -26,7 +26,10 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
   - **Bull regime (SPY > 200MA):** normal operation — all standard thresholds apply.
   - **Bear regime (SPY < 200MA):** reduce max new positions to **2 per week** and require EPS surprise **>20% for ALL sectors** regardless of sector-specific rules. Do not stop trading entirely — qualifying bear-regime entries historically produce strong returns when the signal clears the higher bar. Log the regime status in `plan.md` notes every day.
   - Backtest evidence: adding this gate raised win rate from 55.0%→58.5%, avg return from +1.75%→+2.20%, and profit factor from 1.62→1.88 across 2022-2025 (207 trades). Best single improvement available.
-
+- Gate status is stored in `memory/pead_health.md` and updated 
+  weekly by universe_refresh. Pre_market reads this file — 
+  do not edit manually between Sunday runs.
+  
 ## Universe
 - **S&P 1500 constituents (S&P 500 + S&P 400 + S&P 600) only.** `pre_market` pulls the current list via web_search from a reliable source (SlickCharts or Wikipedia) and caches it for the day in `research_log.md`.
 - Minimum price: **$10/share**
