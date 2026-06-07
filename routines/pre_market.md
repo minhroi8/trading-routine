@@ -32,7 +32,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
 3. **Shortlist 3–5 candidates** from universe + active watchlist tickers with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst). Apply all scoring filters below — higher-scoring candidates rank above lower-scoring ones.
 
-   **Deep research protocol — run steps a through h for EVERY candidate before scoring:**
+   **Deep research protocol — run steps a through i for EVERY candidate before scoring:**
 
    a. **Earnings data (full article fetch):** web_search `"<TICKER> Q[N] [year] earnings results"`. Fetch the full article from the top result (prefer Seeking Alpha, MotleyFool, or company IR page over aggregators). Extract: exact EPS beat %, exact revenue beat %, guidance language verbatim, and any forward commentary from management. Do not rely on snippet alone.
 
@@ -48,18 +48,38 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
    g. **Risk check (full fetch):** web_search `"<TICKER> risks concerns [month] [year]"`. Fetch the top result in full. Note any material risks: regulatory, competitive, supply chain, customer concentration, insider selling. If any risk could plausibly break the thesis within 42 days, drop the candidate entirely and log why.
 
-   h. **Regulatory risk scan (NEW — required for all candidates):**
+   h. **Regulatory risk scan (required for all candidates):**
 
-      i. **SEC shelf registration check:** web_search `"<TICKER> SEC S-3 shelf registration 2026"` AND web_search `"<TICKER> equity offering dilution 2026"`. If an active shelf registration (Form S-3) is found OR a recent equity offering announcement exists, flag as **DILUTION RISK** and drop the candidate. A company with an active shelf reg can sell new shares at any time, immediately diluting existing shareholders and typically causing a sharp price decline. This is what caused the GOOGL -8.71% stop-out on June 2. Record finding in plan.md notes.
+      i. **SEC shelf registration check:** web_search `"<TICKER> SEC S-3 shelf registration 2026"` AND web_search `"<TICKER> equity offering dilution 2026"`. If an active shelf registration (Form S-3) is found OR a recent equity offering announcement exists, flag as **DILUTION RISK** and drop the candidate. Record finding in plan.md notes.
 
-      ii. **BIS export control check (IT/semiconductor candidates only):** web_search `"BIS export control <TICKER> 2026"` AND web_search `"<TICKER> China export restriction 2026"`. For any IT sector candidate — especially semiconductors (AMD, NVDA, MRVL, MU, AVGO, QCOM, etc.) — check for recent Bureau of Industry and Security rule changes, license requirement expansions, or entity list additions that affect the company's China revenue. If material BIS news exists within the last 30 days, flag as **EXPORT CONTROL RISK** and drop or heavily downrank. This is what caused the AMD trailing stop conversion and NVDA stop-out in early June. Record finding in plan.md notes.
+      ii. **BIS export control check (IT/semiconductor candidates only):** web_search `"BIS export control <TICKER> 2026"` AND web_search `"<TICKER> China export restriction 2026"`. For any IT sector candidate — especially semiconductors (AMD, NVDA, MRVL, MU, AVGO, QCOM, etc.) — check for recent BIS rule changes, license requirement expansions, or entity list additions that affect China revenue. If material BIS news exists within the last 30 days, flag as **EXPORT CONTROL RISK** and drop or heavily downrank. Record finding in plan.md notes.
 
       **If either regulatory scan finds a material flag: drop the candidate regardless of score on steps a–g.**
 
-   **After completing a–h, score each candidate 1–10:**
-   - Signal quality (EPS surprise size, guidance raise magnitude): 1–3 pts
-   - Momentum (52-week recency, relative strength vs SPY): 1–3 pts
-   - Confirmation (volume ratio, analyst conviction count): 1–2 pts
+   i. **New signal checks (research-backed additions):**
+
+      i. **Multi-quarter earnings streak:** web_search `"<TICKER> earnings history last 3 quarters"`. Check whether the company has beaten EPS estimates for 2+ consecutive quarters — not just the most recent one. Research shows Sharpe ratios nearly double for stocks with multi-quarter streaks vs first-time beats. Score adjustment:
+         - First-time beat only: signal quality score −1 pt
+         - 2 consecutive quarters beating: no adjustment (baseline)
+         - 3+ consecutive quarters beating: signal quality score +1 pt
+         Record the streak count in the thesis.
+
+      ii. **Earnings day gap size:** Check the stock's price change from prior close to earnings-day open (the overnight gap). A large positive gap shows institutional conviction in real time. Score adjustment:
+         - Gap >10% upward: confirmation score +1 pt (strong institutional buy)
+         - Gap 5–10% upward: no adjustment (normal)
+         - Gap <5% despite large EPS beat: confirmation score −1 pt (muted reaction, weak drift signal)
+         Use Alpaca bars or web_search `"<TICKER> earnings reaction gap [date]"` to verify.
+
+      iii. **Sector ETF momentum:** Identify the candidate's GICS sector ETF (XLK=IT, XLI=Industrials, XLF=Financials, XLV=Healthcare, XLY=Consumer Disc., XLE=Energy, XLP=Consumer Staples, XLU=Utilities, XLRE=Real Estate, XLB=Materials). Fetch Alpaca bars for the sector ETF over the last 20 trading days. If the sector ETF is underperforming SPY over that window: momentum score −1 pt. PEAD is weakest when money is rotating OUT of a sector. Record sector ETF vs SPY 20-day spread in thesis.
+
+      iv. **Short interest amplifier (optional but noted):** web_search `"<TICKER> short interest percent float"`. If short interest >10% of float before earnings and the stock had a large beat: flag as potential short squeeze amplifier — confirmation score +0.5 pt. If short interest <2%: neutral. Record in thesis.
+
+      v. **Insider activity:** web_search `"<TICKER> insider buying Form 4 [month] [year]"`. If C-suite or directors purchased shares within 30 days post-earnings: signal quality score +0.5 pt (management conviction). If insiders are selling aggressively post-earnings: risk score −1 pt. Record in thesis.
+
+   **After completing a–i, score each candidate 1–10:**
+   - Signal quality (EPS surprise size, guidance raise magnitude, earnings streak, insider activity): 1–3 pts
+   - Momentum (52-week recency, relative strength vs SPY, sector ETF momentum): 1–3 pts
+   - Confirmation (volume ratio, analyst conviction count, earnings day gap): 1–2 pts
    - Risk (lower risk = higher score, regulatory flags = automatic drop): 1–2 pts
 
    **Only proceed with candidates scoring ≥6/10.** If fewer than 3 candidates score ≥6, plan fewer buys rather than lowering the bar.
@@ -70,7 +90,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
 5. **Draft `memory/plan.md`** for each surviving candidate:
    - Planned buy: ticker, `target_qty` sized per `strategy.md` `Max position size at entry` field (currently **11%**) of current equity (from Alpaca `/v2/account`), `limit_price`, `stop_price` = `entry × 0.92`.
-   - Full thesis must include: score X/10, EPS surprise %, revenue beat %, volume ratio vs 20-day avg, 52-week high recency (days ago), relative strength vs SPY (5-day spread %), analyst upgrade count, one verbatim management quote from earnings call, top risk flagged, and regulatory scan result (shelf reg: clean/flagged, BIS: clean/flagged/N/A).
+   - Full thesis must include: score X/10, EPS surprise %, revenue beat %, earnings streak (N quarters), earnings day gap %, volume ratio vs 20-day avg, 52-week high recency (days ago), relative strength vs SPY (5-day spread %), sector ETF vs SPY (20-day spread %), analyst upgrade count, short interest %, insider activity, one verbatim management quote from earnings call, top risk flagged, regulatory scan result (shelf reg: clean/flagged, BIS: clean/flagged/N/A).
    - Planned sells: any positions whose exit criteria (per `strategy.md`) have fired since `market_close` — e.g. thesis invalidation, 60-day-with-<3%-gain rotation flag from midday.
 
 6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 5 (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
@@ -81,7 +101,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 - Consider tickers not in `memory/universe.md` OR `memory/watchlist.md`. If a compelling catalyst appears for a ticker outside both lists, add it to `watchlist.md` with `status: pending_review` and POST a Discord flag — do not plan a trade until human sets status to `active`.
 - Re-run any universe filters. That's `universe_refresh`'s job.
 - Leave `plan.md` blank if you had candidates — if nothing qualified, write that reason explicitly under Notes.
-- Score a candidate ≥6 without completing all of steps a–h. Incomplete research = automatic disqualification.
+- Score a candidate ≥6 without completing all of steps a–i. Incomplete research = automatic disqualification.
 - Proceed with any candidate flagged by the regulatory scan in step h.
 
 ## End-of-run protocol (per `CLAUDE.md`)
@@ -93,7 +113,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
 ```json
-{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop | score X/10 | EPS +X% | vol Xx | RS +X% vs SPY | shelf-reg: clean | BIS: clean> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nRegulatory flags: <TICKER — shelf-reg/BIS flag description> or none\nWatchlist flags: <TICKER added as pending_review — reason> or none\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop | score X/10 | EPS +X% | streak Nq | gap +X% | vol Xx | RS +X% vs SPY | sector ETF +X% vs SPY | shelf-reg: clean | BIS: clean> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nRegulatory flags: <TICKER — shelf-reg/BIS flag description> or none\nWatchlist flags: <TICKER added as pending_review — reason> or none\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success. If the POST fails, log the failure but do NOT abort.
