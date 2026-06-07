@@ -28,9 +28,16 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 
 1b. **Load the watchlist.** Read `memory/watchlist.md`. For each ticker with `status: active`, treat it identically to a universe ticker for the rest of this routine — it may be shortlisted, researched, and planned just like any universe name. All strategy.md rules still apply. Log watchlist tickers considered in `memory/research_log.md`.
 
+1c. **PEAD signal-health posture (raise-the-bar overlay).** Read `memory/pead_health.md` frontmatter.
+   - **Freshness:** if `expires_on` is in the past, or the file is missing/placeholder (`source: unset`), treat posture as **NORMAL but flagged STALE** — do NOT raise the bar on a stale overlay (the universe-cache freshness gate above is the hard halt). Note the staleness in `research_log.md` and the Discord message.
+   - **If `posture: ELEVATED_BAR`** (trailing realized PEAD drift is currently weak — see `realized_health_60d_pct`, `health_sample_n`): for THIS session only, raise the EPS-surprise threshold to **>20% for ALL sectors** (overriding the standard 15% in `strategy.md` entry criteria; for sectors already at >20% it stays >20%) and cap **max new positions at 2**. This mirrors `strategy.md`'s bear-regime treatment — **do NOT halt**: high-conviction setups clearing the higher bar still trade. Record posture, `realized_health_60d_pct`, and `health_sample_n` in `plan.md` notes and the Discord message.
+   - **If `posture: NORMAL`:** standard `strategy.md` thresholds apply.
+   - This overlay governs new ENTRIES only — it never affects exits, and it can only TIGHTEN (never loosen) a `strategy.md` rule.
+   - The SPY 200-day regime is enforced separately by `strategy.md`'s own regime-gate rule; this is the *signal-health* leg, which can raise the bar even when SPY is bullish (the bull-and-weak case). When both apply, use the stricter (lower) new-position cap.
+
 2. **Overnight news sweep.** web_search for overnight market-moving news, earnings releases, guidance updates, and analyst actions. Focus on names already in `universe.md` and `watchlist.md`. Log salient items to `memory/research_log.md` (date, source, ticker, note). If a compelling catalyst appears for a ticker NOT in `universe.md` AND NOT in `watchlist.md`: add a new row to `memory/watchlist.md` with `status: pending_review` and POST a Discord flag — do NOT plan a trade on it until human sets status to `active`.
 
-3. **Shortlist 3–5 candidates** from universe + active watchlist tickers with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst). Apply all scoring filters below — higher-scoring candidates rank above lower-scoring ones.
+3. **Shortlist 3–5 candidates** from universe + active watchlist tickers with a positive fundamentals signal in the last 30 days (earnings beat, guidance raise, positive analyst revision, or clear catalyst). Apply all scoring filters below — higher-scoring candidates rank above lower-scoring ones. **Use the EPS-surprise threshold in effect for this session** — the standard `strategy.md` thresholds, OR >20% for all sectors if step 1c set `ELEVATED_BAR` (or the bear-regime rule is active).
 
    **Deep research protocol — run steps a through i for EVERY candidate before scoring:**
 
@@ -93,7 +100,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
    - Full thesis must include: score X/10, EPS surprise %, revenue beat %, earnings streak (N quarters), earnings day gap %, volume ratio vs 20-day avg, 52-week high recency (days ago), relative strength vs SPY (5-day spread %), sector ETF vs SPY (20-day spread %), analyst upgrade count, short interest %, insider activity, one verbatim management quote from earnings call, top risk flagged, regulatory scan result (shelf reg: clean/flagged, BIS: clean/flagged/N/A).
    - Planned sells: any positions whose exit criteria (per `strategy.md`) have fired since `market_close` — e.g. thesis invalidation, 60-day-with-<3%-gain rotation flag from midday.
 
-6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 5 (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
+6. **Sanity-check the plan** against `strategy.md`: cash floor ≥ 10%, max concurrent ≤ 8, max new-per-week ≤ 5 — **but ≤ 2 if step 1c posture is `ELEVATED_BAR` or the bear-regime rule is active** (count recent buys in `trade_log.md`), sector cap ≤ 30% (use the `sector` column in `universe.md`). Trim if needed, log the reasons in the `plan.md` notes section.
 
 ## MUST NOT
 
@@ -103,6 +110,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 - Leave `plan.md` blank if you had candidates — if nothing qualified, write that reason explicitly under Notes.
 - Score a candidate ≥6 without completing all of steps a–i. Incomplete research = automatic disqualification.
 - Proceed with any candidate flagged by the regulatory scan in step h.
+- Ignore an `ELEVATED_BAR` posture from step 1c: when set (and not stale), the >20%-all-sectors EPS bar and ≤2 new-position cap are mandatory for the session. The overlay may only tighten, never loosen.
 
 ## End-of-run protocol (per `CLAUDE.md`)
 
@@ -113,7 +121,7 @@ Not strictly needed here (this routine never trades), but still read `DRY_RUN` f
 5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
 ```json
-{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPlanned buys: <TICKER qty @ limit, stop | score X/10 | EPS +X% | streak Nq | gap +X% | vol Xx | RS +X% vs SPY | sector ETF +X% vs SPY | shelf-reg: clean | BIS: clean> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nRegulatory flags: <TICKER — shelf-reg/BIS flag description> or none\nWatchlist flags: <TICKER added as pending_review — reason> or none\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🌅 PRE-MARKET <YYYY-MM-DD> (DRY_RUN: <true|false>)\nUniverse: <N> tickers (expires <YYYY-MM-DD>)\nPEAD health: <NORMAL|ELEVATED_BAR|STALE> (realized <pct>% n=<N>) — <standard 15% bar | raised to 20% all sectors, max 2 new>\nPlanned buys: <TICKER qty @ limit, stop | score X/10 | EPS +X% | streak Nq | gap +X% | vol Xx | RS +X% vs SPY | sector ETF +X% vs SPY | shelf-reg: clean | BIS: clean> ...\nPlanned sells: <TICKER — reason> ...\nTop catalyst: <one line>\nRegulatory flags: <TICKER — shelf-reg/BIS flag description> or none\nWatchlist flags: <TICKER added as pending_review — reason> or none\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success. If the POST fails, log the failure but do NOT abort.

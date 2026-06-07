@@ -6,6 +6,8 @@ Cron: `0 18 * * 0` (US Eastern). UTC equivalent during EDT: `0 22 * * 0`. During
 
 Rebuild `memory/universe.md`: the pre-computed list of tickers that pass `strategy.md` universe filters. **This is the ONLY routine that writes to `memory/universe.md`** — every trading routine reads it as read-only.
 
+This routine ALSO refreshes `memory/pead_health.md`: the weekly PEAD signal-health overlay that `pre_market` reads to decide whether to raise the entry bar. **This is the ONLY routine that writes to `memory/pead_health.md`**, and only via `compute_pead_health.py` (never by hand).
+
 Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything below.
 
 ## Load
@@ -77,10 +79,15 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 
    **Important:** Use `datetime.date.today()` for `screened_on` — never hardcode the date.
 
+8. **Refresh the PEAD signal-health overlay.** Run `python compute_pead_health.py` (needs `yfinance`, `pandas`, `numpy` — install if missing). It computes the trailing-60d realized PEAD health across the S&P 500 plus the SPY 200-day regime, and writes `memory/pead_health.md` atomically with `posture: NORMAL|ELEVATED_BAR` in its frontmatter (ELEVATED_BAR = the drift edge is currently weak → `pre_market` raises the entry bar).
+   - This step is **independent of the universe rebuild**: if `compute_pead_health.py` exits non-zero, log the error to `memory/research_log.md`, note it in the Discord message, and continue — do NOT fail the run or roll back a good `universe.md`. A stale `pead_health.md` is safe: `pre_market` fails OPEN (treats posture as NORMAL) on a stale overlay, and the universe-cache `expires_on` remains the hard gate.
+   - Note: this script uses **yfinance** (for EPS-surprise history), not the Alpaca bars used above — that's intentional; the health signal was calibrated on yfinance data.
+   - Do not hand-edit `memory/pead_health.md`; only the script writes it.
+
 ## MUST NOT
 
 - Place, modify, or cancel orders.
-- Write to any file other than `memory/universe.md` and `memory/research_log.md`.
+- Write to any file other than `memory/universe.md`, `memory/pead_health.md`, and `memory/research_log.md`. (`pead_health.md` must be written by `compute_pead_health.py`, not by hand.)
 - Leave a partially written `memory/universe.md` on disk if the run fails.
 - Re-screen or refresh the universe from any other routine.
 - Hardcode the current date anywhere in the script. Always derive from `datetime.date.today()`.
@@ -93,7 +100,7 @@ Per the standard `CLAUDE.md` end-of-run protocol — `git pull --rebase`, commit
 Discord body:
 
 ```json
-{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nScope: S&P 1500\nPassed: <N> | Rejected: <M> | Errors: <E>\nBy tier: large=<X>, mid=<Y>, small=<Z>\nTop rejection reasons: price<10: A | ADV<20M: B | IPO<180d: C | no_bars: D\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nScope: S&P 1500\nPassed: <N> | Rejected: <M> | Errors: <E>\nBy tier: large=<X>, mid=<Y>, small=<Z>\nTop rejection reasons: price<10: A | ADV<20M: B | IPO<180d: C | no_bars: D\nExpires: <YYYY-MM-DD>\nPEAD health: <NORMAL|ELEVATED_BAR> (realized <pct>% n=<N> | SPY>200MA: <bool> | <ok|stale/failed>)\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success.

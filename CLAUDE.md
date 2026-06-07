@@ -38,9 +38,10 @@ Read in this order. Missing files = abort and post the error to Discord.
 3. `memory/portfolio.md`
 4. `memory/plan.md`
 5. `memory/universe.md` — read by trading routines (`pre_market`, `market_open`, `midday`) as a read-only cache. Written only by `universe_refresh`. Loaded early because the cache freshness check gates whether the routine can run at all.
-6. `memory/trade_log.md` — **last 30 days only**; move older entries to `memory/archive/trade_log_<YYYY-MM>.md`
-7. `memory/research_log.md` — **last 14 days only**; archive older similarly
-8. `memory/lessons.md`
+6. `memory/pead_health.md` — weekly PEAD signal-health overlay (`posture: NORMAL|ELEVATED_BAR`). Read by `pre_market` to decide whether to raise the entry bar (never to halt). Written only by `universe_refresh` (via `compute_pead_health.py`). Read-only to every other routine.
+7. `memory/trade_log.md` — **last 30 days only**; move older entries to `memory/archive/trade_log_<YYYY-MM>.md`
+8. `memory/research_log.md` — **last 14 days only**; archive older similarly
+9. `memory/lessons.md`
 
 ## Market calendar gate (every run, before anything else)
 
@@ -58,7 +59,7 @@ Read in this order. Missing files = abort and post the error to Discord.
 
 | Routine | May do | MUST NOT |
 |---------|--------|----------|
-| `universe_refresh` | Rebuild `memory/universe.md` (Sundays 18:00 ET) | Place orders; edit any memory file other than `universe.md` and `research_log.md` |
+| `universe_refresh` | Rebuild `memory/universe.md` and refresh `memory/pead_health.md` (Sundays 18:00 ET) | Place orders; edit any memory file other than `universe.md`, `pead_health.md`, and `research_log.md` |
 | `pre_market` | Research, write `plan.md` | Place any orders; re-screen the universe |
 | `market_open` | Execute orders in `plan.md`, set stops | Open positions absent from `plan.md` |
 | `midday` | Cut losers, tighten stops on winners | Open new positions |
