@@ -6,6 +6,8 @@ Cron: `0 18 * * 0` (US Eastern).
 
 Rebuild `memory/universe.md`: the pre-computed list of tickers that pass `strategy.md` universe filters. **This is the ONLY routine that writes to `memory/universe.md`** — every trading routine reads it as read-only.
 
+This routine ALSO refreshes `memory/pead_health.md`: the weekly PEAD signal-health snapshot that `pre_market` consumes read-only as its risk-on/risk-off **AND gate**. **This is the ONLY routine that writes to `memory/pead_health.md`.**
+
 Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything below.
 
 ## Load
@@ -54,10 +56,14 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
    ```
    Then the documentation block (copy from the template) and the table of passing tickers, one row per ticker, sorted by ticker symbol.
 
+8. **Refresh the PEAD signal-health gate.** Run `python compute_pead_health.py` (it requires `yfinance`, `pandas`, `numpy`; install if missing). The script computes the two validated gate components — the SPY 200-day regime and the trailing-60d realized PEAD health across the S&P 500 — and writes `memory/pead_health.md` atomically with the combined `gate: RISK_ON|RISK_OFF` verdict in its frontmatter.
+   - This step is **independent of the universe rebuild**: if `compute_pead_health.py` exits non-zero, log the error to `memory/research_log.md` and include it in the Discord message, but DO NOT fail the whole run or roll back a successful `universe.md`. A stale `pead_health.md` is safe — `pre_market` fails OPEN on a stale gate (it does not halt trading on the health file alone; the universe-cache `expires_on` is the hard gate).
+   - Do not hand-edit `memory/pead_health.md`; only the script writes it.
+
 ## MUST NOT
 
 - Place, modify, or cancel orders.
-- Write to any file other than `memory/universe.md` and `memory/research_log.md`.
+- Write to any file other than `memory/universe.md`, `memory/pead_health.md`, and `memory/research_log.md`. (`pead_health.md` must be written by `compute_pead_health.py`, not by hand.)
 - Leave a partially written `memory/universe.md` on disk if the run fails — keep the last good cache in place and POST the failure to Discord.
 - Re-screen or refresh the universe from any other routine. That is this routine's exclusive job.
 
@@ -70,7 +76,7 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
 5. POST to Discord — HTTP POST to `DISCORD_WEBHOOK_URL`, `Content-Type: application/json`, body:
 
 ```json
-{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: <price<10: X | ADV<20M: Y | IPO<180d: Z | no bars: W>\nExpires: <YYYY-MM-DD>\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
+{"content": "🔄 UNIVERSE REFRESH <YYYY-MM-DD>\nPassed: <N> | Rejected: <M> | Errors: <E>\nTop rejection reasons: <price<10: X | ADV<20M: Y | IPO<180d: Z | no bars: W>\nExpires: <YYYY-MM-DD>\nPEAD gate: <RISK_ON|RISK_OFF> (SPY>200MA: <bool> | health: <pct>% n=<N> | <ok|stale/failed>)\nCommit: https://github.com/minhroi8/trading-routine/commit/<sha>"}
 ```
 
 A 204 response means success. If the POST fails, log the failure but do NOT abort.
