@@ -98,7 +98,7 @@ If `git push origin main` fails with a permissions error, do NOT fall back to cr
 3. `git add -A`
 4. `git commit -m "<routine>: <YYYY-MM-DD> — <one-line summary with concrete details (tickers, prices)>"`
 5. `git push origin main`. On rebase conflict: `git pull --rebase` once, retry push once. If still failing, post the error to Discord and abort.
-6. POST a summary to Discord: HTTP POST to `DISCORD_WEBHOOK_URL` with `Content-Type: application/json` and body `{"content": "<message>"}`. The message MUST include the commit SHA and a link to `https://github.com/minhroi8/trading-routine/commit/<sha>`. A 204 response means success. If the Discord POST fails, log the failure but do NOT abort — the commit has already happened and the Discord post is secondary.
+6. POST a summary to Discord: HTTP POST to `DISCORD_WEBHOOK_URL` with `Content-Type: application/json` and body `{"content": "<message>"}`. **Always send an explicit browser-style `User-Agent` header** (e.g. `User-Agent: Mozilla/5.0 (...) Chrome/124.0 Safari/537.36`). Discord's Cloudflare edge rejects default scripting User-Agents (`Python-urllib/*`, sometimes bare `curl/*`) with **HTTP 403 / Cloudflare error 1010** — this is a UA fingerprint block, NOT a network-policy or webhook-URL problem, and retrying without changing the header will keep failing. The message MUST include the commit SHA and a link to `https://github.com/minhroi8/trading-routine/commit/<sha>`. A 204 response means success. If the Discord POST still fails after setting a proper User-Agent, log the failure but do NOT abort — the commit has already happened and the Discord post is secondary.
 
 ## Commit identity
 
