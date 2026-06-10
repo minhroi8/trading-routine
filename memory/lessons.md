@@ -129,3 +129,42 @@ Review date: 2026-06-07 — evaluate whether new picks from S&P 400/600 outperfo
   - Add export control monitoring to pre_market thesis check for all semiconductor and IT positions: Commerce Dept BIS guidance updates, Entity List changes, and executive orders affecting chip exports. AMD (Jun 1) and NVDA (Jun 5) were both impacted in the same week; this risk is now demonstrated as material and recurring.
   - Review GTC stop behavior on paper account for after-hours fills: HPE stop fired at 16:22 ET (22 min after close). If paper account consistently fills GTC stops after hours, consider requiring DAY stops (re-entered each session) or adding logic to cancel and re-enter stops at market_close to avoid unintended after-hours fills.
   - Clarify sizing-correction process in market_open: when a pre_market position sizing calculation uses a different equity basis than the actual open equity (resulting in wrong share count), the correction buy should be logged as part of the original entry with full thesis re-verification, not treated as a separate decision. Add explicit share-count validation step to market_open before submitting any order.
+
+---
+
+## Week of 2026-06-08 (PARTIAL — mid-week run on Tue Jun 9 eve; only Jun 8–9 sessions completed)
+
+_Note: this review was invoked mid-week (Tue 2026-06-09 ~20:23 ET), not at the usual Friday 16:30 ET. It covers the two completed sessions of the week (Mon Jun 8, Tue Jun 9). Numbers are week-to-date EOD marks; the normal Friday review will close out the full week._
+
+- Perf: portfolio −0.28% vs SPY −0.05% (delta −0.23 pts) | equity $98,430→$98,151 (EOD marks, Fri Jun 5 close → Tue Jun 9 close); SPY IEX 737.45→737.07. Live equity at run time $98,338.60.
+- Trades: 3 fills (all Jun 9, all mechanical stop exits; 0 buys); 3 closed trades
+- Win rate: 2 wins / 3 closed = 66.7%
+- Avg win: +2.17% | Avg loss: −8.01%
+- Best: AAPL +4.24% (+$204.28) — trailing stop 4225eab6 fired 10:03 ET (17@$295.116471, HWM $317.40), held 34 days. Thesis intact at exit (WWDC 2026 Gemini-Siri overhaul, Q2 FY2026 rev +17% YoY, Services ATH $31B); pure mechanical trailing-stop execution on a broad-selloff open, NOT a thesis break. Locked in the gain from the May 27 +10% trailing conversion.
+- Worst: GEV −8.01% (−$319.18) — hard stop 68f84ddd fired 10:17 ET (4@$916.67), held 21 days. Thesis (Gas Power + Electrification data-center orders, FY2026 guide raised $44.5–45.5B) intact at exit; the Vineyard Wind court ruling (May 29) was correctly judged Wind-segment-only and NOT thesis-invalidating. Stop fired on a gap-down open after the position sat at CRITICAL <1.5% cushion for multiple sessions; never worked from entry. Missed ex-div Jun 16 ($2.00) by the stop.
+- Thesis audit:
+  - AAPL — thesis held up; exit was mechanical (trailing stop), not a thesis failure. Trailing stop did its job: protected a position that ran to HWM $317.40 and gave back to $295.12 on the WWDC sell-the-news + macro selloff. Win.
+  - CSCO — thesis intact (AI networking structural demand, hyperscaler orders triple-digits YoY). Trailing stop 5dccb5cd fired 12:38 ET at +0.10% (HWM $126.435 → exit $117.54). The 7% trail let a position that had been +7–10% round-trip to breakeven in a single down session. Pattern repeat of give-back risk on wide trails during sharp single-day selloffs.
+  - GEV — thesis intact but the position never traded positive over its 21-day life and sat at CRITICAL stop cushion (1.06–1.50%) for days before the −8% hard stop finally fired. Correctly NOT cut early on the Vineyard Wind ruling; let the mechanical stop handle it.
+  - Common pattern: all three exits clustered on a single broad-selloff session (Jun 9). 2 of 3 were winners locked in by trailing stops (system working as designed); 1 was the −8% hard stop on a chronically-underwater name. Zero discretionary overrides — clean mechanical execution.
+- What worked:
+  - Trailing stops on AAPL (+4.24%) and CSCO (+0.10%) executed cleanly and without discretion → 2/3 wins, 66.7% win rate on the week's closed trades
+  - Discipline under ELEVATED_BAR held: 8 candidates researched Jun 9 (CRM, INTC, TTWO, META, AVGO, ADBE, ORCL, MRVL), 0 qualified (>20% EPS bar + step-f RS / step-g consensus-PT screens); no forced entries
+  - Correctly held GEV through the Vineyard Wind court ruling as a Wind-division-only event (not a guidance cut / earnings miss / fraud / material thesis catalyst) rather than panic-cutting; mechanical stop took the exit
+  - Portfolio outperformed SPY intraday on the Jun 9 down day (+0.16 pp per EOD log); multi-name positioning cushioned the selloff before the stops cleared
+  - Reconciliation clean both sessions; all stops confirmed active every run; DRY_RUN: false maintained
+- What didn't:
+  - Portfolio underperformed SPY week-to-date (−0.28% vs −0.05%, −0.23 pts)
+  - CSCO trailing-stop give-back: HWM $126.435 → exit $117.54 (+0.10%); the 7% trail let a +7–10% position round-trip to breakeven on one selloff day. Late conversion (Jun 4 close trigger → Jun 5 open) plus the wide trail meant almost none of the gain was realized
+  - GEV chronic underwater hold: never positive across 21 days, sat at <1.5% stop cushion (CRITICAL) for multiple sessions before stopping at the full −8%
+  - Stop-cluster on a single day (Jun 9): 3 simultaneous exits left the book at 2 positions / ~79.5% cash — heavy cash drag now limits upside capture
+  - Deployment very low (~20% invested): ELEVATED_BAR (>20% EPS for ALL sectors) + strict step-f/g screens have produced 0 qualifiers for many consecutive sessions; the cash drag is a real and persistent opportunity cost
+- Rule adherence: clean
+  - 0 new positions opened this week (0/5 weekly cap ✓); no sizing decisions to breach the 11% cap
+  - Cash floor: 79.5% cash >> 10% minimum ✓ (well above — the issue is too much cash, not too little)
+  - Sector cap: post-exits the book is PWR (Industrials) + SNDK (IT) — each well under the 30% cap ✓
+  - All stops confirmed active every session ✓; no orders outside regular market hours ✓; DRY_RUN: false ✓
+- Proposed rule changes (for human review, not applied automatically):
+  - Trailing-stop give-back: CSCO round-tripped from +7–10% to +0.10% under the 7% trail in a single down session. strategy.md already chose 7% over 12% for IT, but consider adding a partial profit-lock at the +10% trailing-conversion trigger (e.g., sell 1/3 of the position) so a subsequent sharp selloff can't erase the entire unrealized gain. Would have banked part of CSCO's run.
+  - Cash-drag under prolonged ELEVATED_BAR: with ~80% cash and 0 qualifiers across many sessions, the >20%-EPS-all-sectors + step-f/g combination may be over-restrictive when sustained for weeks. The overlay is "raise the bar, not halt" by design, but a multi-week 0-entry / 80%-cash streak is a measurable opportunity cost. Suggest the human review whether (a) the health threshold (currently 0, untuned) should be recalibrated, or (b) ELEVATED_BAR should slightly loosen the step-f/g RS screens while keeping the higher EPS bar.
+  - Chronic-underwater review: GEV was never positive over 21 days and sat at CRITICAL (<1.5%) cushion for multiple sessions before stopping at −8%. Consider a "never-worked" flag in pre_market: if a position has not closed green on any session within N days of entry AND its stop cushion is persistently <2%, surface it for proactive human review (not auto-cut — thesis can still be intact, as GEV's was).
