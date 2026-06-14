@@ -15,7 +15,11 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 ## Risk controls
 - **Hard stop-loss: -8% from entry.** Placed as a stop order at Alpaca immediately after fill in `market_open`.
 - **Midday cut: only exit early if the hard stop (-8%) is hit OR the thesis is genuinely broken** (guidance cut, earnings miss, fraud, material negative catalyst). Do NOT cut on temporary intraday weakness alone. Backtest data shows positions held to 42 days win 65.8% of the time — patience is the edge.
-- **Trailing stop on winners:** once a position is up +10%, convert the stop to a trailing stop 7% below peak for all sectors. Backtest data (2026 YTD, 7 IT trades) confirmed 7% outperforms 12% for IT sector — wider trail gives back more gains than it captures.
+- **Trailing stop on winners:** once a position is up +10%, execute a **partial profit-lock** then convert the remainder to a trailing stop:
+  - **Sell 1/3 of the position immediately at market** when the +10% trigger crosses. Round down to the nearest whole share; if 1/3 rounds to 0 shares (small positions), skip the partial sell and trail the full position.
+  - **Apply a 7% trailing stop (all sectors) to the remaining 2/3** of the position.
+  - Rationale: repeated give-back pattern observed 3 consecutive weeks (CSCO round-tripped +7-10% to +0.10% under a 7% trail during single-day selloffs). Locking in 1/3 at the +10% trigger banks real gains while the remaining 2/3 still benefits from upside continuation under the trail.
+  - Log the partial sell in `trade_log.md` with rationale "partial profit-lock at +10% trailing trigger" and the realized P&L on the sold portion.
 - **Single-sector cap:** no more than 30% of portfolio in any one GICS sector.
 - **Sector deprioritization:**
   - Utilities and Real Estate picks require EPS surprise >20% to qualify — historically underperform on PEAD strategy.
@@ -53,6 +57,7 @@ Fundamentals-based swing trading, US cash equities only, paper account only. Not
 
 ## Exit criteria (any one triggers an exit)
 - Hard stop hit (-8%)
-- Trailing stop triggered (7% below peak, all sectors)
+- Partial profit-lock at +10% trigger (sell 1/3, trail remaining 2/3 at 7%)
+- Trailing stop triggered on remaining position (7% below peak, all sectors)
 - Thesis invalidated (bad earnings, guidance cut, negative catalyst)
 - Held 60+ days with < 3% gain (opportunity cost — rotate capital)
