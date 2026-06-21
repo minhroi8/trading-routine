@@ -60,7 +60,7 @@ Read in this order. Missing files = abort and post the error to Discord.
 | Routine | May do | MUST NOT |
 |---------|--------|----------|
 | `universe_refresh` | Rebuild `memory/universe.md` and refresh `memory/pead_health.md` (Sundays 18:00 ET) | Place orders; edit any memory file other than `universe.md`, `pead_health.md`, and `research_log.md` |
-| `pre_market` | Research, write `plan.md` | Place any orders; re-screen the universe |
+| `pre_market` | Research, write `plan.md`, append `status: pending_review` rows to `watchlist.md`, append to `research_log.md` | Place any orders; re-screen the universe; set a watchlist ticker to `status: active` (human-only) |
 | `market_open` | Execute orders in `plan.md`, set stops | Open positions absent from `plan.md` |
 | `midday` | Cut losers, tighten stops on winners | Open new positions |
 | `market_close` | Reconcile, log P&L, rotate logs | Place orders |

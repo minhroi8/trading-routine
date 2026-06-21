@@ -29,7 +29,7 @@ This routine never trades. Still read `DRY_RUN` and include it in the Discord me
    - Average win %, average loss %
    - Best and worst closed trades (ticker, P&L, whether thesis held up)
 4. **Thesis audit.** For each closed trade this week, did the thesis play out? Why or why not? Log patterns.
-5. **Rule adherence audit.** Did any run breach sizing (5% cap), cash floor (10%), sector cap (30%), or max-3-new-per-week? Flag each breach with the run and reason.
+5. **Rule adherence audit.** Did any run breach sizing (**11%** cap per `strategy.md`), cash floor (10%), sector cap (30%), or max-new-per-week (**5** baseline, **2** under `ELEVATED_BAR` posture or the SPY bear-regime rule)? Flag each breach with the run and reason.
 6. **Append to `memory/lessons.md`**:
 
 ```

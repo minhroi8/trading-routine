@@ -1,6 +1,6 @@
 # Portfolio
 
-Snapshot of current open positions. Rewritten by `market_close` (and `market_open` after fills). Compared against Alpaca `/v2/positions` at every routine start — any divergence aborts the run.
+Snapshot of current open positions. Rewritten by `market_close` (and by `market_open`/`midday` after fills, including `+10%` partial profit-locks, so the share count stays in sync for the next reconciliation). Compared against Alpaca `/v2/positions` at every routine start — any divergence aborts the run.
 
 | ticker | qty | avg_cost | stop_price | thesis | opened_date | last_reconciled |
 |--------|-----|----------|------------|--------|-------------|------------------|
