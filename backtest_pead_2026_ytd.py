@@ -798,6 +798,13 @@ def build_report(base, enh, scenA, scenB, spy_return):
 
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    # This engine module stays at the repo root because production
+    # compute_pead_health.py imports it. When run standalone, write the research
+    # report/trade CSV into backtesting/reports/ alongside the other artifacts.
+    import os
+    _REPORTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "backtesting", "reports")
+
     base, spy_return = run_backtest()
     if base.empty:
         print("No BASE candidates generated. Check 2026 data availability.")
@@ -812,11 +819,11 @@ if __name__ == "__main__":
           f"ScenA: {len(scenA)} | ScenB: {len(scenB)}")
 
     report = build_report(base, enh, scenA, scenB, spy_return)
-    with open("backtest_report_PEAD_2026_YTD.md", "w", encoding="utf-8") as f:
+    with open(os.path.join(_REPORTS_DIR, "backtest_report_PEAD_2026_YTD.md"), "w", encoding="utf-8") as f:
         f.write(report)
     # Save the enhanced trade set (or BASE if enhanced is empty) with filter flags
     out = enh if not enh.empty else base
-    out.to_csv("backtest_trades_PEAD_2026_YTD.csv", index=False)
+    out.to_csv(os.path.join(_REPORTS_DIR, "backtest_trades_PEAD_2026_YTD.csv"), index=False)
 
     print("\nReport saved:    backtest_report_PEAD_2026_YTD.md")
     print("Trades saved:    backtest_trades_PEAD_2026_YTD.csv")

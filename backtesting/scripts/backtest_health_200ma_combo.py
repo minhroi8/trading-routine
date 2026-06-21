@@ -14,8 +14,19 @@ try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
     pass
+import os
 import pandas as pd
 import numpy as np
+
+# --- Path anchoring (research artifacts consolidated under backtesting/) ------
+# Engine backtest_pead_2026_ytd.py stays at the repo root (production
+# compute_pead_health.py imports it); add the repo root to sys.path so the bare
+# import below resolves. Reports/candidate CSVs resolve relative to this file.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+_REPORTS_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "reports"))
 
 import backtest_pead_2026_ytd as eng
 from backtest_validate_filters_2022_2025 import robust_spy
@@ -45,7 +56,7 @@ def health_realized(base, D, L=L_REAL):
 
 
 def main():
-    base = pd.read_csv("backtest_signal_health_candidates.csv",
+    base = pd.read_csv(os.path.join(_REPORTS_DIR, "backtest_signal_health_candidates.csv"),
                        parse_dates=["entry_date", "exit_date", "ret5_known"])
     print("SPY 200MA...")
     spy_close, regime = eng.build_spy(robust_spy())
@@ -123,7 +134,7 @@ def main():
     A("")
 
     rep = "\n".join(L)
-    with open("backtest_report_PEAD_HEALTH_200MA_COMBO.md", "w", encoding="utf-8") as f:
+    with open(os.path.join(_REPORTS_DIR, "backtest_report_PEAD_HEALTH_200MA_COMBO.md"), "w", encoding="utf-8") as f:
         f.write(rep)
     print("\n" + rep)
     print("\nSaved: backtest_report_PEAD_HEALTH_200MA_COMBO.md")

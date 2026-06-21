@@ -22,6 +22,17 @@ import numpy as np
 from datetime import timedelta
 
 import yfinance as yf
+
+# --- Path anchoring (research artifacts consolidated under backtesting/) ------
+# Engine backtest_pead_2026_ytd.py stays at the repo root (production
+# compute_pead_health.py imports it); add the repo root to sys.path so the bare
+# import below resolves. Reports/candidate CSVs resolve relative to this file.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+_REPORTS_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "reports"))
+
 import backtest_pead_2026_ytd as eng
 from backtest_validate_filters_2022_2025 import cached_fetch, robust_spy
 
@@ -123,7 +134,7 @@ def variants(c):
 def main():
     c = build_candidates()
     print(f"\nTotal BASE candidates {SCAN_START}..{SCAN_END}: {len(c)}")
-    c.to_csv("backtest_variants_candidates.csv", index=False)
+    c.to_csv(os.path.join(_REPORTS_DIR, "backtest_variants_candidates.csv"), index=False)
 
     periods = {
         "2022-2025": c[c.year <= 2025],
@@ -145,7 +156,7 @@ def main():
     A("**Read:** compare each Vn against V0 (current rules) within a period. A variant that "
       "raises avg% and PF without crushing trade count is an improvement.\n")
     report = "\n".join(L)
-    with open("backtest_report_PEAD_VARIANTS.md", "w", encoding="utf-8") as f:
+    with open(os.path.join(_REPORTS_DIR, "backtest_report_PEAD_VARIANTS.md"), "w", encoding="utf-8") as f:
         f.write(report)
     print("\n" + report)
     print("\nSaved: backtest_report_PEAD_VARIANTS.md, backtest_variants_candidates.csv")

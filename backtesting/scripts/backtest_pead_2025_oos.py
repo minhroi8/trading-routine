@@ -13,6 +13,11 @@ import time
 import sys
 from datetime import datetime, timedelta
 from io import StringIO
+import os
+
+# --- Path anchoring: reports/trade CSVs resolve under backtesting/reports/ ----
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPORTS_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "reports"))
 
 warnings.filterwarnings("ignore")
 
@@ -697,8 +702,8 @@ if __name__ == "__main__":
 
     report = build_report(df, spy_return, stats)
 
-    report_path = "backtest_report_PEAD_2025_OOS.md"
-    trades_path = "backtest_trades_PEAD_2025_OOS.csv"
+    report_path = os.path.join(_REPORTS_DIR, "backtest_report_PEAD_2025_OOS.md")
+    trades_path = os.path.join(_REPORTS_DIR, "backtest_trades_PEAD_2025_OOS.csv")
 
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
