@@ -9,3 +9,4 @@ __pycache__/
 # Backtest artifacts: large local data cache + transient run logs
 data_cache/
 *_run.log
+backtesting/run.log
