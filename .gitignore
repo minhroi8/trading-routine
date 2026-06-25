@@ -6,7 +6,12 @@ __pycache__/
 *.pyc
 .claude/
 
-# Backtest artifacts: large local data cache + transient run logs
-data_cache/
+# Backtest artifacts: large local data cache + transient run logs.
+# The cache holds per-ticker yfinance pickles — never commit them.
+# Ignore the cache *contents* (not the dir) so the empty folder is preserved.
+/data_cache/
+backtesting/data_cache/*
+!backtesting/data_cache/.gitkeep
 *_run.log
+*.pkl
 backtesting/run.log

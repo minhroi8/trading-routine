@@ -18,9 +18,22 @@ import sys
 from datetime import datetime, timedelta
 
 import yfinance as yf
+
+# --- Path anchoring (research artifacts consolidated under backtesting/) ------
+# This script lives in backtesting/scripts/. The shared engine
+# backtest_pead_2026_ytd.py stays at the repo root because production
+# compute_pead_health.py imports it; add the repo root to sys.path so the bare
+# `import backtest_pead_2026_ytd` below still resolves. Reports and the data
+# cache resolve relative to this file, not the current working directory.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+_REPORTS_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "reports"))
+
 import backtest_pead_2026_ytd as eng
 
-CACHE_DIR = "data_cache"
+CACHE_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "data_cache"))
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
@@ -259,10 +272,10 @@ if __name__ == "__main__":
     if base.empty:
         print("No candidates."); sys.exit(1)
     rep, enh = report(base)
-    with open("backtest_report_PEAD_2022_2025_ENHANCED.md", "w", encoding="utf-8") as f:
+    with open(os.path.join(_REPORTS_DIR, "backtest_report_PEAD_2022_2025_ENHANCED.md"), "w", encoding="utf-8") as f:
         f.write(rep)
-    base.to_csv("backtest_trades_PEAD_2022_2025_ENHANCED_base.csv", index=False)
-    enh.to_csv("backtest_trades_PEAD_2022_2025_ENHANCED.csv", index=False)
+    base.to_csv(os.path.join(_REPORTS_DIR, "backtest_trades_PEAD_2022_2025_ENHANCED_base.csv"), index=False)
+    enh.to_csv(os.path.join(_REPORTS_DIR, "backtest_trades_PEAD_2022_2025_ENHANCED.csv"), index=False)
     nB, wB, aB, pB = line(base); nE, wE, aE, pE = line(enh)
     print(f"\nBASE {nB} ({wB}%/{aB}%/PF{pB}) | Enhanced {nE} ({wE}%/{aE}%/PF{pE})")
     print("Report: backtest_report_PEAD_2022_2025_ENHANCED.md")

@@ -35,6 +35,17 @@ import numpy as np
 from datetime import timedelta
 
 import yfinance as yf
+
+# --- Path anchoring (research artifacts consolidated under backtesting/) ------
+# Engine backtest_pead_2026_ytd.py stays at the repo root (production
+# compute_pead_health.py imports it); add the repo root to sys.path so the bare
+# import below resolves. Reports/candidate CSVs resolve relative to this file.
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_REPO_ROOT = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+_REPORTS_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, "..", "reports"))
+
 import backtest_pead_2026_ytd as eng
 from backtest_validate_filters_2022_2025 import cached_fetch, robust_spy
 
@@ -178,7 +189,7 @@ def apply_gate(base, enh, signal_fn, thresh=0.0):
 
 def main():
     df = build()
-    df.to_csv("backtest_signal_health_candidates.csv", index=False)
+    df.to_csv(os.path.join(_REPORTS_DIR, "backtest_signal_health_candidates.csv"), index=False)
     base = df                                  # health computed on full EPS-beat population
     enh = df[(df.enhanced) & (df.entry_date >= pd.Timestamp(EVAL_START))].copy()
     print(f"\nBASE pop {len(base)} | enhanced (eval) {len(enh)}")
@@ -254,7 +265,7 @@ def main():
       "is a research/monitoring change — it does NOT alter `memory/strategy.md` rules, which "
       "are human-edit-only.\n")
     rep = "\n".join(L)
-    with open("backtest_report_PEAD_SIGNAL_HEALTH.md", "w", encoding="utf-8") as f:
+    with open(os.path.join(_REPORTS_DIR, "backtest_report_PEAD_SIGNAL_HEALTH.md"), "w", encoding="utf-8") as f:
         f.write(rep)
     print("\n" + rep)
     print("\nSaved: backtest_report_PEAD_SIGNAL_HEALTH.md, backtest_signal_health_candidates.csv")
