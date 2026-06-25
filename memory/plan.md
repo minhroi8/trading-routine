@@ -4,7 +4,7 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Date
 
-_(awaiting next pre_market)_
+_(reset by market_close 2026-06-25 — awaiting next pre_market)_
 
 ## Planned buys
 
@@ -26,4 +26,4 @@ _(awaiting next pre_market)_
 
 ## Notes
 
-_(reset by market_close 2026-06-18 — awaiting next pre_market)_
+- _(awaiting next pre_market run)_

@@ -14,3 +14,4 @@ backtesting/data_cache/*
 !backtesting/data_cache/.gitkeep
 *_run.log
 *.pkl
+backtesting/run.log
