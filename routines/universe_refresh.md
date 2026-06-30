@@ -83,6 +83,10 @@ Read `CLAUDE.md` and `memory/strategy.md` first — they supersede anything belo
    - This step is **independent of the universe rebuild**: if `compute_pead_health.py` exits non-zero, log the error to `memory/research_log.md`, note it in the Discord message, and continue — do NOT fail the run or roll back a good `universe.md`. A stale `pead_health.md` is safe: `pre_market` fails OPEN (treats posture as NORMAL) on a stale overlay, and the universe-cache `expires_on` remains the hard gate.
    - Note: this script uses **yfinance** (for EPS-surprise history), not the Alpaca bars used above — that's intentional; the health signal was calibrated on yfinance data.
    - Do not hand-edit `memory/pead_health.md`; only the script writes it.
+   - **VERIFY the refresh actually happened (mandatory post-condition).** After the script returns, read back `memory/pead_health.md` frontmatter and confirm `computed_on == today` (the run date). Do NOT trust the step's exit status alone — a skipped step, a crash before the atomic write, or a thin-data fail-open all leave a *stale* file behind while the universe rebuild still looks like a clean success. If `computed_on != today` (script exited non-zero, was skipped, or otherwise did not rewrite the file):
+       1. Log a distinct, greppable line to `memory/research_log.md` tagged **`PEAD_HEALTH_REFRESH_MISS <today>`** with the cause (non-zero exit / skipped / stale read-back).
+       2. Add a **`⚠️ PEAD health NOT refreshed (stale since <computed_on>)`** line to the Discord message — do not bury it inside the normal "ok/stale/failed" suffix.
+       3. Still continue (do not roll back `universe.md`) — the fail-open contract above stands. The point is that a recurring miss must surface **loudly every week**, not silently ride a stale overlay. (Root cause of the Jun-2026 recurring staleness: this verification did not exist, so a skipped/failed step left `pead_health.md` stale for 3+ weeks with no alert.)
 
 ## MUST NOT
 
