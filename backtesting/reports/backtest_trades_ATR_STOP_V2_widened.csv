@@ -1,0 +1,278 @@
+ticker,sector,is_it,year,earn_date,entry_date,entry_price,surprise_pct,atr_pct,eff_stop_pct,pos_v2_dollar,v2_capped,v2_return_pct,v2_exit_reason,v2_holding_days,v2_stop_fired,v2_stop_first5,v2_return_dollar
+ALLE,Industrials,False,2023,2023-02-22,2023-02-24,107.1721,16.28,2.806,8.0,10000.0,False,-8.502,hard_stop,27,True,False,-850.24
+GOOGL,Communication Services,False,2024,2024-04-25,2024-04-29,167.5741,25.58,2.697,8.0,10000.0,False,3.638,time,42,False,False,363.83
+GOOGL,Communication Services,False,2025,2025-10-29,2025-10-31,282.6569,26.88,2.756,8.0,10000.0,False,9.52,time,42,False,False,952.01
+GOOG,Communication Services,False,2024,2024-04-25,2024-04-29,169.2775,25.58,2.66,8.0,10000.0,False,3.549,time,42,False,False,354.92
+AMZN,Consumer Discretionary,False,2024,2024-02-01,2024-02-05,170.2,24.44,2.251,8.0,10000.0,False,2.515,time,42,False,False,251.47
+AMZN,Consumer Discretionary,False,2024,2024-04-30,2024-05-02,180.85,18.16,3.112,8.0,10000.0,False,1.648,time,42,False,False,164.78
+AMZN,Consumer Discretionary,False,2025,2025-10-30,2025-11-03,255.36,25.2,2.67,8.0,10000.0,False,-8.094,hard_stop,11,True,False,-809.45
+APH,Information Technology,True,2025,2025-07-23,2025-07-25,104.0806,28.42,2.806,8.0,10000.0,False,5.401,time,42,False,False,540.13
+APH,Information Technology,True,2025,2025-10-22,2025-10-24,136.45,16.48,3.04,8.0,10000.0,False,1.582,time,42,False,False,158.17
+APP,Information Technology,True,2024,2024-02-14,2024-02-16,58.52,39.34,5.216,10.433,7668.11,False,15.432,time,45,False,False,1183.32
+APP,Information Technology,True,2024,2024-05-08,2024-05-10,85.74,21.54,4.833,9.666,8276.21,False,-9.785,hard_stop,32,True,False,-809.86
+APP,Information Technology,True,2024,2024-11-06,2024-11-08,249.09,19.64,5.202,10.404,7689.49,False,28.344,trail_stop,31,False,False,2179.54
+ACGL,Financials,False,2023,2023-02-13,2023-02-15,62.997,60.3,1.994,8.0,10000.0,False,2.34,time,42,False,False,233.96
+ACGL,Financials,False,2024,2024-04-29,2024-05-01,89.0326,17.23,1.78,8.0,10000.0,False,7.271,time,42,False,False,727.08
+ADM,Consumer Staples,False,2022,2022-04-26,2022-04-28,83.613,34.75,3.27,8.0,10000.0,False,-10.89,hard_stop,11,True,False,-1089.05
+ANET,Information Technology,True,2023,2023-10-30,2023-11-01,50.7325,16.12,4.234,8.469,9446.37,False,12.079,time,42,False,False,1140.99
+AIZ,Financials,False,2024,2024-02-06,2024-02-08,169.388,23.34,1.703,8.0,10000.0,False,2.436,time,42,False,False,243.62
+T,Communication Services,False,2025,2025-01-27,2025-01-29,23.428,17.3,2.06,8.0,10000.0,False,6.058,trail_stop,42,False,False,605.83
+AVB,Real Estate,False,2024,2024-07-31,2024-08-02,199.5518,49.48,2.094,8.0,10000.0,False,9.563,time,42,False,False,956.31
+AXON,Industrials,False,2023,2023-02-28,2023-03-02,215.0,37.34,3.358,8.0,10000.0,False,3.865,time,42,False,False,386.51
+AXON,Industrials,False,2023,2023-11-07,2023-11-09,230.23,34.78,2.747,8.0,10000.0,False,11.039,time,42,False,False,1103.87
+AXON,Industrials,False,2024,2024-02-27,2024-02-29,309.22,31.24,3.067,8.0,10000.0,False,4.809,time,42,False,False,480.89
+AXON,Industrials,False,2024,2024-08-06,2024-08-08,350.9,22.71,3.903,8.0,10000.0,False,10.712,time,42,False,False,1071.25
+AXON,Industrials,False,2024,2024-11-07,2024-11-11,611.06,21.03,3.203,8.0,10000.0,False,6.212,trail_stop,29,False,False,621.25
+AXON,Industrials,False,2025,2025-02-25,2025-02-27,575.0,48.21,6.948,13.896,5757.09,False,-4.13,time,42,False,False,-237.79
+BALL,Materials,False,2024,2024-04-26,2024-04-30,68.4428,25.66,2.043,8.0,10000.0,False,-3.275,time,42,False,False,-327.45
+BX,Financials,False,2024,2024-01-25,2024-01-29,115.5838,16.94,2.286,8.0,10000.0,False,0.6,time,42,False,False,60.05
+BKNG,Consumer Discretionary,False,2023,2023-08-03,2023-08-07,120.8156,29.01,2.523,8.0,10000.0,False,2.392,time,42,False,False,239.19
+BLDR,Industrials,False,2023,2023-02-28,2023-03-02,84.74,39.19,3.325,8.0,10000.0,False,10.099,time,42,False,False,1009.91
+BLDR,Industrials,False,2023,2023-05-03,2023-05-05,108.38,90.26,2.964,8.0,10000.0,False,6.181,trail_stop,18,False,False,618.13
+BLDR,Industrials,False,2024,2024-02-22,2024-02-26,189.11,37.67,3.146,8.0,10000.0,False,7.349,time,42,False,False,734.86
+BG,Consumer Staples,False,2022,2022-02-09,2022-02-11,90.2717,21.42,3.013,8.0,10000.0,False,13.653,time,42,False,False,1365.28
+BG,Consumer Staples,False,2023,2023-08-02,2023-08-04,105.3582,39.63,2.292,8.0,10000.0,False,-1.598,time,42,False,False,-159.77
+BXP,Real Estate,False,2022,2022-05-02,2022-05-04,95.5244,19.6,2.566,8.0,10000.0,False,-8.785,hard_stop,6,True,True,-878.48
+CHRW,Industrials,False,2022,2022-07-27,2022-07-29,98.4505,34.08,2.638,8.0,10000.0,False,7.512,time,42,False,False,751.17
+CHRW,Industrials,False,2024,2024-07-31,2024-08-02,97.521,20.15,3.051,8.0,10000.0,False,-0.856,time,42,False,False,-85.58
+CPB,Consumer Staples,False,2022,2022-12-07,2022-12-09,48.7466,18.73,1.996,8.0,10000.0,False,-8.097,hard_stop,42,True,False,-809.67
+COF,Financials,False,2024,2024-10-24,2024-10-28,157.746,19.97,2.53,8.0,10000.0,False,13.128,time,42,False,False,1312.8
+CAH,Health Care,False,2022,2022-11-04,2022-11-08,75.1175,24.12,2.479,8.0,10000.0,False,-0.699,time,42,False,False,-69.88
+CAH,Health Care,False,2023,2023-05-04,2023-05-08,79.1871,16.77,1.927,8.0,10000.0,False,9.414,time,43,False,False,941.36
+CAH,Health Care,False,2023,2023-11-03,2023-11-07,97.7038,22.98,2.195,8.0,10000.0,False,-0.59,time,42,False,False,-58.97
+CAH,Health Care,False,2025,2025-10-30,2025-11-03,189.721,17.6,2.744,8.0,10000.0,False,5.751,trail_stop,36,False,False,575.13
+CVNA,Consumer Discretionary,False,2024,2024-05-01,2024-05-03,23.84,131.12,6.145,12.29,6509.22,False,-14.102,hard_stop,27,True,False,-917.95
+CVNA,Consumer Discretionary,False,2024,2024-07-31,2024-08-02,27.962,424.08,7.199,14.399,5556.01,False,5.579,trail_stop,32,False,False,309.98
+CVNA,Consumer Discretionary,False,2024,2024-10-30,2024-11-01,49.462,269.09,3.866,8.0,10000.0,False,-8.584,hard_stop,3,True,True,-858.44
+CASY,Consumer Staples,False,2022,2022-12-06,2022-12-08,240.5872,17.29,2.449,8.0,10000.0,False,-8.429,hard_stop,22,True,False,-842.86
+CASY,Consumer Staples,False,2023,2023-09-11,2023-09-13,264.6595,34.6,2.123,8.0,10000.0,False,0.261,time,42,False,False,26.1
+CASY,Consumer Staples,False,2024,2024-06-11,2024-06-13,380.0978,36.25,3.003,8.0,10000.0,False,-2.77,time,42,False,False,-277.0
+CASY,Consumer Staples,False,2025,2025-06-09,2025-06-11,489.1167,36.06,2.721,8.0,10000.0,False,6.723,time,42,False,False,672.32
+CASY,Consumer Staples,False,2025,2025-09-08,2025-09-10,544.9922,15.35,2.057,8.0,10000.0,False,-0.243,time,42,False,False,-24.34
+CAT,Industrials,False,2023,2023-08-01,2023-08-03,274.2636,21.24,2.244,8.0,10000.0,False,-1.044,time,42,False,False,-104.37
+CMG,Consumer Discretionary,False,2023,2023-04-25,2023-04-27,40.518,17.28,2.282,8.0,10000.0,False,-0.132,time,42,False,False,-13.18
+CIEN,Information Technology,True,2024,2024-03-07,2024-03-11,54.03,38.76,4.501,9.003,8885.99,False,-10.05,hard_stop,22,True,False,-893.04
+CIEN,Information Technology,True,2025,2025-09-04,2025-09-08,118.45,27.56,4.151,8.301,9637.08,False,34.103,time,42,False,False,3286.53
+CI,Health Care,False,2022,2022-05-06,2022-05-10,242.4309,16.09,3.003,8.0,10000.0,False,-3.336,time,42,False,False,-333.63
+C,Financials,False,2024,2024-10-15,2024-10-17,61.8129,15.76,2.396,8.0,10000.0,False,10.304,time,43,False,False,1030.43
+CLX,Consumer Staples,False,2023,2023-05-02,2023-05-04,157.0616,23.37,1.663,8.0,10000.0,False,-8.653,hard_stop,19,True,False,-865.3
+COHR,Information Technology,True,2024,2024-11-06,2024-11-08,108.71,20.52,3.833,8.0,10000.0,False,-8.003,hard_stop,6,True,True,-800.29
+COIN,Financials,False,2024,2024-02-15,2024-02-20,179.87,420.0,6.299,12.599,6349.82,False,23.274,trail_stop,23,False,False,1477.84
+FIX,Industrials,False,2025,2025-07-24,2025-07-28,695.4403,35.05,3.736,8.0,10000.0,False,2.781,time,42,False,False,278.05
+FIX,Industrials,False,2025,2025-10-23,2025-10-27,997.2352,31.26,4.697,9.395,8515.22,False,-10.081,hard_stop,17,True,False,-858.43
+CAG,Consumer Staples,False,2023,2023-01-05,2023-01-09,33.5228,21.91,1.599,8.0,10000.0,False,-8.506,hard_stop,14,True,False,-850.65
+CEG,Utilities,False,2023,2023-08-03,2023-08-07,102.4699,85.9,2.281,8.0,10000.0,False,6.173,time,42,False,False,617.34
+CTVA,Materials,False,2022,2022-11-04,2022-11-08,63.6242,46.43,2.487,8.0,10000.0,False,-8.662,hard_stop,37,True,False,-866.23
+CSGP,Real Estate,False,2025,2025-07-22,2025-07-24,90.84,128.48,2.16,8.0,10000.0,False,-1.915,time,42,False,False,-191.55
+CRWD,Information Technology,True,2024,2024-03-05,2024-03-07,82.4375,15.29,5.71,11.419,7005.74,False,-10.811,time,42,False,False,-757.41
+CCI,Real Estate,False,2025,2025-07-23,2025-07-25,108.5768,30.11,1.978,8.0,10000.0,False,-8.172,hard_stop,14,True,False,-817.22
+CMI,Industrials,False,2025,2025-08-05,2025-08-07,379.8569,23.53,2.508,8.0,10000.0,False,10.696,time,42,False,False,1069.62
+DDOG,Information Technology,True,2025,2025-11-06,2025-11-10,192.91,20.33,3.922,8.0,10000.0,False,-8.527,hard_stop,8,True,False,-852.73
+DECK,Consumer Discretionary,False,2023,2023-05-25,2023-05-30,78.5133,28.65,3.433,8.0,10000.0,False,14.703,time,42,False,False,1470.3
+DECK,Consumer Discretionary,False,2023,2023-10-26,2023-10-30,96.7,53.7,3.407,8.0,10000.0,False,16.853,time,42,False,False,1685.28
+DECK,Consumer Discretionary,False,2024,2024-02-01,2024-02-05,145.2483,29.56,2.898,8.0,10000.0,False,4.288,time,42,False,False,428.81
+DECK,Consumer Discretionary,False,2024,2024-05-23,2024-05-28,173.3333,65.03,2.831,8.0,10000.0,False,-9.01,hard_stop,34,True,False,-900.96
+DE,Industrials,False,2024,2024-11-21,2024-11-25,437.8489,15.89,2.681,8.0,10000.0,False,-6.339,time,42,False,False,-633.91
+DE,Industrials,False,2025,2025-05-15,2025-05-19,517.8631,17.76,2.641,8.0,10000.0,False,-3.025,time,42,False,False,-302.47
+DELL,Information Technology,True,2023,2023-08-31,2023-09-05,64.9608,53.07,3.299,8.0,10000.0,False,-0.22,time,42,False,False,-22.04
+DELL,Information Technology,True,2024,2024-02-29,2024-03-04,119.5227,27.92,4.666,9.332,8572.56,False,-11.255,hard_stop,9,True,False,-964.8
+DG,Consumer Staples,False,2025,2025-12-04,2025-12-08,131.8894,37.55,3.319,8.0,10000.0,False,10.435,time,43,False,False,1043.45
+DASH,Consumer Discretionary,False,2024,2024-10-30,2024-11-01,155.91,76.88,2.189,8.0,10000.0,False,11.535,time,42,False,False,1153.46
+DASH,Consumer Discretionary,False,2025,2025-08-06,2025-08-08,269.46,49.52,2.745,8.0,10000.0,False,-8.172,hard_stop,6,True,True,-817.19
+DOW,Materials,False,2024,2024-04-25,2024-04-29,49.9956,23.19,2.017,8.0,10000.0,False,-0.853,time,42,False,False,-85.25
+DHI,Consumer Discretionary,False,2023,2023-07-20,2023-07-24,124.4735,39.71,2.67,8.0,10000.0,False,-9.012,hard_stop,24,True,False,-901.25
+SATS,Communication Services,False,2025,2025-02-27,2025-03-03,31.21,348.59,3.535,8.0,10000.0,False,-9.068,hard_stop,3,True,True,-906.76
+EME,Industrials,False,2023,2023-02-23,2023-02-27,164.6683,15.01,2.826,8.0,10000.0,False,-8.006,hard_stop,38,True,False,-800.63
+EME,Industrials,False,2023,2023-07-27,2023-07-31,211.284,24.47,1.876,8.0,10000.0,False,4.584,time,42,False,False,458.39
+EME,Industrials,False,2024,2024-02-28,2024-03-01,314.2168,24.63,2.539,8.0,10000.0,False,10.952,time,42,False,False,1095.23
+EME,Industrials,False,2024,2024-04-25,2024-04-29,352.4969,43.46,2.937,8.0,10000.0,False,6.136,trail_stop,36,False,False,613.55
+EME,Industrials,False,2024,2024-10-31,2024-11-04,449.32,16.82,2.469,8.0,10000.0,False,7.459,trail_stop,35,False,False,745.88
+EME,Industrials,False,2025,2025-07-31,2025-08-04,630.4754,17.42,3.172,8.0,10000.0,False,-0.42,time,42,False,False,-41.97
+EMR,Industrials,False,2023,2023-08-02,2023-08-04,91.6068,16.92,1.755,8.0,10000.0,False,2.716,time,42,False,False,271.59
+ETR,Utilities,False,2025,2025-07-30,2025-08-01,87.8223,15.11,1.849,8.0,10000.0,False,0.91,time,42,False,False,91.04
+ERIE,Financials,False,2024,2024-07-25,2024-07-29,409.8568,24.18,2.418,8.0,10000.0,False,16.22,time,42,False,False,1621.99
+ESS,Real Estate,False,2024,2024-04-30,2024-05-02,227.4297,51.45,2.031,8.0,10000.0,False,10.945,time,42,False,False,1094.47
+EG,Financials,False,2023,2023-02-08,2023-02-10,356.4298,28.02,3.011,8.0,10000.0,False,-8.711,hard_stop,31,True,False,-871.11
+EXE,Energy,False,2022,2022-05-04,2022-05-06,79.6779,26.93,4.599,9.197,8698.35,False,-12.77,hard_stop,3,True,True,-1110.81
+EXPD,Industrials,False,2025,2025-11-04,2025-11-06,137.2766,17.6,2.63,8.0,10000.0,False,9.862,time,42,False,False,986.19
+FFIV,Information Technology,True,2025,2025-07-30,2025-08-01,308.14,19.17,2.424,8.0,10000.0,False,4.391,time,42,False,False,439.09
+FSLR,Information Technology,True,2023,2023-02-28,2023-03-02,195.73,47.64,3.909,8.0,10000.0,False,5.336,trail_stop,34,False,False,533.61
+F,Consumer Discretionary,False,2025,2025-10-23,2025-10-27,13.3281,25.41,3.157,8.0,10000.0,False,-9.032,hard_stop,24,True,False,-903.24
+FTNT,Information Technology,True,2024,2024-11-07,2024-11-11,92.42,21.52,2.545,8.0,10000.0,False,4.328,time,42,False,False,432.81
+FTNT,Information Technology,True,2025,2025-02-06,2025-02-10,108.65,21.86,2.865,8.0,10000.0,False,-11.606,hard_stop,28,True,False,-1160.61
+FOXA,Communication Services,False,2022,2022-02-09,2022-02-11,41.475,183.6,3.169,8.0,10000.0,False,-8.943,hard_stop,27,True,False,-894.28
+FOXA,Communication Services,False,2024,2024-11-04,2024-11-06,44.4496,63.69,1.784,8.0,10000.0,False,9.625,time,42,False,False,962.52
+FOX,Communication Services,False,2024,2024-11-04,2024-11-06,41.5291,26.09,1.665,8.0,10000.0,False,10.209,time,42,False,False,1020.86
+GRMN,Consumer Discretionary,False,2024,2024-05-01,2024-05-03,159.8262,40.28,2.203,8.0,10000.0,False,-3.776,time,42,False,False,-377.59
+IT,Information Technology,True,2023,2023-11-03,2023-11-07,394.21,30.68,2.771,8.0,10000.0,False,12.849,time,42,False,False,1284.94
+IT,Information Technology,True,2024,2024-04-30,2024-05-02,424.24,15.28,2.852,8.0,10000.0,False,1.987,time,42,False,False,198.71
+IT,Information Technology,True,2024,2024-11-05,2024-11-07,539.24,95.46,1.901,8.0,10000.0,False,-10.658,hard_stop,41,True,False,-1065.76
+GE,Industrials,False,2024,2024-10-22,2024-10-24,180.3125,30.67,2.446,8.0,10000.0,False,-4.942,time,42,False,False,-494.23
+GE,Industrials,False,2025,2025-04-22,2025-04-24,193.3068,17.51,5.578,11.156,7170.85,False,23.09,time,42,False,False,1655.76
+GE,Industrials,False,2025,2025-07-17,2025-07-21,262.6847,15.97,2.393,8.0,10000.0,False,4.437,time,43,False,False,443.7
+GNRC,Industrials,False,2024,2024-10-31,2024-11-04,168.07,15.48,2.895,8.0,10000.0,False,8.042,trail_stop,15,False,False,804.17
+GNRC,Industrials,False,2025,2025-07-30,2025-08-01,189.35,24.58,3.534,8.0,10000.0,False,-2.619,time,42,False,False,-261.95
+GM,Consumer Discretionary,False,2024,2024-04-23,2024-04-25,43.6887,23.63,2.397,8.0,10000.0,False,2.104,time,42,False,False,210.43
+GILD,Health Care,False,2024,2024-11-06,2024-11-08,91.5342,30.48,1.964,8.0,10000.0,False,-8.641,hard_stop,11,True,False,-864.13
+GDDY,Information Technology,True,2023,2023-11-02,2023-11-06,85.055,52.3,2.351,8.0,10000.0,False,20.22,time,42,False,False,2022.04
+GDDY,Information Technology,True,2024,2024-10-30,2024-11-01,167.79,27.91,1.804,8.0,10000.0,False,18.825,time,42,False,False,1882.49
+GS,Financials,False,2024,2024-10-15,2024-10-17,515.3366,23.35,1.981,8.0,10000.0,False,13.038,time,43,False,False,1303.77
+GS,Financials,False,2025,2025-01-15,2025-01-17,602.2744,43.1,2.215,8.0,10000.0,False,1.226,time,42,False,False,122.62
+HIG,Financials,False,2023,2023-02-02,2023-02-06,70.2395,23.26,2.255,8.0,10000.0,False,-9.897,hard_stop,35,True,False,-989.68
+HIG,Financials,False,2024,2024-02-01,2024-02-05,86.4238,26.82,1.534,8.0,10000.0,False,10.977,time,42,False,False,1097.74
+HAS,Consumer Discretionary,False,2024,2024-10-24,2024-10-28,62.9507,34.06,2.299,8.0,10000.0,False,-1.418,time,42,False,False,-141.75
+HCA,Health Care,False,2023,2023-04-21,2023-04-25,279.0337,25.81,2.029,8.0,10000.0,False,-5.251,time,42,False,False,-525.12
+HCA,Health Care,False,2024,2024-01-30,2024-02-01,297.7174,16.79,2.222,8.0,10000.0,False,7.284,time,42,False,False,728.44
+HCA,Health Care,False,2025,2025-10-24,2025-10-28,464.0158,21.55,2.586,8.0,10000.0,False,6.503,time,42,False,False,650.28
+HSIC,Health Care,False,2022,2022-02-15,2022-02-17,83.86,17.05,2.758,8.0,10000.0,False,3.971,time,42,False,False,397.09
+HST,Real Estate,False,2022,2022-02-16,2022-02-18,15.2569,600.0,3.149,8.0,10000.0,False,-10.067,hard_stop,11,True,False,-1006.71
+HUBB,Industrials,False,2022,2022-07-26,2022-07-28,201.4537,15.72,2.626,8.0,10000.0,False,3.516,time,42,False,False,351.61
+HUBB,Industrials,False,2023,2023-04-25,2023-04-27,251.425,45.06,2.505,8.0,10000.0,False,14.621,time,42,False,False,1462.14
+IR,Industrials,False,2023,2023-02-21,2023-02-23,58.1102,15.3,2.375,8.0,10000.0,False,-9.211,hard_stop,20,True,False,-921.1
+PODD,Health Care,False,2023,2023-05-04,2023-05-08,326.98,122.18,2.333,8.0,10000.0,False,-9.343,hard_stop,15,True,False,-934.31
+PODD,Health Care,False,2024,2024-11-07,2024-11-11,268.16,18.29,3.015,8.0,10000.0,False,-1.801,time,42,False,False,-180.12
+PODD,Health Care,False,2025,2025-05-08,2025-05-12,313.46,29.7,3.794,8.0,10000.0,False,-1.847,time,42,False,False,-184.71
+IFF,Materials,False,2024,2024-05-06,2024-05-08,90.9145,29.96,2.218,8.0,10000.0,False,0.923,time,43,False,False,92.35
+IP,Materials,False,2024,2024-07-24,2024-07-26,43.028,241.82,2.281,8.0,10000.0,False,1.792,time,42,False,False,179.2
+ISRG,Health Care,False,2024,2024-07-18,2024-07-22,462.33,15.51,2.413,8.0,10000.0,False,4.566,time,43,False,False,456.6
+IVZ,Financials,False,2025,2025-10-28,2025-10-30,23.4457,37.73,4.123,8.246,9702.09,False,12.235,time,42,False,False,1187.03
+J,Industrials,False,2024,2024-02-06,2024-02-08,115.7155,29.55,1.781,8.0,10000.0,False,5.938,time,42,False,False,593.8
+JPM,Financials,False,2023,2023-07-14,2023-07-18,144.2308,26.46,1.705,8.0,10000.0,False,-3.012,time,42,False,False,-301.21
+JPM,Financials,False,2024,2024-07-12,2024-07-16,202.4403,35.02,1.691,8.0,10000.0,False,4.848,time,42,False,False,484.76
+JPM,Financials,False,2025,2025-01-15,2025-01-17,247.7657,19.18,1.827,8.0,10000.0,False,4.188,trail_stop,39,False,False,418.85
+KR,Consumer Staples,False,2022,2022-03-03,2022-03-07,53.2976,23.19,3.615,8.0,10000.0,False,-1.061,time,42,False,False,-106.09
+KR,Consumer Staples,False,2024,2024-03-07,2024-03-11,53.2965,18.3,2.31,8.0,10000.0,False,1.897,time,42,False,False,189.73
+LVS,Consumer Discretionary,False,2023,2023-04-19,2023-04-21,57.9847,37.3,2.958,8.0,10000.0,False,-9.267,hard_stop,32,True,False,-926.71
+LDOS,Industrials,False,2024,2024-04-30,2024-05-02,138.9527,34.97,1.967,8.0,10000.0,False,1.293,time,42,False,False,129.3
+LDOS,Industrials,False,2024,2024-10-29,2024-10-31,181.502,45.29,1.882,8.0,10000.0,False,-9.181,hard_stop,14,True,False,-918.13
+LEN,Consumer Discretionary,False,2023,2023-06-14,2023-06-16,111.6787,26.91,2.327,8.0,10000.0,False,7.416,time,42,False,False,741.64
+LII,Industrials,False,2023,2023-07-27,2023-07-31,354.6185,18.88,2.11,8.0,10000.0,False,7.774,time,42,False,False,777.38
+LLY,Health Care,False,2024,2024-08-08,2024-08-12,891.7553,41.68,4.571,9.142,8750.68,False,1.725,time,42,False,False,150.91
+LULU,Consumer Discretionary,False,2023,2023-06-01,2023-06-05,363.0,15.38,3.247,8.0,10000.0,False,5.7,time,42,False,False,569.97
+LITE,Information Technology,True,2024,2024-11-07,2024-11-11,85.01,48.05,3.849,8.0,10000.0,False,4.87,trail_stop,29,False,False,487.04
+MTB,Financials,False,2022,2022-04-20,2022-04-22,156.1247,16.72,3.212,8.0,10000.0,False,-8.298,hard_stop,27,True,False,-829.82
+MPC,Energy,False,2022,2022-02-02,2022-02-04,70.2447,131.38,3.458,8.0,10000.0,False,1.647,time,42,False,False,164.66
+MAR,Consumer Discretionary,False,2022,2022-02-15,2022-02-17,173.0794,30.18,3.179,8.0,10000.0,False,-8.47,hard_stop,12,True,False,-846.98
+MAR,Consumer Discretionary,False,2022,2022-05-04,2022-05-06,171.1677,35.84,4.025,8.05,9937.34,False,-8.329,hard_stop,6,True,True,-827.65
+MLM,Materials,False,2023,2023-05-04,2023-05-08,389.9919,92.2,2.556,8.0,10000.0,False,8.592,time,43,False,False,859.25
+MCK,Health Care,False,2023,2023-08-02,2023-08-04,428.8474,23.89,1.814,8.0,10000.0,False,-3.114,time,42,False,False,-311.35
+MRK,Health Care,False,2022,2022-04-28,2022-05-02,78.0014,17.11,2.284,8.0,10000.0,False,-4.193,time,42,False,False,-419.29
+META,Communication Services,False,2025,2025-01-29,2025-01-31,687.6013,18.67,3.118,8.0,10000.0,False,-9.127,hard_stop,34,True,False,-912.74
+META,Communication Services,False,2025,2025-07-30,2025-08-01,758.2448,21.82,2.466,8.0,10000.0,False,-0.676,time,42,False,False,-67.57
+MGM,Consumer Discretionary,False,2023,2023-05-01,2023-05-03,46.08,169.54,2.627,8.0,10000.0,False,-8.919,hard_stop,9,True,False,-891.93
+MU,Information Technology,True,2024,2024-03-20,2024-03-22,108.4439,273.75,4.091,8.181,9778.52,False,7.683,trail_stop,26,False,False,751.31
+MU,Information Technology,True,2025,2025-12-17,2025-12-19,251.5427,20.58,5.789,11.578,6909.77,False,46.577,time,42,False,False,3218.34
+TAP,Consumer Staples,False,2023,2023-05-02,2023-05-04,58.3656,105.13,1.996,8.0,10000.0,False,2.955,time,42,False,False,295.52
+MNST,Consumer Staples,False,2023,2023-05-04,2023-05-08,59.41,15.11,1.824,8.0,10000.0,False,-1.767,time,43,False,False,-176.74
+MS,Financials,False,2024,2024-04-16,2024-04-18,84.9968,21.59,2.671,8.0,10000.0,False,8.825,time,42,False,False,882.53
+MS,Financials,False,2025,2025-01-16,2025-01-21,131.2904,32.23,2.414,8.0,10000.0,False,-10.195,hard_stop,42,True,False,-1019.5
+NDAQ,Financials,False,2025,2025-07-24,2025-07-28,93.7948,19.49,2.115,8.0,10000.0,False,0.011,time,42,False,False,1.05
+NWSA,Communication Services,False,2024,2024-02-07,2024-02-09,25.455,23.81,2.748,8.0,10000.0,False,0.224,time,42,False,False,22.43
+NWSA,Communication Services,False,2025,2025-11-06,2025-11-10,26.7383,16.76,2.256,8.0,10000.0,False,-2.16,time,42,False,False,-216.01
+NI,Utilities,False,2024,2024-10-30,2024-11-01,33.854,24.4,1.496,8.0,10000.0,False,3.629,time,42,False,False,362.92
+NSC,Industrials,False,2024,2024-04-24,2024-04-26,227.2575,29.79,2.531,8.0,10000.0,False,-5.342,time,42,False,False,-534.22
+NTRS,Financials,False,2024,2024-07-17,2024-07-19,82.0396,145.29,2.681,8.0,10000.0,False,5.482,time,42,False,False,548.17
+NTRS,Financials,False,2024,2024-10-23,2024-10-25,99.0733,26.67,2.102,8.0,10000.0,False,4.936,time,42,False,False,493.6
+NOC,Industrials,False,2025,2025-10-21,2025-10-23,595.4021,18.82,2.238,8.0,10000.0,False,-8.672,hard_stop,39,True,False,-867.21
+NRG,Utilities,False,2025,2025-05-12,2025-05-14,153.0,58.83,4.04,8.08,9900.79,False,-0.924,time,42,False,False,-91.49
+NRG,Utilities,False,2025,2025-11-06,2025-11-10,174.5688,30.73,4.235,8.47,9444.94,False,-8.648,hard_stop,10,True,False,-816.79
+NVDA,Information Technology,True,2023,2023-05-24,2023-05-26,37.8124,18.8,3.815,8.0,10000.0,False,8.165,trail_stop,31,False,False,816.52
+NVDA,Information Technology,True,2023,2023-08-23,2023-08-25,46.9206,29.35,4.469,8.938,8950.71,False,-10.145,hard_stop,26,True,False,-908.08
+OMC,Communication Services,False,2022,2022-02-08,2022-02-10,77.3879,23.37,2.87,8.0,10000.0,False,-8.71,hard_stop,13,True,False,-871.0
+ON,Information Technology,True,2022,2022-02-07,2022-02-09,66.27,15.98,6.063,12.126,6597.54,False,-12.856,hard_stop,14,True,False,-848.21
+PKG,Materials,False,2023,2023-07-24,2023-07-26,140.27,15.64,2.034,8.0,10000.0,False,-4.562,time,42,False,False,-456.16
+PLTR,Information Technology,True,2024,2024-11-04,2024-11-06,53.44,42.21,3.564,8.0,10000.0,False,25.102,trail_stop,34,False,False,2510.23
+PLTR,Information Technology,True,2025,2025-02-03,2025-02-05,101.78,23.72,5.276,10.553,7580.87,False,10.067,trail_stop,14,False,False,763.15
+PH,Industrials,False,2024,2024-02-01,2024-02-05,494.016,16.89,2.204,8.0,10000.0,False,6.2,time,42,False,False,620.01
+PCG,Utilities,False,2024,2024-11-07,2024-11-11,20.3317,15.01,1.907,8.0,10000.0,False,-3.149,time,42,False,False,-314.92
+PSX,Energy,False,2025,2025-10-29,2025-10-31,133.4731,16.81,2.727,8.0,10000.0,False,4.347,time,42,False,False,434.73
+PNW,Utilities,False,2024,2024-08-01,2024-08-05,82.2731,39.84,1.775,8.0,10000.0,False,3.573,time,42,False,False,357.26
+PPG,Materials,False,2023,2023-04-20,2023-04-24,134.7783,17.21,1.926,8.0,10000.0,False,-9.042,hard_stop,37,True,False,-904.23
+PPL,Utilities,False,2024,2024-08-02,2024-08-06,28.2479,15.69,2.025,8.0,10000.0,False,8.54,time,42,False,False,854.02
+PGR,Financials,False,2024,2024-04-12,2024-04-16,191.0012,17.05,1.804,8.0,10000.0,False,-1.194,time,42,False,False,-119.43
+PLD,Real Estate,False,2022,2022-01-19,2022-01-21,137.249,166.29,2.317,8.0,10000.0,False,-8.126,hard_stop,26,True,False,-812.6
+PHM,Consumer Discretionary,False,2023,2023-01-31,2023-02-02,57.4852,24.4,2.706,8.0,10000.0,False,-8.153,hard_stop,15,True,False,-815.29
+PHM,Consumer Discretionary,False,2023,2023-07-25,2023-07-27,83.0662,18.01,2.517,8.0,10000.0,False,-8.282,hard_stop,25,True,False,-828.24
+RL,Consumer Discretionary,False,2024,2024-02-08,2024-02-12,168.9268,17.53,2.831,8.0,10000.0,False,4.61,time,42,False,False,461.05
+RJF,Financials,False,2024,2024-10-23,2024-10-25,143.8656,22.19,2.148,8.0,10000.0,False,10.615,time,42,False,False,1061.5
+RTX,Industrials,False,2025,2025-10-21,2025-10-23,175.5838,20.64,2.582,8.0,10000.0,False,-3.16,time,42,False,False,-316.04
+REGN,Health Care,False,2022,2022-05-04,2022-05-06,633.8052,17.28,2.899,8.0,10000.0,False,-9.946,hard_stop,34,True,False,-994.62
+REGN,Health Care,False,2023,2023-02-03,2023-02-07,759.4078,25.48,2.077,8.0,10000.0,False,-0.773,time,42,False,False,-77.32
+HOOD,Financials,False,2024,2024-02-13,2024-02-15,13.4,315.67,3.982,8.0,10000.0,False,36.816,time,42,False,False,3681.59
+HOOD,Financials,False,2024,2024-08-07,2024-08-09,17.8,37.33,7.718,15.437,5182.49,False,9.213,trail_stop,25,False,False,477.49
+HOOD,Financials,False,2025,2025-02-12,2025-02-14,63.305,99.1,5.429,10.859,7367.47,False,-11.445,hard_stop,6,True,True,-843.18
+ROK,Industrials,False,2025,2025-02-10,2025-02-12,294.6974,16.03,2.821,8.0,10000.0,False,-10.751,hard_stop,20,True,False,-1075.12
+ROP,Information Technology,True,2024,2024-01-31,2024-02-02,536.0804,20.79,1.693,8.0,10000.0,False,0.597,time,42,False,False,59.73
+ROST,Consumer Discretionary,False,2022,2022-11-17,2022-11-21,103.1032,23.49,4.175,8.35,9581.11,False,8.861,time,43,False,False,849.03
+RCL,Consumer Discretionary,False,2024,2024-04-25,2024-04-29,137.1199,35.18,3.136,8.0,10000.0,False,10.142,time,42,False,False,1014.18
+STX,Information Technology,True,2024,2024-01-24,2024-01-26,86.4117,290.81,2.737,8.0,10000.0,False,1.98,time,42,False,False,198.04
+STX,Information Technology,True,2024,2024-07-23,2024-07-25,104.9854,39.35,2.691,8.0,10000.0,False,-8.924,hard_stop,5,True,True,-892.38
+NOW,Information Technology,True,2024,2024-07-24,2024-07-26,165.17,27.27,3.558,8.0,10000.0,False,-0.098,time,42,False,False,-9.81
+NOW,Information Technology,True,2024,2024-10-23,2024-10-25,191.452,31.29,2.35,8.0,10000.0,False,14.969,time,42,False,False,1496.93
+SHW,Materials,False,2023,2023-07-25,2023-07-27,274.3086,22.31,1.791,8.0,10000.0,False,-3.521,time,42,False,False,-352.1
+SJM,Consumer Staples,False,2022,2022-08-23,2022-08-25,125.5489,31.68,1.797,8.0,10000.0,False,-3.877,time,42,False,False,-387.74
+SO,Utilities,False,2024,2024-08-01,2024-08-05,83.3493,18.46,1.705,8.0,10000.0,False,1.851,time,42,False,False,185.08
+SWK,Industrials,False,2024,2024-10-29,2024-10-31,86.7194,16.52,3.231,8.0,10000.0,False,-8.322,hard_stop,14,True,False,-832.18
+SYF,Financials,False,2025,2025-07-22,2025-07-24,70.8179,39.29,2.23,8.0,10000.0,False,7.214,time,42,False,False,721.45
+TTWO,Communication Services,False,2024,2024-11-06,2024-11-08,179.17,38.41,2.295,8.0,10000.0,False,1.563,time,42,False,False,156.28
+TTWO,Communication Services,False,2025,2025-02-06,2025-02-10,210.01,29.71,3.026,8.0,10000.0,False,1.667,time,42,False,False,166.66
+TRGP,Energy,False,2022,2022-02-24,2022-02-28,58.0842,37.9,2.979,8.0,10000.0,False,15.905,time,42,False,False,1590.53
+TRGP,Energy,False,2024,2024-11-05,2024-11-07,179.4839,19.13,2.604,8.0,10000.0,False,3.92,trail_stop,32,False,False,391.98
+TGT,Consumer Staples,False,2024,2024-03-05,2024-03-07,160.812,23.52,2.588,8.0,10000.0,False,-4.811,time,42,False,False,-481.14
+TRV,Financials,False,2022,2022-01-20,2022-01-24,148.6706,36.31,2.489,8.0,10000.0,False,4.809,time,42,False,False,480.87
+TRV,Financials,False,2022,2022-04-19,2022-04-21,165.4852,16.69,2.035,8.0,10000.0,False,-0.736,time,42,False,False,-73.59
+TRV,Financials,False,2024,2024-01-19,2024-01-23,204.1029,37.79,1.737,8.0,10000.0,False,2.946,time,42,False,False,294.56
+TSN,Consumer Staples,False,2024,2024-05-06,2024-05-08,55.0723,56.81,2.268,8.0,10000.0,False,-3.878,time,43,False,False,-387.84
+UBER,Industrials,False,2023,2023-05-02,2023-05-04,37.48,111.86,3.737,8.0,10000.0,False,13.792,time,42,False,False,1379.22
+UBER,Industrials,False,2024,2024-02-07,2024-02-09,71.43,115.9,2.663,8.0,10000.0,False,11.547,time,42,False,False,1154.65
+UBER,Industrials,False,2024,2024-10-31,2024-11-04,72.75,125.2,3.222,8.0,10000.0,False,-10.337,hard_stop,31,True,False,-1033.68
+ULTA,Consumer Discretionary,False,2022,2022-05-26,2022-05-31,421.5,40.66,5.088,10.176,7861.97,False,-10.209,hard_stop,35,True,False,-802.61
+ULTA,Consumer Discretionary,False,2023,2023-03-09,2023-03-13,516.29,19.23,1.861,8.0,10000.0,False,6.026,time,42,False,False,602.57
+VLO,Energy,False,2022,2022-04-26,2022-04-28,96.9024,40.32,3.8,8.0,10000.0,False,8.448,trail_stop,11,False,False,844.8
+VTR,Real Estate,False,2024,2024-08-01,2024-08-05,52.4684,92.0,1.674,8.0,10000.0,False,14.497,time,42,False,False,1449.66
+VTR,Real Estate,False,2025,2025-10-29,2025-10-31,72.7143,51.89,2.163,8.0,10000.0,False,5.131,time,42,False,False,513.1
+VRT,Industrials,False,2023,2023-08-02,2023-08-04,34.8336,59.38,4.112,8.223,9728.48,False,7.281,trail_stop,40,False,False,708.3
+VRT,Industrials,False,2024,2024-04-24,2024-04-26,92.6168,19.82,6.329,12.657,6320.37,False,6.162,trail_stop,21,False,False,389.44
+VRT,Industrials,False,2025,2025-10-22,2025-10-24,186.697,25.02,5.668,11.336,7056.93,False,-12.422,hard_stop,20,True,False,-876.59
+VST,Utilities,False,2023,2023-08-09,2023-08-11,29.7123,42.68,2.244,8.0,10000.0,False,9.442,time,42,False,False,944.18
+VMC,Materials,False,2023,2023-08-03,2023-08-07,222.8051,19.57,1.968,8.0,10000.0,False,-6.91,time,42,False,False,-690.97
+WRB,Financials,False,2022,2022-04-25,2022-04-27,40.7151,16.76,2.178,8.0,10000.0,False,5.075,time,42,False,False,507.47
+GWW,Industrials,False,2022,2022-04-28,2022-05-02,484.2473,15.53,2.94,8.0,10000.0,False,-8.642,hard_stop,9,True,False,-864.17
+WAB,Industrials,False,2024,2024-04-24,2024-04-26,161.2463,27.38,2.275,8.0,10000.0,False,0.21,time,42,False,False,21.03
+WFC,Financials,False,2024,2024-04-12,2024-04-16,54.0606,15.7,1.878,8.0,10000.0,False,6.757,time,42,False,False,675.68
+WFC,Financials,False,2024,2024-10-11,2024-10-15,60.5736,18.08,2.477,8.0,10000.0,False,19.108,time,42,False,False,1910.79
+WELL,Real Estate,False,2023,2023-10-30,2023-11-01,79.3701,45.82,2.121,8.0,10000.0,False,9.135,time,42,False,False,913.54
+WST,Health Care,False,2023,2023-04-27,2023-05-01,358.6544,18.84,2.569,8.0,10000.0,False,-1.186,time,42,False,False,-118.61
+WSM,Consumer Discretionary,False,2024,2024-05-22,2024-05-24,139.9251,50.7,4.328,8.656,9242.21,False,4.739,trail_stop,32,False,False,437.97
+WDAY,Information Technology,True,2023,2023-05-25,2023-05-30,217.37,16.62,2.92,8.0,10000.0,False,1.997,time,42,False,False,199.66
+XEL,Utilities,False,2025,2025-07-31,2025-08-04,71.5634,16.29,1.654,8.0,10000.0,False,-0.2,time,42,False,False,-20.04
+AES,Utilities,False,2026,2026-03-02,2026-03-04,14.0073,33.04,4.549,9.097,8793.8,False,1.904,time,42,False,False,167.44
+BKR,Energy,False,2026,2026-04-23,2026-04-27,69.7667,90.5,3.173,8.0,10000.0,False,-8.939,hard_stop,10,True,False,-893.94
+CASY,Consumer Staples,False,2026,2026-03-09,2026-03-11,688.7521,16.64,2.709,8.0,10000.0,False,12.395,time,42,False,False,1239.47
+FIX,Industrials,False,2026,2026-02-19,2026-02-23,1461.6676,38.71,5.201,10.403,7690.32,False,-12.527,hard_stop,11,True,False,-963.39
+CVS,Health Care,False,2026,2026-05-06,2026-05-08,88.0,16.48,2.768,8.0,10000.0,False,5.402,trail_stop,18,False,False,540.15
+DVA,Health Care,False,2026,2026-05-05,2026-05-07,194.32,23.18,3.401,8.0,10000.0,False,6.994,time,42,False,False,699.36
+DELL,Information Technology,True,2026,2026-05-28,2026-06-01,426.15,63.99,5.633,11.267,7100.6,False,-13.216,hard_stop,9,True,False,-938.42
+EME,Industrials,False,2026,2026-04-29,2026-05-01,899.9,17.1,3.183,8.0,10000.0,False,-8.121,hard_stop,28,True,False,-812.09
+FDX,Industrials,False,2026,2026-03-19,2026-03-23,293.0177,25.52,3.175,8.0,10000.0,False,2.018,trail_stop,42,False,False,201.83
+BEN,Financials,False,2026,2026-01-30,2026-02-03,26.4247,23.96,2.675,8.0,10000.0,False,-12.223,hard_stop,37,True,False,-1222.3
+GEV,Industrials,False,2026,2026-04-22,2026-04-24,1160.4271,771.56,3.502,8.0,10000.0,False,-8.433,hard_stop,5,True,True,-843.31
+GNRC,Industrials,False,2026,2026-04-29,2026-05-01,260.02,25.68,3.9,8.0,10000.0,False,-8.042,hard_stop,40,True,False,-804.17
+HAL,Energy,False,2026,2026-01-21,2026-01-23,34.4161,26.32,3.974,8.0,10000.0,False,-1.483,time,42,False,False,-148.3
+HAS,Consumer Discretionary,False,2026,2026-02-10,2026-02-12,105.1649,59.28,2.646,8.0,10000.0,False,-9.314,hard_stop,21,True,False,-931.39
+HSY,Consumer Staples,False,2026,2026-02-05,2026-02-09,228.9056,21.77,2.699,8.0,10000.0,False,-8.708,hard_stop,38,True,False,-870.76
+HPE,Information Technology,True,2026,2026-06-01,2026-06-03,54.0219,195.76,6.331,12.661,6318.5,False,-16.039,hard_stop,7,True,False,-1013.43
+IRM,Real Estate,False,2026,2026-04-30,2026-05-04,125.9588,15.76,2.845,8.0,10000.0,False,0.255,time,42,False,False,25.5
+LITE,Information Technology,True,2026,2026-02-03,2026-02-05,436.22,18.56,9.011,18.023,4438.87,False,42.795,trail_stop,26,False,False,1899.62
+PFE,Health Care,False,2026,2026-02-03,2026-02-05,26.3255,16.18,2.316,8.0,10000.0,False,2.429,time,42,False,False,242.9
+PNW,Utilities,False,2026,2026-02-25,2026-02-27,98.7643,162.15,2.154,8.0,10000.0,False,3.964,time,42,False,False,396.43
+PNC,Financials,False,2026,2026-01-16,2026-01-21,220.3969,15.36,2.142,8.0,10000.0,False,-3.706,time,42,False,False,-370.57
+PWR,Industrials,False,2026,2026-04-30,2026-05-04,749.4854,44.56,3.024,8.0,10000.0,False,-8.287,hard_stop,28,True,False,-828.71
+ROK,Industrials,False,2026,2026-02-05,2026-02-09,408.7751,16.83,3.366,8.0,10000.0,False,-9.806,hard_stop,25,True,False,-980.55
+SNDK,Information Technology,True,2026,2026-01-29,2026-02-02,588.81,74.97,7.539,15.079,5305.47,False,2.851,trail_stop,2,False,False,151.26
+STX,Information Technology,True,2026,2026-04-28,2026-04-30,654.7132,16.76,5.089,10.177,7860.59,False,12.05,trail_stop,18,False,False,947.16
+TPR,Consumer Discretionary,False,2026,2026-02-05,2026-02-09,150.6547,20.72,3.529,8.0,10000.0,False,-4.411,time,42,False,False,-441.14
+TGT,Consumer Staples,False,2026,2026-05-20,2026-05-22,127.49,17.31,3.899,8.0,10000.0,False,4.965,trail_stop,39,False,False,496.48
+TER,Information Technology,True,2026,2026-02-02,2026-02-04,283.4843,30.11,4.376,8.752,9140.35,False,8.183,trail_stop,27,False,False,747.93
+TXN,Information Technology,True,2026,2026-04-22,2026-04-24,286.3749,24.41,3.119,8.0,10000.0,False,4.922,trail_stop,38,False,False,492.22
+VRT,Industrials,False,2026,2026-04-22,2026-04-24,327.9318,15.67,3.924,8.0,10000.0,False,5.717,trail_stop,24,False,False,571.75

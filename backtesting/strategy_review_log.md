@@ -363,3 +363,128 @@ Once any position crosses +8% unrealized, flag in `plan.md` that the +10% traili
 - **Proposals already implemented (not re-recommended):** Same-day cap, macro deferral, partial profit-lock — all confirmed in current `memory/strategy.md`.
 
 ---
+
+## 2026-07-04 — Weekly Strategy Review (ad hoc run)
+
+**Run time:** 2026-07-04, invoked ad hoc (off the normal Saturday 10:00 ET cadence)
+**Routine:** `strategy_review` (market-independent — no clock gate needed)
+**Reconciliation (read-only sanity check):** Alpaca `/v2/positions` = `[]` MATCHES `portfolio.md` FLAT book → 0/0 PASS, zero divergence. Equity $98,266.98 (100% cash).
+**pead_health.md status:** Still STALE (`computed_on` 2026-06-21, `expires_on` 2026-06-28 < today). `universe.md` `screened_on` 2026-06-28, `expires_on` 2026-07-05 — the next `universe_refresh` (Sun 2026-07-05 18:00 ET) is the first run since the mandatory pead_health-refresh verification was added (commit 23d9d64) and will be the first live test of that fix.
+**New source material since the 2026-06-30 review:** one new `weekly_review` entry — "Week of 2026-06-29" (Mon Jun 29 → Thu Jul 2, committed 2026-07-03, e8ccfdf). Book was FLAT/100% cash the entire week (0 trades, earnings-desert week); portfolio 0.00% vs SPY +2.13% (delta −2.13 pts). No new trade-level evidence (no fills), so no proposal gains a new *documented loss* this run — only carry-forward week-counts and framing updates.
+
+---
+
+### Anti-overfitting counters (Gate 3) — carried forward from 2026-06-30, updated
+
+| Proposal | Times backtested (formal) | Status |
+|----------|---------------------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not yet applied by human) | Not exhausted |
+| S3 — ATR stop, TIGHTER/capped variant (V1) | 1 (2026-06-25, `backtest_report_ATR_STOP_VS_FLAT.md`) — **REJECTED** | Not exhausted (1 rejection < 2), but do not re-test this exact variant again without new evidence |
+| S3 — ATR stop, WIDER/uncapped variant (V2, the actual live proposal) | 0 prior → **1 this run** (see below) | Not exhausted |
+| All others (S2, S4, S5, S6, M1–M5) | 0 | No formal backtests — procedural/monitoring rules or insufficient evidence tier |
+
+No proposal is EXHAUSTED.
+
+---
+
+### ✅ Already Implemented (additions since 2026-06-30 — moved out of ranking)
+
+*(Items 1–3 — same-day cap, macro deferral, partial profit-lock — remain implemented per the 2026-06-30 entry; not repeated here.)*
+
+4. **Mandatory `pead_health.md` refresh verification** (NEW). `routines/universe_refresh.md` (commit `23d9d64`, 2026-06-30) now reads back `pead_health.md` frontmatter after `compute_pead_health.py` runs and requires `computed_on == today`. On a miss it logs a greppable `PEAD_HEALTH_REFRESH_MISS <date>` line to `research_log.md` and adds a loud, un-buried Discord warning — instead of silently riding a stale overlay for weeks. This directly answers the "fix the partial universe_refresh" proposal escalated in the week-of-2026-06-29 review. **Not yet exercised live**: the last `universe_refresh` (Jun 28) predates this fix; the next run (Sun 2026-07-05) is the first opportunity to confirm it fires as designed. Flag for next `strategy_review` to confirm.
+
+5. **Opening-range entry filter** (NEW). `routines/market_open.md` (commit `e36ad29`, 2026-06-25) added a mandatory OR/ATR check before any new buy: fetch the first three 5-minute bars, compute opening-range width vs 14-day ATR, and defer the entry if the open is "chaotic" (OR width > 0.5×ATR) or price hasn't confirmed above the opening-range high by 09:50 ET. This implements the *entry-timing* half of the recommendation from the week-of-2026-06-22 review (triggered by the MU 2026-06-25 same-day −8% noise stop-out: "...OR barring gap-chase entries... under ELEVATED_BAR"). It does **not** implement the *stop-width* half of that recommendation (S3 below) — those are two independent mitigations for the same root cause, and only one is live.
+
+---
+
+### 🔴 STRONG Proposals — Backtested This Run
+
+---
+
+#### S3 (re-tested): Wider ATR-Scaled Stop for High-ATR Names — the actual proposal, formally backtested for the first time
+
+**Proposal (unchanged from 2026-06-30):** for new entries, use `max(8%, 2×14-day ATR%)` as the initial stop instead of the flat −8%, and shrink the position notional so dollar risk per trade stays roughly constant (`min(11% × equity, 0.8% × equity / stop_pct)`).
+
+**Evidence tier:** STRONG (documented MU −$807.58 same-day noise stop-out, 2026-06-25; now 2 weeks flagged — Jun-22, Jun-29 carry-forward).
+
+**This is a genuinely new backtest, not a re-test of the already-rejected V1.** V1 (`min(8%, max(4%, 2×ATR))`) was a CEILING at 8% — it could only ever be tighter than flat, never wider, and was rejected 2026-06-25. This run built a new script (`backtesting/scripts/backtest_atr_stop_widened.py`) implementing V2 (`max(8%, 2×ATR)`, a FLOOR with no ceiling) — the actual mechanic the proposal and the V1 report itself both called for ("raise/remove the 8% cap"). Ran on the same validated 277-trade candidate set as every other PEAD backtest in this repo, with freshly re-fetched OHLC (Yahoo chart API, same method as `backtest_report_ATR_STOP_VS_FLAT.md`).
+
+**Results (full report: `backtesting/reports/backtest_report_ATR_STOP_WIDENED_V2.md`):**
+
+| Period | Var | Trades | Win% | Avg% | PF | AvgLoss% |
+|--------|-----|-------:|-----:|-----:|---:|---------:|
+| 2022–2024 (IS) | V0 | 194 | 57.7% | 1.81% | 1.68 | −6.31% |
+| 2022–2024 (IS) | V2 | 194 | 58.2% | **1.90%** | **1.72** | −6.46% |
+| 2025 (OOS) | V0 | 53 | 49.1% | 1.23% | 1.38 | −6.29% |
+| 2025 (OOS) | V2 | 53 | 49.1% | 1.31% | 1.36 | −6.12% |
+| 2026 YTD (OOS) | V0 | 30 | 50.0% | −0.23% | 0.95 | −8.24% |
+| 2026 YTD (OOS) | V2 | 30 | 50.0% | **−0.55%** | **0.73** | −8.88% |
+
+**Out-of-sample discipline check (mandatory per Step 3c):** Combined OOS (2025+2026, 83 trades): V0 avg **0.70%** / PF **1.20** vs V2 avg **0.64%** / PF **1.08**. **V2 is WORSE out-of-sample.** In-sample it's marginally better (1.90% vs 1.81%, PF 1.72 vs 1.68). This is the textbook in-sample-only-improvement pattern the routine's discipline rule exists to catch.
+
+**Noise-stop mechanism worked as designed, but didn't translate to better OOS P&L:** first-5-day noise-stop rate dropped in every period (2022–24: 4.1%→3.1%; 2025: 7.5%→5.7%; 2026 YTD: 6.7%→3.3%), and on the MU-style high-ATR IT subset (29 trades, mean ATR 4.76%/day) V2 avoided 2 of 3 V0 noise stops and introduced 0 new ones. Position sizing behaved exactly as specified: **100% of these 29 high-ATR trades had V2 notional below the $11k cap** (mean $8,523, range $4,439–$10,000) — the risk-parity downsizing genuinely engaged every time, it never defaulted back to the full $11k. **But** avoiding an early noise stop just delays the exit for names whose thesis was going to fail anyway — those trades go on to hit a wider (more expensive) hard stop or ride out to a worse time-stop exit later, which is visible in the 2026 YTD avg-loss widening from −8.24% to −8.88% and PF collapsing from 0.95 to 0.73. Net effect in the current OOS stretch: fewer noise stops, but each realized loss costs more, and the two effects roughly cancel or net slightly negative.
+
+**Beat-the-benchmark bar:** SPY buy-and-hold was 28.2% (2022–24), 18.0% (2025), 11.1% (2026 YTD, partial). Per-trade avg% figures aren't directly comparable to a compounded index return (these are single-trade returns on ~11% position size, not a fully-invested return), but neither variant's per-trade edge changes that comparison in V2's favor.
+
+**Verdict: ⚠️ NOT ENDORSED — fails the out-of-sample discipline bar.** Full-sample and in-sample results are marginally favorable, but the routine's own rule (Step 3c) requires OOS improvement-or-hold, and OOS here is worse on both avg return (0.64% vs 0.70%) and profit factor (1.08 vs 1.20). This supersedes the 2026-06-30 "direction supported, pending full sim" conditional verdict — the full sim has now been run, and it does not clear the bar. **No `strategy.md` wording is proposed this run** (the MUST NOT list bars endorsing an OOS-negative result).
+
+**Anti-overfitting counter:** S3-V2 (wider/uncapped variant) now has 1 formal backtest (2026-07-04), verdict NOT SUPPORTED. This is a distinct variant from S3-V1 (rejected 2026-06-25) — 1 rejection each, neither is EXHAUSTED (would need 2 rejections on the *same* variant/periods). If a future week brings new evidence (e.g. a different ATR multiplier/cap combination, or a materially larger OOS sample), that would be a new variant eligible for one more test; re-running this exact V2 spec on these same three periods again would not add information and should be treated as EXHAUSTED-equivalent going forward (1 of the "twice" ceiling already used).
+
+---
+
+### 🔴 STRONG — carried forward unchanged from 2026-06-30 (no new trade-level evidence this week; book was FLAT all week)
+
+- **S1 — ELEVATED_BAR realized-health threshold −1.0%.** Verdict unchanged: ✅ BACKTEST SUPPORTS (OOS identical at 0% vs −1.0%, IS quality improves). Still NOT applied by the human — `compute_pead_health.py` `HEALTH_THRESHOLD` constant confirmed still `0.0` this run. No new backtest needed (no new data since Jun-30; re-running the identical test on identical periods would violate the spirit of Gate 3 without adding evidence).
+- **S2 — "Never-worked" chronic-underwater monitoring flag.** Analytical support unchanged (GEV −$319.18, CASY −$813.58). No new instance this week (book was flat). Verdict unchanged: recommend implementing the flag.
+- **S4 — SEC EDGAR shelf-registration scan.** Unchanged (GOOGL −$413.92 precedent). No new instance this week.
+- **S5 — Export-control (BIS) monitoring for semiconductor/IT positions.** Unchanged (AMD/NVDA precedent). No new instance this week.
+- **S6 — Missed pre_market scheduler-gap investigation.** Unchanged. No new gap this week (all 4 sessions of the week-of-Jun-29 ran pre_market on schedule per the weekly review).
+
+---
+
+### 🟡 MODERATE Proposals (ranked, not backtested)
+
+- **M1 — Orphan stop queue in `market_open`** *(still 2 weeks: May-11, May-18)* — unchanged; confirmed NOT implemented (no orphan/stop_order_id scan logic found in `routines/market_open.md` this run).
+- **M2 — Max concurrent positions 8→10** *(still 1 week: May-26)* — unchanged; `strategy.md` still caps at 8.
+- **M3 — GTC stop behavior on paper account** *(still 1 week: Jun-01)* — unchanged.
+- **M4 — Sizing-correction process clarification** *(still 1 week: Jun-01)* — unchanged.
+- **M5 — Between-seasons secondary entry lane (NEW, 1 week: Jun-29).** From the week-of-2026-06-29 review: the book sat 100% cash through the entire week not because of the ELEVATED_BAR overlay (which was stale→NORMAL, so the standard 15% bar was in effect) but because of a genuine seasonal Q1/Q2 earnings desert — 0 qualifiers even at the lower bar, and the 3 fresh "beats" that did appear (GIS, NKE, MU) were correctly rejected on quality. Proposal: consider using the already-threshold-exempt analyst-revision/partnership-catalyst entry lane more actively between earnings seasons to reduce multi-week 100%-cash stretches. *Why not STRONG:* only 1 week flagged, and the review's own framing hedges it ("...OR accept the desert as by-design — the discipline correctly avoided three low-quality beats that would likely have lost"). This is speculative and not yet evidence of a costly gap (no missed-and-would-have-won trade is documented — GIS/NKE/MU were all correctly rejected for cause). *What would promote to STRONG:* a documented instance of a high-quality analyst-revision/partnership candidate that was available but not researched/traded during a desert stretch, or 2+ more weeks of the same pattern with quantified opportunity cost.
+
+---
+
+### ⚪ WEAK / EXHAUSTED
+
+- **W1 — Trailing-stop pre-alert at +8% unrealized** — unchanged, superseded by the live partial profit-lock rule.
+- **S3 tighter/capped variant (V1)** — REJECTED (backtested 2026-06-25); do not re-test this specific variant. (The wider/uncapped variant V2 is a distinct proposal, tested fresh above — this is not a repeat test of a rejected variant.)
+
+---
+
+### Ranked summary table
+
+| Rank | ID | Proposal | Tier | Evidence | Backtest verdict | Recommended action |
+|------|----|----------|------|----------|------------------|--------------------|
+| 1 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG | 3 weeks + data | ✅ OOS-supported (2026-06-30) | Apply: tune threshold in `compute_pead_health.py` — still not applied |
+| 2 | S4 | EDGAR shelf-registration scan | 🔴 STRONG | 4 weeks + $413.92 loss | Analytical — recommend | Add EDGAR scan to `pre_market` |
+| 3 | S5 | Export-control monitoring | 🔴 STRONG | 4 weeks + AMD/NVDA stops | Analytical — recommend | Extend BIS scan to open positions |
+| 4 | S2 | "Never-worked" chronic flag | 🔴 STRONG | 3 weeks + GEV −$319 + CASY −$814 | Analytical — recommend | Add CHRONIC_WATCH alert to `pre_market` |
+| 5 | S6 | Missed scheduler investigation | 🔴 STRONG | 3 weeks | Operational | Investigate trigger config; add heartbeat check |
+| 6 | S3 | Wider ATR stop (V2) for high-ATR names | 🔴 STRONG | 2 weeks + MU −$808 | ⚠️ **NOT ENDORSED — fails OOS this run** | Do not apply; root-cause (MU noise stop) partially addressed via opening-range filter instead |
+| 7 | M1 | Orphan stop queue | 🟡 MODERATE | 2 weeks | Not backtested | Consider adding to `market_open` |
+| 8 | M2 | Max concurrent 8→10 | 🟡 MODERATE | 1 week | Not backtested | Wait for more evidence |
+| 9 | M3 | GTC stop behavior | 🟡 MODERATE | 1 week | Not backtested | Monitor; investigate paper-acct behavior |
+| 10 | M4 | Sizing-correction process | 🟡 MODERATE | 1 week | Not backtested | Low priority — add to `market_open` checklist |
+| 11 | M5 | Between-seasons secondary entry lane (NEW) | 🟡 MODERATE | 1 week | Not backtested | Wait for more evidence — currently hedged/speculative |
+| — | W1 | Trailing-stop pre-alert | ⚪ WEAK | 1 week | Superseded | No action |
+
+*(S3 moves down in rank this run — from #5 conditional to #6 rejected — now that its full-sim OOS result is in. S1/S4/S5/S2/S6 keep their 2026-06-30 ranks unchanged; no new evidence this run.)*
+
+---
+
+### Notes on this run
+
+- This run reused the exact validated candidate set (`backtest_trades_PEAD_2022_2025_ENHANCED_base.csv`, `backtest_trades_PEAD_2026_YTD.csv`) as every other PEAD backtest in the repo, so the entry population is identical across V0/V1/V2 comparisons.
+- `backtesting/data_cache/` was empty at the start of this run (per `.gitignore`, per-ticker pickles are never committed); OHLC paths were re-fetched from Yahoo's chart API (same approach validated in `backtest_report_ATR_STOP_VS_FLAT.md`) and are not committed here either.
+- New artifacts this run: `backtesting/scripts/backtest_atr_stop_widened.py`, `backtesting/reports/backtest_report_ATR_STOP_WIDENED_V2.md`, `backtesting/reports/backtest_trades_ATR_STOP_V2_widened.csv`, `backtesting/reports/backtest_trades_ATR_STOP_V2_widened_v0.csv`.
+- Proposals already implemented (not re-recommended): same-day cap, macro deferral, partial profit-lock (all confirmed since 2026-06-30), plus the two NEW implementations this run (mandatory pead_health refresh verification, opening-range entry filter).
+
+---
