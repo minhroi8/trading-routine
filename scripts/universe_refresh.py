@@ -89,7 +89,7 @@ def load_wikipedia_index(url, cap_tier, name):
 
     # First table is the holdings list (Symbol, Security, GICS Sector, ...)
     t = tables[0]
-    rows = _re.findall(r'<tr>(.*?)</tr>', t, _re.DOTALL)
+    rows = _re.findall(r'<tr[^>]*>(.*?)</tr>', t, _re.DOTALL)
 
     tickers = []
     for row in rows[1:]:  # skip header row
