@@ -115,7 +115,10 @@ def main():
 
     reject_counts = {}
     trades = []
+    t0 = time.time()
     for i, ticker in enumerate(tickers):
+        if i % 500 == 0:
+            print(f"  [sim {i}/{len(tickers)}] elapsed {time.time()-t0:.0f}s, {len(trades)} trades so far", flush=True)
         sub = cdf[cdf.ticker == ticker]
         cik = ticker_to_cik[ticker]
 
