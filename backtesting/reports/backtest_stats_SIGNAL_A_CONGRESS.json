@@ -1,0 +1,123 @@
+{
+  "full": {
+    "label": "full",
+    "window_start": "2016-01-04 00:00:00+00:00",
+    "window_end": "2021-03-31 00:00:00+00:00",
+    "n_trades": 118,
+    "win_rate": 0.6101694915254238,
+    "profit_factor_gross": 2.6234131680122856,
+    "profit_factor_net": 2.578488218395258,
+    "avg_return_gross": 0.04671645964622428,
+    "avg_return_net": 0.04587942129384835,
+    "CAGR_gross": 0.1407594762935256,
+    "CAGR_net": 0.13679719422474057,
+    "Sharpe_gross": 4.046130104395684,
+    "Sharpe_net": 3.941761722126734,
+    "MaxDD_gross": -0.19240591448445865,
+    "MaxDD_net": -0.19463983800466667,
+    "pct_trading_days_with_open_position": 0.918939393939394,
+    "exit_reason_counts": {
+      "stale_90d": 82,
+      "take_profit": 16,
+      "stop_loss": 13,
+      "end_of_window": 7
+    }
+  },
+  "in_sample": {
+    "label": "in_sample",
+    "window_start": "2016-01-04 00:00:00+00:00",
+    "window_end": "2019-09-04 02:24:00+00:00",
+    "n_trades": 91,
+    "win_rate": 0.5824175824175825,
+    "profit_factor_gross": 2.0875315842322952,
+    "profit_factor_net": 2.048028997712289,
+    "avg_return_gross": 0.03167595918023861,
+    "avg_return_net": 0.03085094841719973,
+    "CAGR_gross": 0.10177087754851177,
+    "CAGR_net": 0.09798412293266412,
+    "Sharpe_gross": 3.1159349178891653,
+    "Sharpe_net": 3.0073938470852513,
+    "MaxDD_gross": -0.1906265369915533,
+    "MaxDD_net": -0.1928780746624199,
+    "pct_trading_days_with_open_position": 0.9318181818181818,
+    "exit_reason_counts": {
+      "stale_90d": 70,
+      "stop_loss": 10,
+      "take_profit": 6,
+      "end_of_window": 5
+    }
+  },
+  "out_of_sample": {
+    "label": "out_of_sample",
+    "window_start": "2019-09-04 02:24:00+00:00",
+    "window_end": "2021-03-31 00:00:00+00:00",
+    "n_trades": 27,
+    "win_rate": 0.7037037037037037,
+    "profit_factor_gross": 4.529575681347757,
+    "profit_factor_net": 4.470754082569793,
+    "avg_return_gross": 0.09740851677232412,
+    "avg_return_net": 0.0965309409892196,
+    "CAGR_gross": 0.2934618316927291,
+    "CAGR_net": 0.28861828668858736,
+    "Sharpe_gross": 5.6189397608380105,
+    "Sharpe_net": 5.54712552434906,
+    "MaxDD_gross": -0.07758893431990199,
+    "MaxDD_net": -0.0782584438019156,
+    "pct_trading_days_with_open_position": 0.851010101010101,
+    "exit_reason_counts": {
+      "stale_90d": 12,
+      "take_profit": 10,
+      "stop_loss": 3,
+      "end_of_window": 2
+    }
+  },
+  "split_point": "2019-09-04 02:24:00+00:00",
+  "bench_SPY_full": {
+    "CAGR": 0.13763967377838204,
+    "Sharpe": 0.7968502933335747,
+    "MaxDD": -0.3418065736580752,
+    "total_return": 0.9634442879088165,
+    "start": "2016-01-04 05:00:00+00:00",
+    "end": "2021-03-30 04:00:00+00:00"
+  },
+  "bench_SPY_is": {
+    "CAGR": 0.10608088390936432,
+    "Sharpe": 0.8351718089832905,
+    "MaxDD": -0.20154669028719374,
+    "total_return": 0.44637925133519585,
+    "start": "2016-01-04 05:00:00+00:00",
+    "end": "2019-09-03 04:00:00+00:00"
+  },
+  "bench_SPY_oos": {
+    "CAGR": 0.20659559141845807,
+    "Sharpe": 0.8367831971378665,
+    "MaxDD": -0.3418065736580752,
+    "total_return": 0.3426199952376092,
+    "start": "2019-09-04 04:00:00+00:00",
+    "end": "2021-03-30 04:00:00+00:00"
+  },
+  "bench_QQQ_full": {
+    "CAGR": 0.22329057418271003,
+    "Sharpe": 1.0217559115933326,
+    "MaxDD": -0.28559372098911295,
+    "total_return": 1.8705022831050226,
+    "start": "2016-01-04 05:00:00+00:00",
+    "end": "2021-03-30 04:00:00+00:00"
+  },
+  "bench_QQQ_is": {
+    "CAGR": 0.15514464340318823,
+    "Sharpe": 0.9173183367033203,
+    "MaxDD": -0.23155189032879941,
+    "total_return": 0.6954337899543379,
+    "start": "2016-01-04 05:00:00+00:00",
+    "end": "2019-09-03 04:00:00+00:00"
+  },
+  "bench_QQQ_oos": {
+    "CAGR": 0.38611389255079986,
+    "Sharpe": 1.2248141777945971,
+    "MaxDD": -0.28559372098911295,
+    "total_return": 0.6689852917750756,
+    "start": "2019-09-04 04:00:00+00:00",
+    "end": "2021-03-30 04:00:00+00:00"
+  }
+}

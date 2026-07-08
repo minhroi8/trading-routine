@@ -16,8 +16,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bt_common import (
-    DATA_CACHE, get_daily_bars, trade_stats, equity_curve_from_trades,
-    cagr, sharpe_from_trade_equity, max_drawdown, buy_and_hold_stats,
+    DATA_CACHE, get_daily_bars, trade_stats, daily_portfolio_equity,
+    cagr, sharpe_from_daily_returns, max_drawdown, buy_and_hold_stats,
 )
 
 API_KEY = os.environ["ALPACA_API_KEY_ID"]
@@ -38,8 +38,9 @@ def summarize(trades: pd.DataFrame, label: str, start, end):
         return out
     gross = trade_stats(trades, "gross_return")
     net = trade_stats(trades, "net_return")
-    eq_gross = equity_curve_from_trades(trades, ret_col="gross_return")
-    eq_net = equity_curve_from_trades(trades, ret_col="net_return")
+    eq_gross, dr_gross, cnt_gross = daily_portfolio_equity(trades, start, end, ret_col="gross_return")
+    eq_net, dr_net, cnt_net = daily_portfolio_equity(trades, start, end, ret_col="net_return")
+    pct_days_invested = float((cnt_net > 0).mean()) if len(cnt_net) else np.nan
     out.update({
         "n_trades": len(trades),
         "win_rate": net["win_rate"],
@@ -49,10 +50,11 @@ def summarize(trades: pd.DataFrame, label: str, start, end):
         "avg_return_net": net["avg_return"],
         "CAGR_gross": cagr(eq_gross, start, end) if not eq_gross.empty else np.nan,
         "CAGR_net": cagr(eq_net, start, end) if not eq_net.empty else np.nan,
-        "Sharpe_gross": sharpe_from_trade_equity(eq_gross) if not eq_gross.empty else np.nan,
-        "Sharpe_net": sharpe_from_trade_equity(eq_net) if not eq_net.empty else np.nan,
+        "Sharpe_gross": sharpe_from_daily_returns(dr_gross) if not eq_gross.empty else np.nan,
+        "Sharpe_net": sharpe_from_daily_returns(dr_net) if not eq_net.empty else np.nan,
         "MaxDD_gross": max_drawdown(eq_gross) if not eq_gross.empty else np.nan,
         "MaxDD_net": max_drawdown(eq_net) if not eq_net.empty else np.nan,
+        "pct_trading_days_with_open_position": pct_days_invested,
         "exit_reason_counts": trades.exit_reason.value_counts().to_dict(),
     })
     return out

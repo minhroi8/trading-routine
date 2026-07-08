@@ -1,0 +1,22 @@
+{
+  "signal_b": {
+    "real_mean_return": 0.024875010227434262,
+    "real_win_rate": 0.4850498338870432,
+    "placebo_mean_return": 0.014403249364829736,
+    "placebo_win_rate": 0.4835317231018144,
+    "real_percentile_in_placebo_dist": 56.620054701644904,
+    "edge_vs_placebo": 0.010471760862604526,
+    "n_real": 2709,
+    "n_placebo": 25959
+  },
+  "signal_a": {
+    "real_mean_return": 0.04671645964622428,
+    "real_win_rate": 0.6101694915254238,
+    "placebo_mean_return": 0.02968252286984826,
+    "placebo_win_rate": 0.6110169491525423,
+    "real_percentile_in_placebo_dist": 55.33898305084746,
+    "edge_vs_placebo": 0.01703393677637602,
+    "n_real": 118,
+    "n_placebo": 1180
+  }
+}

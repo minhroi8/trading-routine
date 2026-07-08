@@ -334,48 +334,69 @@ def trade_stats(trades: pd.DataFrame, ret_col="net_return"):
     }
 
 
-def equity_curve_from_trades(trades: pd.DataFrame, entry_col="entry_date", exit_col="exit_date",
-                              ret_col="net_return", start_capital=100_000.0, n_concurrent=10):
-    """Simple equal-weight equity curve: each trade risks 1/n_concurrent
-    of capital at time of entry, compounding sequentially trade-by-trade
-    ordered by exit date (a light-weight approximation, not a full
-    intraday-accurate portfolio simulator)."""
+def daily_portfolio_equity(trades: pd.DataFrame, window_start, window_end,
+                            entry_col="entry_date", exit_col="exit_date",
+                            ret_col="net_return", start_capital=100_000.0):
+    """Equal-weight, fully-invested-when-active daily mark-to-market equity
+    curve. Each trade's total realized return is converted to a constant
+    per-trading-day rate over its actual holding period (r_daily such that
+    (1+r_daily)^holding_trading_days == 1+total_return), then on each
+    trading day the portfolio return is the AVERAGE r_daily across every
+    trade open that day (flat/cash days contribute 0%). This avoids the
+    bug in an earlier version of this function, which chained trades
+    SEQUENTIALLY (each trade fully compounding into the stake for the
+    next), producing nonsensical >100%/yr CAGR when hundreds of trades
+    overlap in real time -- overlapping trades must be averaged
+    cross-sectionally, not chained temporally.
+    """
     if trades.empty:
         return pd.Series(dtype=float)
-    t = trades.sort_values(exit_col).copy()
-    equity = start_capital
-    curve = []
-    for _, row in t.iterrows():
-        stake = equity / n_concurrent
-        equity = equity - stake + stake * (1 + row[ret_col])
-        curve.append({"date": row[exit_col], "equity": equity})
-    cdf = pd.DataFrame(curve).set_index("date")["equity"]
-    return cdf
+
+    days = TRADING_DAYS[(TRADING_DAYS >= pd.Timestamp(window_start).tz_localize(None)) &
+                         (TRADING_DAYS <= pd.Timestamp(window_end).tz_localize(None))]
+    if len(days) == 0:
+        return pd.Series(dtype=float)
+    n = len(days)
+    sum_rate = np.zeros(n + 1)
+    cnt = np.zeros(n + 1)
+
+    for _, row in trades.iterrows():
+        entry_d = pd.Timestamp(row[entry_col]).tz_localize(None).normalize()
+        exit_d = pd.Timestamp(row[exit_col]).tz_localize(None).normalize()
+        i0 = days.searchsorted(entry_d, side="left")
+        i1 = days.searchsorted(exit_d, side="left")
+        i0 = max(0, min(i0, n - 1))
+        i1 = max(i0, min(i1, n - 1))
+        hold_days = i1 - i0 + 1
+        total_ret = row[ret_col]
+        daily_rate = (1 + total_ret) ** (1 / hold_days) - 1
+        sum_rate[i0] += daily_rate
+        sum_rate[i1 + 1] -= daily_rate
+        cnt[i0] += 1
+        cnt[i1 + 1] -= 1
+
+    sum_rate_cum = np.cumsum(sum_rate[:n])
+    cnt_cum = np.cumsum(cnt[:n])
+    daily_ret = np.divide(sum_rate_cum, cnt_cum, out=np.zeros(n), where=cnt_cum > 0)
+
+    equity = start_capital * np.cumprod(1 + daily_ret)
+    return pd.Series(equity, index=days), pd.Series(daily_ret, index=days), cnt_cum
 
 
 def cagr(equity: pd.Series, start_date, end_date) -> float:
     if equity.empty:
         return np.nan
-    years = (pd.Timestamp(end_date) - pd.Timestamp(start_date)).days / 365.25
+    years = (pd.Timestamp(end_date).tz_localize(None) - pd.Timestamp(start_date).tz_localize(None)).days / 365.25
     if years <= 0:
         return np.nan
     total_return = equity.iloc[-1] / equity.iloc[0]
     return total_return ** (1 / years) - 1
 
 
-def sharpe_from_trade_equity(equity: pd.Series, periods_per_year=252) -> float:
-    if len(equity) < 3:
+def sharpe_from_daily_returns(daily_ret: pd.Series, periods_per_year=252) -> float:
+    if len(daily_ret) < 3 or daily_ret.std() == 0:
         return np.nan
-    rets = equity.pct_change().dropna()
-    if rets.std() == 0 or len(rets) == 0:
-        return np.nan
-    # equity here is indexed by trade-exit events, not daily -- annualize
-    # using the actual observed trade cadence rather than assuming 252/yr
-    span_years = (equity.index[-1] - equity.index[0]).days / 365.25
-    if span_years <= 0:
-        return np.nan
-    trades_per_year = len(rets) / span_years
-    return (rets.mean() / rets.std()) * np.sqrt(trades_per_year)
+    return (daily_ret.mean() / daily_ret.std()) * np.sqrt(periods_per_year)
 
 
 def max_drawdown(equity: pd.Series) -> float:
@@ -386,8 +407,13 @@ def max_drawdown(equity: pd.Series) -> float:
     return dd.min()
 
 
+def _to_utc_ts(d):
+    ts = pd.Timestamp(d)
+    return ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
+
+
 def buy_and_hold_stats(bars: pd.DataFrame, start_date, end_date):
-    bars = bars.loc[pd.Timestamp(start_date, tz="UTC"):pd.Timestamp(end_date, tz="UTC")]
+    bars = bars.loc[_to_utc_ts(start_date):_to_utc_ts(end_date)]
     if bars.empty or len(bars) < 2:
         return {}
     px = bars["close"]
