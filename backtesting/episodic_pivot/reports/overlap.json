@@ -1,0 +1,14 @@
+{
+  "ep_tickers": 23,
+  "shared_tickers": 23,
+  "shared_tickers_pct_of_ep": 100.0,
+  "ep_events": 27,
+  "shared_events": 27,
+  "shared_events_pct_of_ep": 100.0,
+  "ep_holding_bdays": 416,
+  "concurrent_bdays_same_ticker": 387,
+  "concurrent_pct_of_ep_holding": 93.0,
+  "monthly_realized_pnl_corr": 0.5747812781034285,
+  "monthly_corr_note": "realized-PnL-by-exit-month proxy only; true daily MTM return correlation is NOT computable from PEAD trade-level artifacts",
+  "n_monthly_points": 20
+}

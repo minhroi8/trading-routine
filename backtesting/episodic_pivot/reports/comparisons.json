@@ -1,0 +1,104 @@
+{
+  "IS_2022_2024": {
+    "episodic_pivot": {
+      "n_trades": 21,
+      "total_return_pct": 0.6600885093537512,
+      "cagr_pct": 0.2329653279206756,
+      "max_drawdown_pct": -1.7620338918251635,
+      "sharpe": 0.241981536140331,
+      "win_rate_pct": 47.61904761904761,
+      "expectancy_pct": 0.5878483906470706,
+      "median_return_pct": -0.2910773774209563,
+      "profit_factor": 1.2662933743154254,
+      "avg_invested_frac_pct": 2.0589496451092533,
+      "pct_days_invested": 29.91573033707865,
+      "turnover_annual_x": 0.367285299689953,
+      "slippage_cost_$": 208.15591820378768,
+      "largest_winner_contrib_pct": 16.820233874423177,
+      "top5_winner_contrib_pct": 65.2078028067686,
+      "expectancy_ex_top1_pct": 0.13562514690110328,
+      "expectancy_ex_top5_pct": -1.5830935438955105
+    },
+    "spy_buyhold": {
+      "total_return_pct": 40.36713902601363,
+      "cagr_pct": 12.741851662363878,
+      "max_drawdown_pct": -22.094847995426885,
+      "sharpe": 0.7749497134429485
+    },
+    "pead_from_artifacts": {
+      "n_trades": 4387,
+      "win_rate_pct": 54.798267608844306,
+      "expectancy_pct": 1.3237975837702303,
+      "median_return_pct": 1.1,
+      "profit_factor": 1.453767303907282,
+      "note": "trade-level, PEAD's own sizing/exits (~42-cal-day hold); not portfolio-CAGR comparable"
+    },
+    "simple_gap_baseline": {
+      "n_trades": 246,
+      "total_return_pct": 14.140060262720633,
+      "win_rate_pct": 34.959349593495936,
+      "expectancy_pct": 1.1217158764016644,
+      "median_return_pct": -0.9850252121081426,
+      "profit_factor": 1.6794184380049264,
+      "largest_winner_contrib_pct": 4.791735421613939
+    },
+    "random_matched_control": {
+      "n_ep_trades_matched": 21,
+      "n_random_samples": 105,
+      "mean_return_pct": 1.926862430243266,
+      "median_return_pct": 0.0,
+      "win_rate_pct": 36.19047619047619
+    }
+  },
+  "OOS_2025": {
+    "episodic_pivot": {
+      "n_trades": 6,
+      "total_return_pct": 0.06805493998136569,
+      "cagr_pct": 0.08225766898817266,
+      "max_drawdown_pct": -0.679921129979603,
+      "sharpe": 0.08719273842191025,
+      "win_rate_pct": 50.0,
+      "expectancy_pct": 0.8749356367926989,
+      "median_return_pct": -0.046287706813707974,
+      "profit_factor": 1.4899537524213224,
+      "avg_invested_frac_pct": 2.0915338944868695,
+      "pct_days_invested": 29.04761904761905,
+      "turnover_annual_x": 0.3588144158692509,
+      "slippage_cost_$": 59.738039525370645,
+      "largest_winner_contrib_pct": 79.17841482735811,
+      "top5_winner_contrib_pct": 70.46908968715219,
+      "expectancy_ex_top1_pct": -1.4574553658779266,
+      "expectancy_ex_top5_pct": -5.929855334794876
+    },
+    "spy_buyhold": {
+      "total_return_pct": 12.793179490536799,
+      "cagr_pct": 15.661687399185432,
+      "max_drawdown_pct": -18.75522119641665,
+      "sharpe": 0.8039768469927818
+    },
+    "pead_from_artifacts": {
+      "n_trades": 1454,
+      "win_rate_pct": 55.50206327372765,
+      "expectancy_pct": 1.540123796423659,
+      "median_return_pct": 1.355,
+      "profit_factor": 1.5482947659144162,
+      "note": "trade-level, PEAD's own sizing/exits (~42-cal-day hold); not portfolio-CAGR comparable"
+    },
+    "simple_gap_baseline": {
+      "n_trades": 91,
+      "total_return_pct": -1.4629062070665722,
+      "win_rate_pct": 21.978021978021978,
+      "expectancy_pct": -0.377623675390153,
+      "median_return_pct": -1.9453422409686394,
+      "profit_factor": 0.8218020516407906,
+      "largest_winner_contrib_pct": 20.04276697940095
+    },
+    "random_matched_control": {
+      "n_ep_trades_matched": 6,
+      "n_random_samples": 30,
+      "mean_return_pct": 0.7786169635602951,
+      "median_return_pct": -0.12352533260270304,
+      "win_rate_pct": 23.333333333333332
+    }
+  }
+}
