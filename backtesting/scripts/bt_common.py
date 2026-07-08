@@ -279,8 +279,8 @@ LEVERAGED_INVERSE_KEYWORDS = [
 ]
 
 
-def looks_leveraged_or_inverse(name: str) -> bool:
-    if not name:
+def looks_leveraged_or_inverse(name) -> bool:
+    if not isinstance(name, str) or not name:
         return False
     n = name.lower()
     return any(k in n for k in LEVERAGED_INVERSE_KEYWORDS)
