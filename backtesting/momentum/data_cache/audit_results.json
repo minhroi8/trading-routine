@@ -1,0 +1,63 @@
+{
+  "transport_ok": true,
+  "membership_has_exit_dates": false,
+  "pit_membership_available": false,
+  "wiki_changes_reachable": true,
+  "wiki_datable_removed": [
+    "SIVB",
+    "FRC",
+    "TWTR",
+    "CTXS",
+    "ATVI",
+    "XEC"
+  ],
+  "delisted_prices_available": false,
+  "delisted_detail": [],
+  "splits_adjusted": true,
+  "splits_pass": [
+    "AAPL",
+    "NVDA",
+    "TSLA",
+    "AMZN"
+  ],
+  "ticker_change_map_available": false,
+  "rename_probe": [
+    [
+      "FB",
+      "META",
+      false,
+      true,
+      true
+    ],
+    [
+      "ANTM",
+      "ELV",
+      false,
+      true,
+      true
+    ],
+    [
+      "DISCA",
+      "WBD",
+      false,
+      true,
+      true
+    ],
+    [
+      "RE",
+      "EG",
+      false,
+      true,
+      true
+    ]
+  ],
+  "survivorship_free": false,
+  "verdict": {
+    "1_pit_membership_entry_exit": "FAIL",
+    "2_delisted_price_history": "FAIL",
+    "3_split_div_adjusted": "PASS",
+    "4_ticker_change_handling": "FAIL",
+    "5_no_future_membership_leakage": "FAIL"
+  },
+  "overall": "FAIL"
+}

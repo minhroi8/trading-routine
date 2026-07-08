@@ -1,0 +1,130 @@
+
+==============================================================================
+CHECK -1 — Transport control (prove the fetch works before trusting 404s)
+==============================================================================
+  AAPL control: OK, rows=1258 [2019-01-02..2023-12-29]
+  -> transport confirmed working; subsequent empties/404s are REAL.
+
+==============================================================================
+CHECK 0 — Membership source content & schema
+==============================================================================
+Local scripts/sp500_source.csv columns: ['symbol', 'sector', 'date_added']
+Row count: 503
+Has an exit/removal-date column?: False
+date_added range: 1957-03-04 -> 2026-05-07
+Known-REMOVED tickers still present in local list: none (expected)
+
+engine.get_sp500 source reachable: https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv
+  columns: ['Symbol', 'Security', 'GICS Sector', 'GICS Sub-Industry', 'Headquarters Location', 'Date added', 'CIK', 'Founded'] | rows: 503
+  has entry/exit date columns?: True
+
+==============================================================================
+CHECK 1 — Point-in-time membership entry/exit dates (need >=3 removed names)
+==============================================================================
+Requirement: for names removed/renamed historically we need the DATE they
+entered AND left the index, as known at each point in time. Neither the local
+CSV nor the datasets GitHub CSV carries exit dates or removed names. Probing
+for ANY reachable point-in-time source...
+
+Wikipedia page reachable; parsed 3 tables.
+  changes table = table index 1 | shape (402, 6)
+  columns: ["('Effective Date', 'Effective Date')", "('Added', 'Ticker')", "('Added', 'Security')", "('Removed', 'Ticker')", "('Removed', 'Security')", "('Reason', 'Reason')"]
+  removed=SIVB  rows in changes table: 2 | change-date(s): March 15, 2023, March 19, 2018   (SVB Financial — bank failure, removed & delisted)
+  removed=FRC   rows in changes table: 2 | change-date(s): May 4, 2023, January 2, 2019   (First Republic Bank — seized, sold to JPM)
+  removed=TWTR  rows in changes table: 2 | change-date(s): November 1, 2022, June 7, 2018   (Twitter — taken private by Musk)
+  removed=CTXS  rows in changes table: 1 | change-date(s): October 3, 2022   (Citrix — taken private)
+  removed=ATVI  rows in changes table: 2 | change-date(s): October 18, 2023, August 28, 2015   (Activision Blizzard — acquired by Microsoft)
+  removed=XEC   rows in changes table: 2 | change-date(s): March 2, 2020, June 20, 2014   (Cimarex — merged w/ Cabot into Coterra (CTRA))
+
+Removed names with >=1 datable change-event row: ['SIVB', 'FRC', 'TWTR', 'CTXS', 'ATVI', 'XEC'] (6 of 6)
+CAVEAT: a change-event row gives at most ONE side of the interval and only
+for names removed in the window Wikipedia still lists. It is (a) incomplete
+for older years, (b) retroactively editable (NOT point-in-time frozen),
+(c) has no continuous membership intervals. It cannot serve as an
+authoritative PIT membership record without external cross-validation
+that is not available in this environment.
+
+==============================================================================
+CHECK 2 — Delisted-price history exists for >=1 removed name (Yahoo chart API)
+==============================================================================
+  SIVB  (delisted ~2023-03-15): HTTP 404  -> NO DATA   SVB Financial — bank failure, removed & delisted
+  FRC   (delisted ~2023-05-04): HTTP 404  -> NO DATA   First Republic Bank — seized, sold to JPM
+  TWTR  (delisted ~2022-11-08): HTTP 404  -> NO DATA   Twitter — taken private by Musk
+  CTXS  (delisted ~2022-09-30): HTTP 404  -> NO DATA   Citrix — taken private
+  ATVI  (delisted ~2023-10-13): HTTP 404  -> NO DATA   Activision Blizzard — acquired by Microsoft
+  XEC   (merged   ~2021-10-01): HTTP 404  -> NO DATA   Cimarex — merged w/ Cabot into Coterra (CTRA)
+
+Removed names with usable price history: NONE
+
+==============================================================================
+CHECK 3 — Split/dividend adjustment applied (Yahoo adjclose)
+==============================================================================
+  AAPL  Apple 4:1: adj last_before=121.06 first_after=125.17 ratio=1.034 -> ADJUSTED (continuous)
+  NVDA  NVIDIA 10:1: adj last_before=120.82 first_after=121.72 ratio=1.007 -> ADJUSTED (continuous)
+  TSLA  Tesla 3:1: adj last_before=297.10 first_after=296.07 ratio=0.997 -> ADJUSTED (continuous)
+  AMZN  Amazon 20:1: adj last_before=122.35 first_after=124.79 ratio=1.020 -> ADJUSTED (continuous)
+
+==============================================================================
+CHECK 4 — Ticker-change handling
+==============================================================================
+For each rename: does the OLD ticker still return history, does the NEW ticker
+carry continuous pre-change history, and is there a programmatic mapping?
+
+  Facebook -> Meta Platforms
+     OLD FB   : HTTP 400 -> NO DATA
+     NEW META : OK rows=3028 [2012-05-18..2024-05-31]
+     NEW carries pre-rename history spanning 2022-06-09?: True
+     OLD ticker still queryable independently?: False
+
+  Anthem -> Elevance Health
+     OLD ANTM : HTTP 404 -> NO DATA
+     NEW ELV  : OK rows=3627 [2010-01-04..2024-05-31]
+     NEW carries pre-rename history spanning 2022-06-28?: True
+     OLD ticker still queryable independently?: False
+
+  Discovery -> Warner Bros Discovery
+     OLD DISCA: HTTP 404 -> NO DATA
+     NEW WBD  : OK rows=3627 [2010-01-04..2024-05-31]
+     NEW carries pre-rename history spanning 2022-04-11?: True
+     OLD ticker still queryable independently?: False
+
+  Everest Re -> Everest Group
+     OLD RE   : HTTP 404 -> NO DATA
+     NEW EG   : OK rows=3627 [2010-01-04..2024-05-31]
+     NEW carries pre-rename history spanning 2023-11-01?: True
+     OLD ticker still queryable independently?: False
+
+There is NO programmatic ticker-change map from the price API; the OLD symbol
+404s and its history is silently folded into the NEW symbol. A backtest that
+only knows the OLD symbol on a historical rebalance date gets NO DATA and
+silently drops the name -> selection distortion. Mapping must be hand-maintained.
+
+==============================================================================
+CHECK 5 — Future-membership leakage
+==============================================================================
+The only membership list reachable is the CURRENT constituents snapshot.
+Using it to define the 2012-2026 universe means:
+  (a) names in the index THEN but since removed are ABSENT (survivorship bias);
+  (b) names in the list NOW but added later would be INCLUDED early (look-ahead).
+
+Current list: 503 names.
+  added after 2012-01-01: 215 (leak risk if used pre-add)
+  added after 2023-01-01: 56
+  missing/unparseable date_added: 0
+date_added partially guards (b) but does NOTHING for (a): the ~cumulative
+hundreds of names removed from the index across 2012-2026 are simply not in
+the file, and their prices 404 anyway (Check 2), so they cannot be restored.
+
+==============================================================================
+AUDIT SUMMARY (machine-readable)
+==============================================================================
+  1_pit_membership_entry_exit: FAIL
+  2_delisted_price_history: FAIL
+  3_split_div_adjusted: PASS
+  4_ticker_change_handling: FAIL
+  5_no_future_membership_leakage: FAIL
+
+  OVERALL AUDIT: FAIL
+  Gate: primary backtest requires PIT membership (1) AND delisted coverage (2)
+  AND no leakage (5). These FAIL -> primary backtest MUST NOT run. The
+  data-availability report is the final deliverable.
