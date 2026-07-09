@@ -1,0 +1,18 @@
+{
+  "updated_at": "REPLACE_WITH_DATE_YOU_FILL_THIS_IN",
+  "cash": 0,
+  "positions": {
+    "EXAMPLE_TICKER": {
+      "shares": 0,
+      "cost_basis_per_share": 0.00,
+      "last_updated": "REPLACE_WITH_DATE"
+    }
+  },
+  "notes": [
+    "This file stores SHARE COUNTS and COST BASIS PER SHARE, not dollar market values.",
+    "Current market value and concentration % are computed at read time by the routine using live prices, so this file only needs to change when you actually buy, sell, or add cash.",
+    "Fill in your real Fidelity holdings and cash balance before first use. Delete the EXAMPLE_TICKER entry.",
+    "Never store account numbers, login credentials, or tax IDs in this file.",
+    "This file is only ever updated from your actual brokerage data or an explicit statement from you. The routine must never estimate or auto-write to this file from market-price movement."
+  ]
+}

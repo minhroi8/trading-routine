@@ -1,0 +1,41 @@
+{
+  "updated_at": "2026-07-09T16:00:00-04:00",
+  "tickers": {
+    "AVGO": {
+      "status": "BUY_ONLY_IF",
+      "confidence": "high",
+      "priority_rank": 1,
+      "entry_condition": {
+        "pullback_level": 395,
+        "breakout_level": 407,
+        "breakout_volume_condition": "above 20-day avg volume"
+      },
+      "invalidation": {
+        "level": 388,
+        "basis": "daily_close",
+        "description": "Daily close below 388 weakens the breakout thesis"
+      },
+      "thesis": "Confirmed Apple ASIC agreement through 2031 plus custom-silicon (OpenAI, Google, Meta, Anthropic) and AI networking exposure",
+      "strongest_counterargument": "Valuation and customer concentration (four named hyperscalers driving most XPU revenue) remain elevated",
+      "last_changed": "2026-07-09"
+    },
+    "NVDA": {
+      "status": "WAIT",
+      "confidence": "medium",
+      "priority_rank": 2,
+      "entry_condition": {
+        "pullback_level": null,
+        "breakout_level": 205,
+        "breakout_volume_condition": "hold above 200 intraday and close above 205"
+      },
+      "invalidation": {
+        "level": 199,
+        "basis": "daily_close",
+        "description": "Daily close below 199 signals the China H200 news failed to hold as a durable catalyst"
+      },
+      "thesis": "Reported (unconfirmed/unlicensed) China easing on H200 sales to select AI firms; training-only use, sub-200K unit cap reported",
+      "strongest_counterargument": "Policy reporting is not a signed license; China has reversed or slow-walked similar signals before",
+      "last_changed": "2026-07-09"
+    }
+  }
+}
