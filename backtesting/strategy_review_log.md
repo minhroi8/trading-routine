@@ -714,3 +714,99 @@ No newly-exhausted proposal this run; no proposal crossed into STRONG-needing-a-
 - Proposals already implemented (not re-recommended): same-day cap, macro deferral, partial profit-lock, mandatory pead_health refresh verification, opening-range entry filter, sizing-cap discrepancy resolution (20%) — all confirmed unchanged since prior reviews.
 
 ---
+
+## 2026-07-25 — Weekly Strategy Review
+
+**Run time:** Sat 2026-07-25 ~10:00 ET (market-independent — no clock gate needed for this routine).
+**Routine:** `strategy_review`.
+**Reconciliation (read-only sanity check):** `GET /v2/positions` = `[]` MATCHES `memory/portfolio.md` FLAT book (last written by `market_close` 2026-07-24, itself 0/0 PASS) → **0/0 PASS, zero divergence.**
+**pead_health.md status:** **FRESH & NORMAL** — `computed_on: 2026-07-19`, `expires_on: 2026-07-26` (both current), `realized_health_60d +1.225%`, `n=318`, `health_ok=true`. This is the first review to run since the transport fix landed (2026-07-19) — see S7 resolution below.
+**SPY regime:** BULL per the most recent computed reading (Jul 21 close $748.155 > 200MA $693.44, +7.9%); `HEALTH_THRESHOLD` in `compute_pead_health.py` confirmed still `0.0` this run (S1 not yet applied by the human).
+**New source material since the 2026-07-18 review:** one new `weekly_review` entry — "Week of 2026-07-20" (commit `31cc641`). Book was FLAT/100% cash all 5 sessions (0 fills); portfolio **0.00%** vs SPY **−0.59%** (**+0.59 pts, OUTPERFORMED**). No new trade-level ($ P&L) evidence this run (no fills, no stops). Two substantive developments: (1) the `pead_health.md` staleness bug (S7) is now confirmed fixed and live (Jul-19 `universe_refresh`, commit `f3b3d74`, root cause: yfinance `curl_cffi` vs. the TLS-re-terminating proxy — fixed via `YF_DISABLE_CURL_CFFI=1`); (2) INTC reported a ~+100% Q2 EPS beat Jul 23 AC, deferred day-0 (incomplete a–i, 0 completed drift days), and is flagged `#1 priority for Mon Jul 27 pre_market` — a high-ATR semiconductor name that will simultaneously test the (already-EXHAUSTED) wider-ATR-stop proposal and the (still-MODERATE) execution-micro-gate proposal once it re-screens.
+
+---
+
+### Anti-overfitting counters (Gate 3) — carried forward, unchanged
+
+| Proposal | Times backtested (formal) | Status |
+|----------|---------------------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not yet applied by human) | Not exhausted |
+| S3 — ATR stop, TIGHTER/capped variant (V1) | 1 (2026-06-25) — REJECTED | Not exhausted, but no new evidence to justify a re-test |
+| S3 — ATR stop, WIDER/uncapped variant (V2) | 2 (2026-07-04 formal + 2026-07-08 independent sweep reproduction) — **EXHAUSTED** | Do not re-test on the 2022–2024/2025/2026 periods without a materially new dataset or a walk-forward design |
+| All others (S2, S4, S5, S6, S8, M1–M5) | 0 formal | Procedural/monitoring rules or insufficient evidence tier — no formal backtest warranted |
+
+No newly-exhausted proposal this run; no proposal crossed into STRONG-needing-a-backtest (no new mechanical-rule evidence this week — see Step 4 note below). **S7 is retired from the queue entirely this run (RESOLVED, not exhausted)** — it was an infra/operational fix, never a backtestable mechanical rule, and it is now confirmed shipped and working.
+
+---
+
+### ✅ Already Implemented / Resolved (additions since 2026-07-18 — moved out of ranking)
+
+*(Items 1–6 — same-day cap, macro deferral, partial profit-lock, mandatory pead_health refresh verification, opening-range entry filter, max position size 20% — remain implemented per prior entries; not repeated here.)*
+
+7. **S7 RESOLVED — `compute_pead_health.py` yfinance/curl_cffi transport failure, fixed and confirmed live.** The 2026-07-19 `universe_refresh` (commit `f3b3d74`) applied `YF_DISABLE_CURL_CFFI=1` (+ `lxml`) so yfinance routes through the plain-`requests` fallback instead of `curl_cffi`, which the agent proxy was resetting. Effect verified directly: `pead_health.md` now shows `computed_on: 2026-07-19`, posture flipped **ELEVATED_BAR → NORMAL** (realized_health_60d +1.225%, n=318, health_ok=true), and it remained the live, unexpired reading through the entire week of 2026-07-20 → 2026-07-24 (expires 2026-07-26). This closes out the item that was escalating for 6+ consecutive weeks (Jun-29 → Jul-18). **Residual note (informational, human/maintainer action, not this routine's scope):** the fix so far is a runtime env var (`YF_DISABLE_CURL_CFFI=1`), not a committed code change — confirm it is set as a durable environment variable in the routine's execution environment (not just exported ad hoc in the session that applied it on Jul-19) so it survives a fresh container/session. If the routine environment resets the var, this bug will silently recur.
+
+---
+
+### 🔴 STRONG Proposals — carried forward unchanged (no new $-loss evidence this week; book was FLAT all week, 0 fills)
+
+- **S1 — ELEVATED_BAR realized-health threshold −1.0%.** Verdict unchanged: ✅ BACKTEST SUPPORTS (OOS 2025–2026 identical at 0% vs −1.0%: 52 trades, 2.0% avg, PF 1.62; IS 2022–2024 quality improves 1.89% vs 1.77%). **Still not applied** — `HEALTH_THRESHOLD` confirmed `0.0` this run. **Status change: now UNBLOCKED** — with S7 resolved and `pead_health.md` producing fresh weekly readings again, applying this threshold would take live effect for the first time since it was recommended (2026-06-30). No re-backtest (no new data since 2026-06-30; re-running the identical test on identical periods would add no information). This and S7-durability (above) are jointly the two highest-priority items for the human this week.
+- **S2 — "Never-worked" chronic-underwater monitoring flag.** Unchanged — GEV −$319.18, CASY −$813.58, plus the `stop_audit_2026-07-07.md` finding that 50% of all hard-stops are chronic. No new instance this week (book flat, 0 fills, no open positions to ever go chronic). Verdict unchanged: recommend implementing the `CHRONIC_WATCH` flag in `pre_market`.
+- **S4 — SEC EDGAR shelf-registration scan.** Unchanged (GOOGL −$413.92 precedent). No new instance this week.
+- **S5 — Export-control (BIS) monitoring for semiconductor/IT positions.** Unchanged (AMD/NVDA precedent). No new instance this week. **Directly relevant next week:** if INTC (a semiconductor name) is entered Monday per its #1-priority flag, this scan would apply to it as an open position.
+- **S6 — Missed `pre_market` scheduler-gap investigation.** Unchanged, still 3 weeks originally flagged (May-11, Jun-17, Jun-26) — now **4 consecutive clean weeks running** (Jun-29, Jul-06, Jul-13, Jul-20 all ran all 5 sessions on schedule per commit history and each week's `weekly_review`). The underlying scheduler mechanism was still never actually investigated/root-caused, so this stays open at STRONG tier on its historical evidence, but the live recurrence risk continues to look lower than it did in June.
+
+---
+
+### 🟡 MODERATE Proposals (ranked, not backtested)
+
+- **M1 — Orphan stop queue in `market_open`** *(still 2 weeks: May-11, May-18)* — unchanged; not implemented.
+- **M2 — Max concurrent positions 8→10** *(still 1 week: May-26)* — unchanged; `strategy.md` still caps at 8.
+- **M3 — GTC stop behavior on paper account** *(still 1 week: Jun-01)* — unchanged.
+- **M4 — Sizing-correction process clarification** *(still 1 week: Jun-01)* — unchanged.
+- **M5 — Between-seasons secondary entry lane** *(still 2 weeks: Jun-29, Jul-06)* — no new instance this week; this week's rejections (COF, GM, TRV, BLK, TFC, ISRG) were all primary-lane earnings-driven candidates correctly rejected on quality, not a desert/secondary-lane situation.
+- **S8 — Execution micro-gates vs. fresh-print PEAD entries** *(still 1 week: Jul-13, GS precedent)* — unchanged; no new instance this week. INTC was deferred day-0 for incomplete a–i (0 completed drift days), which is a different mechanism than the Gate 6d/Gate 4 defers that hit GS — so this week does NOT count as a second flag. **However, INTC is a live, explicitly-flagged setup for Monday 2026-07-27**, and if it clears the primary screen and then gets deferred by Gate 6d (chaotic opening range) or Gate 4 (21-day EMA) the way GS was, that would be the second distinct-week instance needed to promote S8 to STRONG. Watch directly next review.
+
+---
+
+### ⚪ WEAK / EXHAUSTED
+
+- **W1 — Trailing-stop pre-alert at +8% unrealized** — unchanged, superseded by the live partial profit-lock rule.
+- **S3-V1 — ATR stop, tighter/capped variant** — REJECTED (2026-06-25); 1 rejection, not re-tested.
+- **S3-V2 — ATR stop, wider/uncapped variant** — **EXHAUSTED** (2 rejections: 2026-07-04 formal + 2026-07-08 independent reproduction). Do not re-test without a materially new dataset. **Relevant next week:** if INTC enters and its ATR is high, per this EXHAUSTED verdict the flat −8% stop should still be used as-is — do not improvise a wider stop on the fly; the backtest evidence says it doesn't help OOS.
+
+---
+
+### Ranked summary table
+
+| Rank | ID | Proposal | Tier | Evidence | Backtest verdict | Recommended action |
+|------|----|----------|------|----------|------------------|--------------------|
+| 1 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG | 3 weeks + data | ✅ OOS-supported (2026-06-30); **now unblocked (S7 resolved)** | Apply: tune threshold in `compute_pead_health.py` — still not applied, now would take live effect |
+| 2 | S2 | "Never-worked" chronic flag | 🔴 STRONG | 3 weeks + GEV −$319 + CASY −$814 + 50% of all hard-stops chronic (stop-audit) | Analytical — recommend | Add `CHRONIC_WATCH` alert to `pre_market` |
+| 3 | S4 | EDGAR shelf-registration scan | 🔴 STRONG | 4 weeks + $413.92 loss | Analytical — recommend | Add EDGAR scan to `pre_market` |
+| 4 | S5 | Export-control monitoring | 🔴 STRONG | 4 weeks + AMD/NVDA stops | Analytical — recommend | Extend BIS scan to open positions — directly relevant if INTC enters |
+| 5 | S6 | Missed scheduler investigation | 🔴 STRONG | 3 weeks, now 4 consecutive clean weeks | Operational | Investigate trigger config to confirm root cause; risk trending down but unconfirmed |
+| 6 | S8 | Execution micro-gates vs fresh-print entries | 🟡 MODERATE | 1 week, opportunity cost only, no realized loss | Not backtested | INTC Monday is the live test for a 2nd instance |
+| 7 | M1 | Orphan stop queue | 🟡 MODERATE | 2 weeks | Not backtested | Consider adding to `market_open` |
+| 8 | M2 | Max concurrent 8→10 | 🟡 MODERATE | 1 week | Not backtested | Wait for more evidence |
+| 9 | M3 | GTC stop behavior | 🟡 MODERATE | 1 week | Not backtested | Monitor; investigate paper-acct behavior |
+| 10 | M4 | Sizing-correction process | 🟡 MODERATE | 1 week | Not backtested | Low priority — add to `market_open` checklist |
+| 11 | M5 | Between-seasons secondary entry lane | 🟡 MODERATE | 2 weeks | Not backtested | Wait for a concrete missed-candidate instance |
+| — | W1 | Trailing-stop pre-alert | ⚪ WEAK | 1 week | Superseded | No action |
+| — | S3-V1 | ATR stop, tighter/capped | ⚪ Rejected | 1 rejection | Rejected 2026-06-25 | No re-test |
+| — | S3-V2 | ATR stop, wider/uncapped | ⚪ **EXHAUSTED** | 2 rejections | Rejected 2026-07-04 + confirmed 2026-07-08 | Do not re-test — human/manual review only; use flat −8% on INTC |
+| — | S7 | pead_health transport fix | ✅ **RESOLVED (moved to Already Implemented)** | — | — | Confirm `YF_DISABLE_CURL_CFFI=1` is durably set in the environment |
+
+*(S7 exits the ranked queue entirely this run — moved to Already Implemented. S1 moves up to #1 given it is now unblocked and actionable for the first time since 2026-06-30 — S2/S4/S5/S6 hold their relative order. S8 remains MODERATE at #6, one live instance away from promotion.)*
+
+---
+
+### Notes on this run
+
+- **No fills, no new $ P&L evidence this week** (book FLAT all 5 sessions, per the Jul-20 `weekly_review` entry, commit `31cc641`) — the substantive developments this run are the S7 resolution (confirmed via direct read of `pead_health.md` frontmatter) and the forward-looking INTC flag, which does not yet promote either S3 (EXHAUSTED, stays retired) or S8 (still only 1 week) but is worth watching at the next review.
+- **No formal backtest was run this session.** Per Step 4/Gate 3, backtesting is reserved for STRONG proposals with a mechanical rule to test: S1 already has a standing OOS-supported result with no new data to re-test against; S3-V2 is EXHAUSTED; S2/S4/S5/S6 are procedural/monitoring rules with no mechanical backtest possible; S8 is MODERATE and per the routine's own MUST NOT list, MODERATE proposals are not backtested.
+- **`backtesting/data_cache/` remains empty** (per `.gitignore`); no fetch was needed this run. `backtesting/scripts/` has no new scripts since the 2026-07-18 review (confirmed via `git log` on the directory).
+- **Reconciliation:** `GET /v2/positions` = `[]` matches `memory/portfolio.md`'s FLAT book — 0/0 PASS, zero divergence (read-only sanity check per Gate 2; this routine does not own reconciliation and would not abort even on a mismatch).
+- **`memory/strategy.md` unchanged** since the last human edit (commit `55e87ed`, sizing cap to 20%) — confirmed via `git log -- memory/strategy.md`; no new proposal has been applied by the human this week, so S1/S2/S4/S5/S6/S8 all remain open exactly as ranked above.
+- Proposals already implemented (not re-recommended): same-day cap, macro deferral, partial profit-lock, mandatory pead_health refresh verification, opening-range entry filter, sizing-cap discrepancy resolution (20%), and (NEW this run) the pead_health transport fix (S7) — all confirmed unchanged/resolved since prior reviews.
+
+---
