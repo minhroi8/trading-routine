@@ -4,27 +4,37 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 
 ## Date
 
-_(reset by market_close 2026-08-05 — awaiting next pre_market)_
+**2026-08-06** (pre_market ~08:25 ET). DRY_RUN: false. Regime **BULL** (SPY Aug 5 close $769.79 > 200MA $701.91, +9.7%). PEAD health **NORMAL & FRESH** (computed 2026-08-02, expires 2026-08-09; realized_health_60d +2.008%, n=269, health_ok=true) → standard 15% bar (>20% Util/RE/Industrials/Energy; Industrials/Energy also streak≥2), max 5 new/week. Macro-deferral **NOT triggered** (premarket futures UP ~+0.5–0.6%; 10-yr ~4.73% elevated but "futures down >0.4%" leg fails → both legs required).
 
 ## Planned buys
 
 | ticker | target_qty | limit_price | stop_price | thesis |
 |--------|------------|-------------|------------|--------|
-| _(none)_ | — | — | — | Awaiting next pre_market screen. |
+| CAT | 12 | $885 | $814.20 | **Score 7/10 — Caterpillar (Industrials). Q2 2026 reported Aug 4 BMO: adj EPS $8.17 vs ~$6.19–6.25 = +31.7% surprise** (+73% YoY) — clears strict Industrials >20% gate **AND ≥4-qtr beat streak** (Q3'25/Q4'25/Q1'26/Q2'26 ≥2 ✓). Rev **$20.5B +24% YoY** (beat ~$1.26B), first-ever $20B+ quarter; **record backlog $72.1B +92% YoY**; segments Construction +35%, Resource +20%, Power&Energy +17% (**data-center/AI power demand** — same secular tailwind as EME/PWR). **RAISED FY26 guide** to "mid-to-high-teens" sales growth (from low-double-digit) + improved margin/FCF. EPS surprise +31.7% (>20% ✓); **earnings-day gap +11.65%** (open $927.84 vs prior close $831.04, >10% → +1) held +5.5% into close ($877.09); vol ~1.8x IEX (moderate — CAT thin on IEX, exact ratio unreliable); RS since reaction Aug4→Aug5 −0.45pp (mild 1-session give-back, drift holding); 52wk-hi $1,064.60 (25 td ago) but price −18% below (recovering off drawdown). Analyst upgrades: Truist $1,225, UBS $925 Neutral — **no downgrades post-print**. Short interest low/neutral; insider routine. Mgmt (Umpleby/Bonfield): data-center power demand driving record backlog. **Top risk:** tariff/input-cost headwinds + China/construction cyclicality + valuation stretched after run. Regulatory: **shelf-reg clean, BIS N/A** (Industrials). Ranks #1 (cleanest risk profile). |
+| PLTR | 66 | $162 | $149.04 | **Score 7/10 — Palantir (IT). Q2 2026 reported Aug 3 AC: adj EPS $0.41 vs $0.34 = +20.6% surprise** (>15% IT bar). Rev **$1.935B +93% YoY** (beat +7%); **US-commercial rev $764M +149% YoY**; US-comm TCV $2.132B +153% YoY / +81% QoQ (~$800M above prior record); adj op margin 62%, Rule of 40 = 155%. **Largest-ever FY guide raise** (+~$500M): FY26 rev to $8.150–8.158B (~82% YoY from ~71%); US-comm guide raised to ≥$3.424B (≥134% YoY). **9-qtr beat streak** (+1). **Earnings gap +15.30%** (open $145.15 vs prior close $125.89, >10% → +1); **reaction-day vol 5.50x** (huge institutional conviction, +$3B short-squeeze — squeeze fuel now largely spent); RS since reaction Aug4→Aug5 −2.37pp (1-session −2.55% give-back after +29% pop; premarket Aug6 ~$155). **8+ post-print PT raises** — Citi $245, DB **UPGRADE to Buy** $200, Piper $230 OW, Rosenblatt $225, Mizuho $215, DA Davidson $200, Baird $200, William Blair Buy; bears: Monness downgrade to Neutral, Cantor Neutral, 2 Sells. 52wk-hi $207.39 (188 td ago, −24% → downrank). SI 3.57%. Karp "demand for AI sovereignty has now been unleashed… otherworldly." **Top risk: EXTREME valuation ~45–48x forward SALES (~82x fwd P/E) + relentless insider selling** (Thiel/Karp/Cohen 10b5-1, 0 buys) → valuation air-pocket/gap-fill plausible in 42d (−8% hard stop protects). Regulatory: **shelf-reg clean** (comp-driven S-8, no ATM), **BIS N/A** (positive govt: Army NGC2, Nvidia sovereign-AI). Ranks #2. |
+| FTNT | 64 | $167 | $153.64 | **Score 6/10 (MARGINAL) — Fortinet (IT). Q2 2026 reported Jul 29 AC: non-GAAP EPS $0.90 vs $0.75 = +20.0% surprise** (>15% IT bar, +41% YoY). Rev **$2.047B +8.4% beat** (+26% YoY); **product rev $773M +52% YoY** (FortiGate refresh); billings $2.372B +33%; op margin 38% record; **RAISED FY26 guide** (rev $8.02–8.18B, EPS $3.41–3.47). **24-qtr no-miss streak** (+1). Initial print was a gap-and-fade (market sold ~8% day-1) but **subsequent drift POSITIVE: RS +2.55pp vs SPY over 4 sessions** ($154.21→$164.00); gap +8.61% (normal); vol 2.68x (strong); **52wk-hi $168.27 just 1 td ago (top priority)**. SI 3.24% (low). **⚠️ WEAK CONFIRMATION — Piper Sandler DOWNGRADE Overweight→Neutral (Jul 30), consensus Hold, 0 clear post-print upgrades; Wells UW, MS EW, Citi Neutral, HSBC Reduce.** Xie "$2 trillion SASE Firewall opportunity." **Top risk:** mgmt disclosed **40–50% through 2026 renewal cohort** (front-loading → deceleration/"show-me" risk), ~60x P/E, CEO Xie sold $26.3M Aug 3 (10b5-1, no insider buying). Regulatory: **shelf-reg clean** (anti-dilutive buyback), **BIS clean** (China blacklist stale Jan 2026, not <30d). Ranks #3 (weakest — analyst caution caps confirmation). |
 
 ## Planned sells
 
 | ticker | reason | notes |
 |--------|--------|-------|
-| _(none)_ | — | 1 open position (EME) — exit criteria evaluated live by midday/mechanical stop, not pre-planned here. |
+| _(none)_ | — | EME 13 @ $834.12 held (current $822.16, −1.43%; hard stop 96e4e855 @ $767.39 GTC active, cushion 6.7%). No exit criterion fired: not −8% stop, not +10% trail, thesis intact (EMCOR Q2 blowout +25.31% EPS / record backlog $17.1B / raised guide), held 1d (not 60d-stale). Exit evaluated live by midday/mechanical stop. |
 
 ## Trailing stop conversions (market_open actions)
 
 | ticker | current_stop_id | current_stop_price | action | target_new_stop | basis |
 |--------|-----------------|-------------------|--------|-----------------|-------|
-| _(none)_ | — | — | — | — | — |
+| _(none)_ | — | — | — | — | EME −1.43%, below +10% trailing trigger. No conversion. |
 
 ## Notes
 
-- Reset to empty template by `market_close` 2026-08-05 after archiving the day's plan to `memory/archive/plan_2026-08-05.md`. Next `pre_market` rewrites this file fresh.
-- Open book at reset: **EME 13 @ $834.12** (hard stop 96e4e855 @ $767.39, −8% GTC active). 1/8 concurrent, ~10.9% Industrials, cash ~89%.
+- **Reconciliation PASS (1/1):** Alpaca `/v2/positions` = EME 13 @ $834.12 MATCHES portfolio.md exactly; hard stop 96e4e855 @ $767.39 GTC active in `/v2/orders`. Zero divergence. Account ACTIVE, trading_blocked=false; equity **$98,111.49**, cash $87,423.41 (89.1%), 1/8 concurrent.
+- **Gates:** clock is_open=false, next_open=2026-08-06T09:30 ET → opens today (Thu), NOT a holiday → proceed. Universe **FRESH** (screened 2026-08-02, expires 2026-08-09, 286 rows). PEAD health **FRESH & NORMAL** → bar NOT raised.
+- **3 QUALIFIED (CAT, PLTR, FTNT); 1 DROPPED (AMZN).** All 3 planned are in-universe. Sizing ~11% of equity (strategy.md 20% ceiling; routine "currently 11%").
+- **AMZN DROP (~5.5/10):** AWS thesis intact (AWS $42.2B +36.7% YoY, fastest in 18 qtrs, backlog $496B — no thesis-break) BUT **drift REVERSED — RS −2.65pp over 3 sessions** (topped Aug 3 $284.12, faded to $272.62 Aug 5); step-f negative spread → drop/downrank. 4th consecutive Gate-6 defer (Jul31/Aug3/Aug4/Aug5). Fade is mechanical (Bezos routine 10b5-1 ~$4B filed Aug 3, plan adopted Nov 2025) + capex/FCF debate ($220B 2026 capex), not a business crack — but PEAD needs the drift to continue and it has rolled over. "Plan fewer, don't lower the bar."
+- **Earnings re-verify (step 4):** CAT (rep Aug 4), PLTR (rep Aug 3), FTNT (rep Jul 29) — all next report ~late Oct/Nov, none within 3 days ✓.
+- **Halt/tradable (step 4b):** CAT (NYSE), PLTR (NASDAQ), FTNT (NASDAQ) all `status=active`, `tradable=true` per `/v2/assets`; no halt news ✓.
+- **Regulatory scan (step h):** no flags among planned — CAT shelf clean/BIS N/A; PLTR shelf clean/BIS N/A; FTNT shelf clean/BIS clean.
+- **Sanity vs strategy.md (step 6):** post-fill (if all 3 fill) cash ~55% >> 10% floor ✓; 4/8 concurrent ≤ 8 ✓; weekly new-positions **1 (EME Aug 5) + 3 = 4/5** ≤ 5 (BULL/NORMAL) ✓; sectors **Industrials EME 10.9% + CAT ~10.8% = ~21.7%** < 30% ✓, **IT PLTR ~10.9% + FTNT ~10.9% = ~21.8%** < 30% ✓.
+- **Watchlist:** MRVL active (no in-window catalyst, reports ~Aug 20 → no plan; human-only). WDFC/THC/CLS/BE/FORM pending_review (human-only, MUST NOT plan). **CRL (Charles River, Health Care, NOT in universe/watchlist)** +12% on Q2 beat + raised FY guide — noted, NOT flagged (CRO mid-cap; EPS-surprise magnitude unverified/below the standout WDFC/THC/BE/CLS watchlist bar; consistent with CNMD Jul-30 "logged-only" precedent). No new watchlist adds.
+- market_open executes plan only; MUST NOT open positions absent from this plan or re-screen the universe. Each buy still subject to market_open's Gate-6 opening-range breakout confirmation.
