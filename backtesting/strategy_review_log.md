@@ -906,3 +906,199 @@ No newly-exhausted proposal this run; no proposal crossed into STRONG-needing-a-
 - **`memory/strategy.md` unchanged** since the last human edit — confirmed by content inspection (20% sizing cap, 8 concurrent, unchanged risk/entry/exit rules); no new proposal has been applied by the human this week, so S1/S2/S4/S5/S6/S7/S8 all remain open exactly as ranked above.
 - **Correction to last week's log:** the 2026-07-25 entry moved S7 to "Already Implemented / Resolved." That call is superseded by this run's direct evidence (`pead_health.md` still stale). S7 is reopened above and returned to the ranked STRONG queue.
 - Proposals already implemented (not re-recommended): same-day cap, macro deferral, partial profit-lock, mandatory pead_health refresh verification, opening-range entry filter, sizing-cap discrepancy resolution (20%).
+
+---
+
+## 2026-08-08 — Weekly Strategy Review
+
+**Run time:** Sat 2026-08-08 ~10:00 ET (market-independent — no clock gate needed).
+**Routine:** `strategy_review` (analysis/recommend-only — no orders placed, no memory files other than this log touched).
+**Reconciliation (read-only sanity check, Gate 2):** **NOT PERFORMED LIVE this session** — no Alpaca credentials/network reachable in this analysis sandbox (`ALPACA_API_KEY_ID` unset; no live `GET /v2/positions` call made). Falling back to the last-known state in `memory/portfolio.md`, written by `market_close` 2026-08-07T15:47 ET: **EME 13 @ $834.12**, hard stop `96e4e855` @ $767.39 GTC active, cash ~89%. This is a disclosed limitation, not a pass/fail claim — per Gate 2 this routine does not abort on reconciliation issues either way.
+**`memory/pead_health.md` status:** `computed_on: 2026-08-02`, `expires_on: 2026-08-09`, posture **NORMAL** (realized_health_60d +2.008%, n=269, `health_threshold_pct: 0.0` — confirms **S1 has NOT been applied** by the human). Still fresh as of today; **the next `universe_refresh` (Sun 2026-08-09) is the live test of whether the transport fix (S7) finally holds two refreshes in a row** — flag for next cycle.
+**`memory/strategy.md`:** unchanged since last human edit (20% sizing cap, 8 concurrent, 5/week base cap, all risk/entry/exit rules as documented). No new human edits this week — everything below remains a recommendation only.
+**New source material since the 2026-08-01 review:** one new `weekly_review` entry, "Week of 2026-08-03" (commit `c5d9c2a`, Mon Aug 3 → Fri Aug 7). Headline: **EME filled Aug 5** — the first actual fill in ~6 weeks, and it broke through Gate 6d/6e cleanly (narrow OR, wide ATR). But the book still ran only ~11% deployed while SPY rallied +3.53% to record highs (S&P 7,736.52 Aug 4) — portfolio −0.11% vs SPY +3.53%, **delta −3.64 pts, the worst relative week in the log.** LLY (top pick, 8/10) and CAT were both deferred/never filled on the year's best up-week.
+
+---
+
+### Anti-overfitting counters (Gate 3) — carried forward, **no new formal backtests run this cycle**
+
+| Proposal | Times backtested (formal) | Status |
+|---|---:|---|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported) | Not exhausted. No new data since 2026-06-30 → correctly **not** re-tested this cycle (re-running the identical test on identical periods adds no information). |
+| S3-V1 — ATR stop, tighter/capped variant | 1 (2026-06-25, REJECTED) | Not exhausted, but no new evidence to justify a re-test. |
+| S3-V2 — ATR stop, wider/uncapped variant | 2 (2026-07-04 formal + 2026-07-08 independent sweep reproduction, both REJECTED — fails OOS) | **EXHAUSTED.** Per Gate 3, correctly **not** re-tested this cycle despite `lessons.md`'s Aug-03 entry still carrying "volatility-scaled stop width" in its pending list — this is the same lessons.md/log hygiene gap flagged in the 2026-08-01 entry; it recurs again this week (see Notes). |
+| S8 — execution micro-gates (Gate 6d/6e) | 0 formal | **Still blocked by an infrastructure gap, not evidence quality**: Gate 6d/6e need 5-minute intraday Alpaca bars (opening-range width, ORH/ORL); everything in `backtesting/scripts/` is built on **daily** OHLC only — confirmed again this cycle by re-inspecting `bt_common.py` (`get_daily_bars`, no intraday timeframe support anywhere in the module). No intraday-capable script exists. A daily-bar proxy was again considered and rejected as methodologically unsound (would not represent a 15-min opening-range gate faithfully). |
+| All others (S2, S4, S5, S6, S7, S9, M1–M5) | 0 formal | Procedural/monitoring/documentation items — no mechanical rule to backtest. |
+
+**Network check performed this cycle:** `curl` to Yahoo Finance's chart API returned **HTTP 429** (rate-limited), consistent with the previously-diagnosed shared-egress-IP throttling documented in this log. `backtesting/data_cache/` remains empty (`.gitkeep` only). This is moot this cycle since no proposal required a fresh backtest, but is recorded so a future cycle doesn't assume the transport issue is resolved.
+
+**Conclusion for Step 4 this cycle: zero new backtests run.** Every STRONG proposal either (a) already has a standing OOS-tested verdict with no new data to justify a re-test, (b) is EXHAUSTED under Gate 3, or (c) is blocked by a genuine infrastructure gap (procedural or intraday-data-only). Running anything anyway would be either overfitting (re-testing on identical data) or fabricating a result on data the engine cannot produce.
+
+---
+
+### ✅ Already Implemented (confirmed against current `memory/strategy.md` + routine files)
+
+1. **S&P 1500 universe expansion** — `strategy.md` § Universe: "S&P 500 + S&P 400 + S&P 600." (First flagged 2026-05-07.)
+2. **Same-day open+close counts toward the weekly new-position cap** — `strategy.md` § Capital & sizing: "a position opened and closed same day via midday cut still consumes a weekly slot." (First flagged week of 2026-05-18.)
+3. **Macro deferral rule** — `strategy.md` § Risk controls: "if S&P 500 futures are down >0.4% AND the 10-year Treasury yield is at a multi-month high... raise the EPS surprise threshold to >20% for that day only." (First flagged week of 2026-05-18.)
+4. **Partial profit-lock at +10% trailing trigger** — `strategy.md` § Risk controls / Trailing stop on winners: sell 1/3 at +10%, trail remaining 2/3 at 7%. (First flagged Jun-08 PARTIAL; live in strategy.md as of the Jun-15 review.)
+5. **Opening-range entry filter (Gate 6d/6e)** — implemented in `routines/market_open.md` §6 (shipped commit `e36ad29`, 2026-06-25), directly addressing the MU same-day noise-stop precedent from the entry side (rather than the stop-width side, which is S3/EXHAUSTED). **Partial credit only** — this is a routine-file implementation, not a `strategy.md` rule, and it is itself the subject of the still-open S8 proposal (whether it over-defers fresh-print qualifiers).
+6. **`pead_health.md` staleness self-check (monitoring half of S7)** — implemented in `routines/universe_refresh.md` §7 ("VERIFY the refresh actually happened (mandatory post-condition)... `PEAD_HEALTH_REFRESH_MISS` tag..."). **This is only half of S7** — the underlying transport fix (`YF_DISABLE_CURL_CFFI=1` + `lxml` as a *durable* environment setting) is not confirmed durable; see S7 below, which stays open.
+
+**Correction to a prior log claim:** the 2026-08-01 entry's "Already Implemented" list included *"sizing-cap discrepancy resolution (20%)."* **This was checked directly this cycle and is incorrect** — `routines/pre_market.md` (lines 40, 99), `routines/market_open.md` (line 19), and `routines/weekly_review.md` (line 32) **all still hardcode "11%"** as the sizing cap, while `memory/strategy.md` (the authoritative source per `CLAUDE.md`) says **20%**. `strategy.md`'s 20% figure is genuinely implemented (that was never in question); what was never done is updating the routine-text references to match. This proposal is reopened below as **S9**. Flagging this explicitly per the instruction to be rigorous about false/premature claims.
+
+---
+
+### 🔴 STRONG (backtested where mechanically possible; procedural items assessed analytically)
+
+*Evidence-week counts below use the full "any mention, including bundled carry-forward one-liners in a later week's 'still pending' list, counts as flagged again" rule. Where this materially exceeds a prior cycle's count (which only counted dedicated paragraphs), both are shown for transparency.*
+
+---
+
+**S8 — Execution micro-gates (Gate 6d/6e) vs. fresh-print PEAD entries** *(4 distinct weeks: Jul-13, Jul-20, Jul-27, Aug-03)*
+
+Gate 6d (opening-range width > 0.5×ATR ⇒ defer) and Gate 6e (price ≤ ORH ⇒ defer) have deferred **100% of fresh-print qualifiers for 3 straight instances** (GS ×3 Jul-13/16/17; PWR+AMZN together Jul-31) before **finally passing one (EME, Aug-5)** this week. No direct $-loss (nothing was ever filled on the deferred names — pure opportunity cost), but the cost is now realized and quantified: **−3.64 pts vs SPY the week of Aug-03**, the worst relative week in the log, with the #1-ranked pick (LLY, 8/10) and CAT both deferred on the year's best up-week.
+
+**Backtest status:** blocked by infrastructure gap (no intraday bar source in the backtest engine — see Gate 3 table above). **Not backtested this cycle**, consistent with every prior cycle since S8 was promoted to STRONG (2026-08-01).
+
+**New evidence this cycle (not a backtest, an observation):** EME's clean Aug-5 fill is the first proof the gates are a *filter*, not a *wall* — they let through a genuinely narrow-OR/wide-ATR breakout and deferred the choppy ones. This nuances, but does not resolve, the tradeoff: the framing shifts from "gates block everything" to "gates have a real false-defer rate on high-quality fresh prints, and this week that rate cost the single biggest relative-return week in the log."
+
+**Verdict:** ⚠️ Not backtestable this cycle — **human decision required**, unchanged from 2026-08-01: (a) accept the gates as by-design chaotic-open protection (EME proves they can pass a real setup); (b) add a high-conviction override for fresh-print qualifiers — resting limit at/below prior close, waive Gate 6d/6e for the first N sessions post-beat, or replace the 09:50 opening-range snapshot with a VWAP/mid-morning re-check; or the newly surfaced Aug-03 refinement (c) a **partial/staggered entry** on a Gate-6 defer (fraction of target size immediately, remainder if the gate clears next session) so a record-high week isn't missed with zero fill. This is an execution-layer (`market_open.md`) tuning decision, not a `strategy.md` change — **no `strategy.md` wording is proposed; human applies any change to the routine file, this routine does not.**
+
+---
+
+**S7 — `compute_pead_health.py` transport fix (durability half)** *(6 distinct weeks: Jun-29, Jul-06, Jul-13, Jul-20, Jul-27, Aug-03)*
+
+Root cause (diagnosed 2026-07-11): yfinance's `curl_cffi` transport is reset by the TLS-re-terminating proxy; `YF_DISABLE_CURL_CFFI=1` + `lxml` fixes it, but has twice been applied **runtime-only** and regressed on the next fresh cloud environment (fixed Jul-19, regressed Jul-26; the self-check now at least surfaces this loudly instead of silently — see Already Implemented #6).
+
+**This cycle's status:** `pead_health.md` reads `computed_on: 2026-08-02`, `expires_on: 2026-08-09` — **currently fresh**, i.e. the Aug-02 `universe_refresh` succeeded. This is one data point, not confirmation of durability (the Jul-19 fix also looked resolved for one cycle before regressing). **The Aug-09 `universe_refresh` is the actual test** — if `computed_on` advances to 2026-08-09, that's two consecutive clean refreshes and a real signal the fix survived a fresh environment; if it doesn't, this is a 3rd occurrence of the same regression.
+
+**Backtest status:** N/A — infrastructure fix, not a trading rule. Not backtestable.
+
+**Verdict:** RECOMMEND (unchanged) — human sets `YF_DISABLE_CURL_CFFI=1` and installs `lxml` as a **durable environment variable** (not a per-run export) in the routine's execution environment. **This is an environment-config change outside this repo's files; this routine cannot apply it. Human applies this; this routine does not.**
+
+---
+
+**S1 — ELEVATED_BAR realized-health threshold: 0.0% → −1.0%** *(3 distinct weeks: Jun-08, Jun-15, Jun-22)*
+
+**Standing backtest result (2026-06-30, not re-run this cycle — no new data):**
+
+| Period | Trades | Avg return | PF |
+|---|---:|---:|---:|
+| 2022–2024 (IS) — threshold 0.0% (current) | 139 | +1.77% | 1.69 |
+| 2022–2024 (IS) — threshold −1.0% (proposed) | 157 | +1.89% | 1.72 |
+| 2025–2026 (OOS) — threshold 0.0% (current) | 52 | +2.0% | 1.62 |
+| 2025–2026 (OOS) — threshold −1.0% (proposed) | 52 | +2.0% | 1.62 |
+
+**OOS discipline:** OOS is **identical** at both thresholds (same 52 trades, same avg/PF) — the proposed threshold neither helps nor hurts OOS, and it fixes a documented IS problem (60% of 2023 trades blocked at 0.0%, and the 23 that passed averaged **−1.30%**; at −1.0% only 44% are blocked and the 33 that pass average **+1.42%**). **Verdict stands: ✅ BACKTEST SUPPORTS.**
+**Benchmark check:** SPY returned ~+26% (2023) / ~+23% (2024) in the IS window; this proposal is a threshold tune inside an already-selective strategy, not a standalone return claim — the relevant comparison is PF-preserved-or-improved at both thresholds, which holds.
+
+**Live blocker (unchanged):** `health_threshold_pct` confirmed still `0.0` in today's `pead_health.md` — **not applied by the human**, and its live effect remains gated on S7 producing durable weekly readings (a threshold change on a chronically-stale file does nothing).
+
+**Proposed `strategy.md`/production wording (human applies; this routine does not):**
+> In `compute_pead_health.py`, change the ELEVATED_BAR trigger comparison from `realized_health >= 0.0` to `realized_health >= -1.0`. Backtest (2022–2026, 191→209 trades): OOS (2025–2026) is unchanged (52 trades, +2.0% avg, PF 1.62 at both thresholds); IS quality improves (avg +1.89% vs +1.77%, PF 1.72 vs 1.69), and the counterproductive 2023 over-blocking (60% blocked, −1.30% avg on survivors at 0.0%) is corrected (44% blocked, +1.42% avg survivors at −1.0%).
+
+---
+
+**S2 — "Never-worked" chronic-underwater monitoring flag** *(3 dedicated weeks — Jun-08, Jun-15, Jun-22 — carried forward in every subsequent week's pending list through Aug-03: **9 distinct weeks total** on the strict counting rule)*
+
+Documented real (paper) losses: **GEV −$319.18 (−8.01%, 21 days, never green)**, **CASY −$813.58 (−8.21%, 12 days, never green)**. Standing analytical finding (2026-06-30, cached `backtest_trades_PEAD_2022_2025_ENHANCED_base.csv`, 5,836 rows): **43% of all hard-stop exits are "chronic"** (held >20 days before stopping) — the GEV/CASY pattern is structural, not anecdotal. **This week's watch item:** EME (open, −1.0% to −3.1% intra-week, never closed green in 3 sessions as of Aug-07) is the live instance to monitor next cycle; no new realized loss this week.
+
+**Backtest status:** explicitly a monitoring/alerting rule, not a mechanical exit ("NOT auto-cut" per the proposal itself) — no formal price-path backtest is meaningful; the standing analytical assessment is unchanged.
+
+**Verdict:** ✅ ANALYTICAL SUPPORT (unchanged) — recommend implementing.
+
+**Proposed `strategy.md` addition (human applies; this routine does not):**
+> In `pre_market`'s thesis-audit section: flag any open position `CHRONIC_WATCH` if (a) it has not closed green on any session since entry, AND (b) current price is within 2% of the hard stop. Log in `plan.md`: `"⚠️ CHRONIC_WATCH: <TICKER> — held <N> days, never closed green, cushion <X>% above stop $<price>."` This is NOT an auto-exit — no order is placed by the agent.
+
+---
+
+**S9 — Reconcile the routine-text sizing-cap discrepancy (11% vs. `strategy.md`'s 20%)** *(5 distinct weeks: Jul-06, Jul-13, Jul-20, Jul-27, Aug-03 — reopened this cycle; see correction above)*
+
+`strategy.md` § Capital & sizing says **20%**. `routines/pre_market.md` (×2 references), `routines/market_open.md`, and `routines/weekly_review.md` all still hardcode **11%**. No breach has occurred yet because live entries have all sized 10–11% of equity (well under both figures), but the routine text disagreeing with the authoritative file is a live latent-bug risk — a future sizing calculation keyed off the routine text would under-size (or a human reading the routine text would misjudge risk) relative to `strategy.md`'s actual 20% cap.
+
+**Backtest status:** N/A — documentation-sync fix, not a trading rule. Not backtestable, and doesn't need to be — this is unambiguous.
+
+**Verdict:** RECOMMEND — human confirms 20% is intended (it is the authoritative value per `CLAUDE.md`) and edits the three routine files to read 20% instead of 11%. **This routine cannot edit `routines/*.md` files (only `backtesting/strategy_review_log.md`) — human applies this.**
+
+---
+
+**S4 — SEC EDGAR shelf-registration pre-market scan** *(4 dedicated weeks — Jun-01, Jun-08, Jun-15, Jun-22 — carried forward every week through Aug-03: **10 distinct weeks total**)*
+
+Documented loss: **GOOGL −$413.92 (−8.71%, Jun-02)** — the $80B Alphabet offering (424B1 filed the same morning) gapped the stock below its stop at the open; a pre-market EDGAR scan would have surfaced it before the open. No new instance this week.
+
+**Backtest status:** not backtestable — external filing data is not in the engine's daily-OHLC universe. Analytical assessment unchanged: MODERATE implementation cost (EDGAR full-text search API is free; ~3–8 calls/day at current book size), recommend restricting to prospectuses raising >5% of market cap to cut false positives from routine shelf filings.
+
+**Verdict:** RECOMMEND — human applies; this routine does not.
+
+---
+
+**S5 — Export-control (BIS) monitoring for semiconductor/IT positions** *(4 dedicated weeks — Jun-01, Jun-08, Jun-15, Jun-22 — carried forward through Aug-03: **10 distinct weeks total**)*
+
+Documented losses: **AMD stopped −8% (Jun-01, BIS MI350x loophole closure)**; **NVDA stopped −8% (Jun-05, broader export-control selloff)**. Precedent already exists in practice (MU's Jun-30 pre_market deep-research included an ad-hoc BIS scan) — the proposal is to formalize this for all open IT/semi positions, not just new candidates.
+
+**Backtest status:** not backtestable — same reason as S4 (external event data, not in the engine).
+
+**Verdict:** RECOMMEND — human applies; this routine does not.
+
+---
+
+**S6 — Missed pre-market scheduler-gap investigation** *(originally 3 dedicated weeks — May-11, Jun-15, Jun-22 — carried forward through Jul-27: **8 distinct weeks total**, but zero recurrence and zero mentions in the Aug-03 entry)*
+
+No trading-rule content — root cause of the May 11–13 / Jun-17 / Jun-26 missed `pre_market` sessions was never formally diagnosed, but recurrence has been **zero for 7 consecutive weeks** (Jun-29 through Aug-07 inclusive). Risk trending toward resolved but not formally confirmed.
+
+**Backtest status:** N/A — operational/infra, not a trading rule.
+
+**Verdict:** RECOMMEND CLOSING OUT pending human confirmation — 7 clean weeks is a strong signal this either self-resolved or was fixed as a side effect of other environment work; recommend the human either (a) do a final check of the trigger/scheduler configuration and close this item, or (b) explicitly keep it open only if there's a known reason it could recur.
+
+---
+
+### 🟡 MODERATE (ranked, not backtested per Gate 3/MUST-NOT)
+
+- **M1 — Orphan stop queue in `market_open`** *(2 weeks: May-11, May-18)* — scan `portfolio.md` at the start of `market_open` for positions missing a `stop_order_id`, place those first. One documented instance (CSCO stop placed 1 day late). Would promote to STRONG on a second same-pattern instance.
+- **M2 — Max concurrent positions 8→10** *(1 week: May-26)* — unchanged; `strategy.md` still caps at 8. Note: in every subsequent week where the book was under-deployed, the binding constraint was signal supply or execution gates, **never** the 8-position cap itself — the original opportunity-cost rationale (PWR/ANET blocked by 8/8) hasn't recurred. Borderline WEAK on current evidence; kept at MODERATE pending a fresh concrete instance.
+- **M3 — GTC stop behavior on paper account** *(1 week: Jun-01)* — HPE's after-hours GTC fill (16:22 ET). No second instance since.
+- **M4 — Sizing-correction process clarification** *(1 week: Jun-01)* — HPE sizing-basis correction. No recurrence; process appears to have self-corrected.
+- **M5 — Between-seasons secondary entry lane** *(2 weeks: Jun-29, Jul-06)* — use the already-threshold-exempt analyst-revision/partnership-catalyst lane more actively during earnings deserts. No new concrete missed-candidate instance since Jul-06 (the binding constraint shifted to execution gates, not signal supply, from Jul-13 onward).
+
+---
+
+### ⚪ WEAK / EXHAUSTED
+
+- **W1 — Trailing-stop pre-alert at +8% unrealized** *(1 week: May-11)* — superseded by the live partial-profit-lock rule (Already Implemented #4).
+- **S3-V1 — ATR stop, tighter/capped variant** — 1 rejection (2026-06-25); not EXHAUSTED but no new evidence to justify a re-test.
+- **S3-V2 — ATR stop, wider/uncapped variant** — **EXHAUSTED** (2 rejections: 2026-07-04 formal, OOS avg 0.64% vs baseline 0.70% / PF 1.08 vs 1.20; 2026-07-08 independent 45-combo sweep reproduction, explicitly "CONFIRMS S3; does NOT overturn it"). **Do not re-test without a materially new dataset or a walk-forward design.** `lessons.md`'s Aug-03 entry again lists "volatility-scaled stop width for high-ATR names" in its carry-forward pending list without flagging EXHAUSTED status — same hygiene gap noted in the 2026-08-01 log entry, recurring. Correctly **not** re-tested this cycle.
+
+---
+
+### Ranked summary table
+
+| Rank | ID | Proposal | Tier | Evidence-weeks | Backtest status | Recommended action |
+|---|---|---|---|---:|---|---|
+| 1 | S8 | Execution micro-gates vs. fresh-print entries | 🔴 STRONG | 4 | Blocked — no intraday-bar backtest infra | Human: accept as-is, add override, or commission intraday tooling |
+| 2 | S7 | `compute_pead_health.py` durable transport fix | 🔴 STRONG | 6 | N/A — infra fix | Set env var durably; watch Aug-09 refresh |
+| 3 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG | 3 | ✅ OOS-supported (standing, 2026-06-30) | Apply in `compute_pead_health.py` — no live effect until S7 durable |
+| 4 | S2 | "Never-worked" chronic flag | 🔴 STRONG | 3 (9 incl. carry-forward) | Analytical support | Add `CHRONIC_WATCH` to `pre_market` |
+| 5 | S9 | Sizing-cap doc discrepancy (11% vs 20%) | 🔴 STRONG (reopened) | 5 | N/A — doc fix | Update 3 routine files to 20% |
+| 6 | S4 | EDGAR shelf-registration scan | 🔴 STRONG | 4 (10 incl. carry-forward) | Not backtestable (external data) | Add to `pre_market` |
+| 7 | S5 | BIS export-control monitoring | 🔴 STRONG | 4 (10 incl. carry-forward) | Not backtestable (external data) | Extend to open positions |
+| 8 | S6 | Scheduler-gap investigation | 🔴 STRONG | 3 (8 incl. carry-forward) | N/A — operational | Recommend closing pending final human check (7 clean weeks) |
+| 9 | M1 | Orphan stop queue | 🟡 MODERATE | 2 | Not backtested | Consider adding |
+| 10 | M2 | Max concurrent 8→10 | 🟡 MODERATE | 1 | Not backtested | Evidence has weakened — wait |
+| 11 | M3 | GTC stop behavior | 🟡 MODERATE | 1 | Not backtested | Monitor |
+| 12 | M4 | Sizing-correction process | 🟡 MODERATE | 1 | Not backtested | Low priority |
+| 13 | M5 | Secondary entry lane | 🟡 MODERATE | 2 | Not backtested | Wait for fresh instance |
+| — | W1 | Trailing-stop pre-alert | ⚪ WEAK | 1 | Superseded | No action |
+| — | S3-V1 | ATR stop, tighter/capped | ⚪ Rejected | 1 rejection | No re-test | No action |
+| — | S3-V2 | ATR stop, wider/uncapped | ⚪ **EXHAUSTED** | 2 rejections | Do not re-test | No action |
+
+---
+
+### Notes on this run
+
+- **Zero new formal backtests this cycle** — every STRONG proposal is either standing-verdict/no-new-data (S1), EXHAUSTED (S3-V2), or genuinely un-backtestable with this engine (S2, S4, S5, S6, S7, S8, S9 are procedural/monitoring/infra). This is a legitimate outcome per the routine's own anti-overfitting discipline, not a shortfall.
+- **Correction issued this cycle:** the 2026-08-01 log entry's claim that the sizing-cap discrepancy was resolved is **wrong** — verified directly against `routines/pre_market.md`, `routines/market_open.md`, `routines/weekly_review.md` this session; all three still say 11% vs. `strategy.md`'s 20%. Reopened as S9.
+- **Recount methodology note:** several proposals' "weeks flagged" figures are meaningfully higher this cycle than in prior log entries (e.g. S2: 3 dedicated weeks vs. 9 total including every "still pending" carry-forward bundle; S4/S5: 4 vs. 10) because this cycle applied the instruction that any carry-forward mention — including a one-line bundled "still pending" reference — counts as a fresh flag. This does not change any tier outcome (all were already STRONG) but is a more complete evidence count than prior cycles used.
+- **`lessons.md`/log hygiene gap recurs:** `lessons.md`'s Aug-03 entry again lists the EXHAUSTED wider-ATR-stop proposal in its pending carry-forward list without noting its EXHAUSTED status, same as the 2026-08-01 entry flagged. Recommend the human (or `weekly_review`) stop carrying EXHAUSTED items forward as if open, to avoid a future cycle mistaking the listing for untested evidence.
+- **Reconciliation not performed live** (no Alpaca network/credentials in this analysis session) — this is a disclosed sandbox limitation, not a reconciliation failure; `market_close`'s last-written `portfolio.md` state (EME 13 @ $834.12) was used for reference only.
+- **`memory/strategy.md` unchanged** since the last human edit — none of the recommendations in this report have been applied. All STRONG items with a proposed wording are explicitly labeled below: **the human applies these edits; this routine never edits `strategy.md` or any routine file.**
