@@ -37,3 +37,7 @@ Handoff from `pre_market` → `market_open`. Rewritten fresh each pre-market. `m
 - **Watchlist flags today: none added** (DG already evaluated/declined Aug 28; no new compelling non-universe/active catalyst). MRVL is the only `active` watchlist name and was dropped on negative reaction.
 - **Sizing note:** pre_market.md line 99 says "(currently 11%)" while strategy.md's `Max position size at entry` field now reads **20%**. Sized to ~11% (recent-run precedent; conservative), well within the 20% ceiling. Flagged for human to reconcile the two documents.
 - DRY_RUN: false. (pre_market never trades regardless.)
+
+### Midday intentions
+
+- **midday 2026-08-31 ~12:10 ET (DRY_RUN: false):** Gates PASS — clock `is_open=true` (next_close 16:00 ET). **RECONCILIATION 0/0 PASS:** Alpaca `/v2/positions=[]` MATCHES portfolio.md FLAT book; no open/orphan orders (`/v2/orders?status=open=[]`). **No open positions → no cuts, no partial profit-locks, no trailing conversions, no stale flags.** The planned CRM buy was NOT executed at market_open (Alpaca flat, no CRM position/order) — consistent with pre_market's note that market_open's EMA/opening-range guards would defer rather than chase CRM's +24% two-day vertical. Midday MUST NOT open positions; nothing to do. No orders placed.
