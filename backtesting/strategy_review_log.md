@@ -1631,3 +1631,72 @@ No proposal newly crossed into "needs a fresh numeric backtest" this cycle, and 
 - **Reconciliation:** `GET /v2/positions` = `[]`, `/v2/orders?status=open` = `[]` — matches `memory/portfolio.md` FLAT book exactly. **0/0 PASS, zero divergence** (read-only sanity check per Gate 2; this routine does not own reconciliation and would not abort even on a mismatch).
 - **`memory/strategy.md` unchanged** — content read fresh this run and compared against the 2026-09-19 review's cited values; identical. No new human edit this cycle, and none was made by this routine.
 - **Headline of this run: two accuracy corrections outweigh the week's few genuinely new data points.** (1) S7's Discord-alert ask was already implemented all along — this log's own prior reviews (2026-06-30 onward) carried it forward as outstanding without re-verifying `routines/universe_refresh.md` directly; narrowing S7 to just the transport fix is a more honest and more actionable ask going forward. (2) `lessons.md`'s "volatility-scaled stop width" framing of the DELL stop-out is the same EXHAUSTED S3-V2 proposal wearing new evidence, not a new STRONG candidate — Gate 3 correctly blocks a third backtest on the same periods, and this review recommends the human treat any further DELL-style stop-outs as expected variance under an already-tested-and-rejected stop design, not fresh grounds to revisit it, unless a genuinely new out-of-sample dataset becomes available. Substantively, M6 (portfolio.md bloat) crossing its 3rd-week promotion threshold is the one new actionable STRONG item this cycle.
+
+---
+
+## 2026-10-03 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-09-28 (the only new entry since the 2026-09-26 review). `memory/strategy.md` read fresh and unchanged. Read-only reconciliation: Alpaca `/v2/positions` = `[]` vs `portfolio.md` FLAT → 0/0 PASS.*
+
+### What's new this cycle
+- Week of 2026-09-28 was a 100%-cash, zero-trade week (0 fills). Nothing new on the stop/exit side, so no new evidence for S2/S3/S7-data.
+- One new item: **KMX (CarMax, +59.7% EPS surprise)** is on the watchlist `pending_review`. It is a human-gated watchlist adjudication, not a rule proposal.
+- The cash-drag / always-on sleeve question (W0) is now flagged a **2nd distinct week** (Sep-21, Sep-28) and is escalated.
+- `lessons.md` again re-lists the "volatility-scaled stop width" item (S3-V2, EXHAUSTED) as a standing carry-forward.
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted; no new data, not re-tested |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED**; the item was re-surfaced in lessons.md again (3rd consecutive review). Not re-tested. |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** No proposal newly qualified as STRONG and backtestable, and no EXHAUSTED item was re-tested. `backtesting/data_cache/` is empty.
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% position cap, opening-range entry filter (Gate 6), S4 EDGAR shelf-registration scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert. These are unchanged from the 2026-09-26 review.
+*Hygiene: lessons.md's "standing carry-forwards" still list the S4 and S5 scans and a "LOUD Discord re-flag" (S7b) as pending, though all three are implemented. This has been flagged repeatedly.*
+
+### 🔴 STRONG
+- **S9 — `routines/weekly_review.md` line 32 says 11%, but `strategy.md` says 20%.** Flagged in 13 consecutive weeks. Re-verified unfixed this run. Human applies this; this routine does not. **Fix:** change `11%` → `20%` on line 32.
+- **M6 — `portfolio.md` rotation.** The file is 375,708 bytes, up from 348KB at the last review, and exceeds single-read limits. Recommend archiving the embedded audit comments to a dated file under `memory/archive/`. Deleting audit history needs human sign-off.
+- **S8 — Execution micro-gates vs fresh-print entries.** Flagged in 12 weeks. Blocked: there is no intraday-bar backtest script. The human decides whether to accept the gates, add a staggered size-down override, or commission intraday tooling.
+- **S7 — `compute_pead_health.py` transport reliability.** Still no retry or `curl_cffi` handling in the script. The overlay stayed fresh this cycle (computed 2026-09-27, expires 2026-10-04), so there was no new regression. The Discord alert already exists. Recommend committing retry/backoff in code.
+- **S2 — `CHRONIC_WATCH` flag.** `grep -c CHRONIC_WATCH routines/pre_market.md` = 0. No new instance (flat book). Verdict unchanged: recommend implementing.
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported (2026-06-30). `health_threshold_pct` is still `0.0`. Realized health is −0.32% (n=394), so the posture is ELEVATED_BAR. Recommendation unchanged: hold until S7 is durably fixed. Note that the −1.0% threshold would have placed the current −0.32% reading in NORMAL posture; weigh that against the 21-session candidate drought before deciding.
+- **S6 — Scheduler-gap investigation.** 15 consecutive clean weeks. Lowest urgency.
+- **M5 — Between-seasons candidate-supply lane.** 4 weeks. This week's drought (about 21 sessions with 0 in-universe qualifiers) adds supportive context but is not a new distinct-week flag. Not backtestable.
+
+### 🟡 MODERATE (not backtested)
+- **W0 → M7 — Cash-drag / always-on core sleeve.** *Promoted from WEAK: now 2 distinct weeks (Sep-21, Sep-28).* Evidence is mixed. The book was flat for two weeks and SPY was about flat on the matched basis (−0.22%). The earlier weeks showed cash as a beta-reducer. It would also add a position type outside the signal-driven design. To promote to STRONG it needs a 3rd week, or a manual request for a SPY-sleeve backtest (SPY is directly testable). The human decides.
+- **M1** Orphan stop queue (2 weeks): unchanged.
+- **M2** Max concurrent 8→10 (1 week): moot at 0/8.
+- **M3** GTC stop behavior (1 week): unchanged.
+- **M4** Sizing-correction process (1 week): unchanged.
+- **K1 — KMX watchlist adjudication (human action, not a rule).** +59.7% EPS surprise clears the >20% bar but KMX is not in the universe cache. Setting it `active` is human-only.
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded by the partial profit-lock.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped ("volatility-scaled stop width"): **EXHAUSTED**. Re-surfaced for the 3rd consecutive review. Do not re-test without a materially new out-of-sample year or a walk-forward design.
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | S9 | Fix weekly_review.md sizing text 11%→20% | 🔴 STRONG (13 wks) | Human one-line edit |
+| 2 | M6 | portfolio.md archive/rotation (375KB) | 🔴 STRONG | Human sign-off to archive |
+| 3 | S8 | Execution micro-gates vs fresh-print entries | 🔴 STRONG (12 wks) | Human decision (accept / staggered / commission intraday tooling) |
+| 4 | S7 | Harden compute_pead_health.py transport | 🔴 STRONG | Commit retry/fallback in code |
+| 5 | S2 | CHRONIC_WATCH flag | 🔴 STRONG | Implement in pre_market |
+| 6 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Hold until S7 fixed; weigh candidate drought |
+| 7 | S6 | Scheduler-gap investigation | 🔴 STRONG | Low urgency |
+| 8 | M5 | Candidate-supply lane | 🔴 STRONG | Formalize or accept |
+| 9 | M7 | Cash-drag / core sleeve | 🟡 MODERATE (promoted) | Awareness; decide whether to commission a SPY-sleeve backtest |
+| 10 | K1 | KMX watchlist adjudication | 🟡 human action | Human reviews pending_review row |
+| 11–14 | M1–M4 | See above | 🟡 MODERATE | Unchanged |
+| — | W1, S3-V1, S3-V2 | See above | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
