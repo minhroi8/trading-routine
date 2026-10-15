@@ -240,7 +240,7 @@ def wf_B(AC, sma=200, safe=False, safe_sma=PRE_B2_SAFE_SMA):
         w = np.zeros(k)
         q = ac[i, :n] > m[i, :n]   # NaN compares False
         w[:n] = q / n
-        if safe and ac[i, sj] > ms[i, sj]:
+        if safe and ac[i, sj] > ms[i]:
             w[sj] = (n - q.sum()) / n
         return w
     return wf
