@@ -125,8 +125,22 @@ def load_universe(refresh=False):
 # --------------------------------------------------------------------------
 # GATE 0
 # --------------------------------------------------------------------------
-def gate0():
-    """Return (passed: bool, report_lines: list[str], data: dict)."""
+def dividend_continuity(df):
+    """On each ex-date, AdjClose return should equal (Close + Div)/prevClose - 1.
+    Returns (abs error Series on ex-dates, ex-date index)."""
+    d = df.dropna(subset=["Close", "AdjClose"])
+    r_adj = d["AdjClose"].pct_change()
+    r_tr = (d["Close"] + d["Div"]) / d["Close"].shift(1) - 1
+    exd = d.index[d["Div"] > 0]
+    exd = exd[exd > d.index[0]]
+    return (r_adj - r_tr).loc[exd].abs(), exd
+
+
+def gate0(extra=()):
+    """Return (passed: bool, report_lines: list[str], data: dict).
+
+    `extra` = additional ETF tickers (e.g. IEF) that get the same per-ETF row
+    checks; they are returned in `data` but are not part of UNIVERSE."""
     lines, passed = [], True
     # 1. live control fetch (forces network, no cache)
     try:
@@ -140,7 +154,7 @@ def gate0():
 
     data = {"SPY": spy}
     transport_fail = []
-    for t in UNIVERSE:
+    for t in list(UNIVERSE) + [x for x in extra if x not in UNIVERSE]:
         if t == "SPY":
             continue
         try:
@@ -154,11 +168,7 @@ def gate0():
     # 2. SPY total-return continuity across dividends.
     # On each ex-date, AdjClose return should equal (Close + Div)/prevClose - 1.
     d = spy.dropna(subset=["Close", "AdjClose"])
-    r_adj = d["AdjClose"].pct_change()
-    r_tr = (d["Close"] + d["Div"]) / d["Close"].shift(1) - 1
-    exd = d.index[d["Div"] > 0]
-    exd = exd[exd > d.index[0]]
-    err = (r_adj - r_tr).loc[exd].abs()
+    err, exd = dividend_continuity(spy)
     lines.append(f"- SPY dividends since {FETCH_START}: {len(exd)} ex-dates; "
                  f"max |AdjClose return - (Close+Div)/prevClose return| on ex-dates "
                  f"= {err.max()*1e4:.2f} bp (median {err.median()*1e4:.2f} bp).")
@@ -173,10 +183,10 @@ def gate0():
 
     # 3. Every ETF: start date, gaps, split continuity, extreme jumps.
     lines.append("")
-    lines.append("| ETF | first bar | bars | max cal-day gap | splits in data | max |1d adj ret| (date) | non-dividend AdjClose/Close factor jumps |")
+    lines.append("| ETF | first bar | bars | max cal-day gap | splits in data | max abs 1d adj ret (date) | non-dividend AdjClose/Close factor jumps |")
     lines.append("|---|---|---|---|---|---|---|")
     spy_idx = spy.index
-    for t in UNIVERSE:
+    for t in list(UNIVERSE) + [x for x in extra if x not in UNIVERSE]:
         df = data[t]
         first = df.index[0]
         ok_start = first <= pd.Timestamp(REQUIRED_START)
