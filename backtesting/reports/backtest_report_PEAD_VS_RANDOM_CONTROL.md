@@ -1,6 +1,6 @@
 # PEAD Earnings-Beat vs Matched Random Control
 
-*Generated: 2026-10-15 04:49 — 2022-01 → 2026 YTD, current S&P 500 constituents (survivorship-biased, both arms).*
+*Generated: 2026-10-15 04:50 — 2022-01 → 2026 YTD, current S&P 500 constituents (survivorship-biased, both arms).*
 
 **Research / diagnostic only — no `strategy.md` edit, no orders.** Script: `backtesting/scripts/backtest_pead_vs_random_control.py`.
 
@@ -31,7 +31,7 @@ Does the PEAD signal pick **better stocks than random**, or does its P&L just co
 **Verdict (strategy exits, date-clustered p):**
 - **The raw EPS-beat signal shows selection skill in both periods.** EPS ≥15% beats matched random by +0.77 pp (p <0.001, n=1097) in-sample and +1.08 pp (p 0.009, n=380) out-of-sample; the plain 42-day hold agrees (+0.76 pp (p 0.003, n=1097) IS, +1.83 pp (p 0.002, n=380) OOS), so it is not an artefact of the exit rules.
 - **Reports without a big beat sit close to random:** +0.25 pp (p 0.031, n=3241) IS, +0.22 pp (p 0.203, n=1079) OOS, and the exit-free hold shows +0.08 pp (p 0.307, n=3241) IS. The edge comes mostly from the beat, not from simply having reported earnings.
-- Only ~52–56% of signal trades beat their own matched pool, so the excess comes from a fatter right tail (see §3), not from a higher hit rate.
+- The edge is a broad upward shift, not a few outsized winners: signal medians sit ~1–2 pp above the random arm and the left tail is shallower, while the 95th percentiles are about the same (§3). Per trade it is still a coin-flip-plus: only ~52–56% of signal trades beat their own matched pool's average.
 - **The live bar (adds q==3 quality filters)** is significant in-sample (+1.48 pp (p 0.006, n=192)) and points the same way out-of-sample (+1.02 pp (p 0.237, n=52)) and in 2026 YTD (+0.50 pp (p 0.432, n=30)), but those two samples are too small to separate it from random. Its OOS excess is not larger than the raw beat's, so these data do not show the quality filters adding selection skill on top of the beat — they mainly cut trade count.
 - Absolute returns are modest: per-trade excess of roughly +1 pp over a ~6-week hold. Much of each trade's raw return is shared with same-day, same-sector, same-size random names.
 

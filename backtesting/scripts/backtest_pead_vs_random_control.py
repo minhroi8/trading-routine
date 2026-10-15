@@ -457,8 +457,10 @@ def build_report(res, out):
       f"{ex('nonbeat', 'OOS (2025)')} OOS, and the exit-free hold shows "
       f"{ex('nonbeat', 'IS (2022-2024)', 'hold')} IS. The edge comes mostly from the beat, not "
       "from simply having reported earnings.")
-    A("- Only ~52–56% of signal trades beat their own matched pool, so the excess comes from a "
-      "fatter right tail (see §3), not from a higher hit rate.")
+    A("- The edge is a broad upward shift, not a few outsized winners: signal medians sit ~1–2 pp "
+      "above the random arm and the left tail is shallower, while the 95th percentiles are about "
+      "the same (§3). Per trade it is still a coin-flip-plus: only ~52–56% of signal trades beat "
+      "their own matched pool's average.")
     A(f"- **The live bar (adds q==3 quality filters)** is significant in-sample "
       f"({ex('live', 'IS (2022-2024)')}) and points the same way out-of-sample "
       f"({ex('live', 'OOS (2025)')}) and in 2026 YTD ({ex('live', '2026 YTD')}), but those two "
