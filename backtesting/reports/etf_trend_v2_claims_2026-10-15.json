@@ -1,0 +1,465 @@
+[
+ {
+  "line": "- **B1 (primary): idle sleeves earning the T-bill.** Seatbelt: max drawdown -13.9% vs EW buy-and-hold -45.4% in IS and -11.6% vs -29.6% in OOS; Sharpe 0.841 vs 0.597 in IS and 0.882 vs 0.771 in OOS. Against 60/40 in OOS: Sharpe 0.882 vs 0.835, CAGR/MaxDD 0.680 vs 0.432. It is still a lower-return series: OOS CAGR 7.9% vs 11.7% for EW buy-and-hold and 14.5% for SPY.",
+  "refs": [
+   {
+    "table": "seatbelt",
+    "row": "B1 IS 2006-2017",
+    "col": "Strategy MaxDD",
+    "value": "-13.9%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 IS 2006-2017",
+    "col": "Benchmark MaxDD",
+    "value": "-45.4%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy MaxDD",
+    "value": "-11.6%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 OOS 2018-latest",
+    "col": "Benchmark MaxDD",
+    "value": "-29.6%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 IS 2006-2017",
+    "col": "Strategy Sharpe",
+    "value": "0.841"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 IS 2006-2017",
+    "col": "Benchmark Sharpe",
+    "value": "0.597"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy Sharpe",
+    "value": "0.882"
+   },
+   {
+    "table": "seatbelt",
+    "row": "B1 OOS 2018-latest",
+    "col": "Benchmark Sharpe",
+    "value": "0.771"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy Sharpe",
+    "value": "0.882"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "60/40 Sharpe",
+    "value": "0.835"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy CAGR/MaxDD",
+    "value": "0.680"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "60/40 CAGR/MaxDD",
+    "value": "0.432"
+   },
+   {
+    "table": "m_OOS",
+    "row": "B1 trend + T-bill",
+    "col": "CAGR",
+    "value": "7.9%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "EW buy-and-hold (16 ETFs)",
+    "col": "CAGR",
+    "value": "11.7%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "SPY buy-and-hold",
+    "col": "CAGR",
+    "value": "14.5%"
+   }
+  ]
+ },
+ {
+  "line": "- **The Sharpe convention matters.** The pre-registered tests use Sharpe with rf = 0, as in v1. Now that idle cash earns interest, that convention gives cash-heavy series credit for the T-bill itself. Measured in excess of the T-bill (a labeled sensitivity), B1's OOS Sharpe is 0.586 vs EW buy-and-hold's 0.603. Seatbelt passes that do not survive the excess-return Sharpe: B1, B2 and VT. Configs that pass both tests in both periods under both conventions: BL. Read the other seatbelt passes as marginal on Sharpe and clear on drawdown.",
+  "refs": [
+   {
+    "table": "exsharpe",
+    "row": "B1",
+    "col": "OOS Sharpe ex",
+    "value": "0.586"
+   },
+   {
+    "table": "exsharpe",
+    "row": "B1",
+    "col": "OOS bench Sharpe ex",
+    "value": "0.603"
+   }
+  ]
+ },
+ {
+  "line": "- **Cash effect.** Paying T-bill interest on the same positions closes 0.8 of v1 B's 4.6-point OOS CAGR gap to EW buy-and-hold (17% of it). In IS it closes 0.2 of 0.5 points (37%). The remaining 3.8 points in OOS come from being out of the market while it rose, not from idle cash earning nothing.",
+  "refs": [
+   {
+    "table": "cash",
+    "row": "OOS 2018-latest",
+    "col": "Closed (pts)",
+    "value": "0.8"
+   },
+   {
+    "table": "cash",
+    "row": "OOS 2018-latest",
+    "col": "Gap v1 B (pts)",
+    "value": "4.6"
+   },
+   {
+    "table": "cash",
+    "row": "OOS 2018-latest",
+    "col": "Closed (share of v1 gap)",
+    "value": "17%"
+   },
+   {
+    "table": "cash",
+    "row": "IS 2006-2017",
+    "col": "Closed (pts)",
+    "value": "0.2"
+   },
+   {
+    "table": "cash",
+    "row": "IS 2006-2017",
+    "col": "Gap v1 B (pts)",
+    "value": "0.5"
+   },
+   {
+    "table": "cash",
+    "row": "IS 2006-2017",
+    "col": "Closed (share of v1 gap)",
+    "value": "37%"
+   },
+   {
+    "table": "cash",
+    "row": "OOS 2018-latest",
+    "col": "Gap B1 (pts)",
+    "value": "3.8"
+   }
+  ]
+ },
+ {
+  "line": "- **B2 (IEF rotation)** helped mostly in IS: 2008 3.7% vs -8.1% for B1, IS CAGR 9.7% vs 8.3%. In OOS it adds little: CAGR 8.1% vs 7.9%, MaxDD -12.5% vs -11.6%. In 2022 its average IEF weight was 1%: IEF was below its own SMA200, so the rotation sat in bills.",
+  "refs": [
+   {
+    "table": "years",
+    "row": "2008",
+    "col": "B2",
+    "value": "3.7%"
+   },
+   {
+    "table": "years",
+    "row": "2008",
+    "col": "B1",
+    "value": "-8.1%"
+   },
+   {
+    "table": "m_IS",
+    "row": "B2 trend + IEF or T-bill",
+    "col": "CAGR",
+    "value": "9.7%"
+   },
+   {
+    "table": "m_IS",
+    "row": "B1 trend + T-bill",
+    "col": "CAGR",
+    "value": "8.3%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "B2 trend + IEF or T-bill",
+    "col": "CAGR",
+    "value": "8.1%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "B1 trend + T-bill",
+    "col": "CAGR",
+    "value": "7.9%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "B2 trend + IEF or T-bill",
+    "col": "MaxDD",
+    "value": "-12.5%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "B1 trend + T-bill",
+    "col": "MaxDD",
+    "value": "-11.6%"
+   },
+   {
+    "table": "stress_exp",
+    "row": "2022 calendar year",
+    "col": "B2 IEF part",
+    "value": "1%"
+   }
+  ]
+ },
+ {
+  "line": "- **VT** passes the seatbelt test against SPY (MaxDD -25.3% vs -55.2% IS, -15.7% vs -33.7% OOS) and fails the 60/40 test: in IS its Sharpe is 0.746 vs 0.750. Its weakness is the GFC: -25.2% / -25.2% (return / max DD), consistent with a 21-day vol estimate that cuts exposure only after volatility has already risen.",
+  "refs": [
+   {
+    "table": "seatbelt",
+    "row": "VT IS 2006-2017",
+    "col": "Strategy MaxDD",
+    "value": "-25.3%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "VT IS 2006-2017",
+    "col": "Benchmark MaxDD",
+    "value": "-55.2%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "VT OOS 2018-latest",
+    "col": "Strategy MaxDD",
+    "value": "-15.7%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "VT OOS 2018-latest",
+    "col": "Benchmark MaxDD",
+    "value": "-33.7%"
+   },
+   {
+    "table": "t6040",
+    "row": "VT IS 2006-2017",
+    "col": "Strategy Sharpe",
+    "value": "0.746"
+   },
+   {
+    "table": "t6040",
+    "row": "VT IS 2006-2017",
+    "col": "60/40 Sharpe",
+    "value": "0.750"
+   },
+   {
+    "table": "stress",
+    "row": "GFC SPY peak to trough 2007-10-09 to 2009-03-09",
+    "col": "VT",
+    "value": "-25.2% / -25.2%"
+   }
+  ]
+ },
+ {
+  "line": "- **BL (50% B1 + 50% VT)** passes both pre-registered tests: OOS Sharpe 0.900 vs 60/40 0.835 and EW 0.771, OOS MaxDD -13.4% against a limit of -14.8%. With Sharpe ex T-bill its seatbelt result is \"pass both\" and its 60/40 result \"pass both\".",
+  "refs": [
+   {
+    "table": "t6040",
+    "row": "BL OOS 2018-latest",
+    "col": "Strategy Sharpe",
+    "value": "0.900"
+   },
+   {
+    "table": "t6040",
+    "row": "BL OOS 2018-latest",
+    "col": "60/40 Sharpe",
+    "value": "0.835"
+   },
+   {
+    "table": "seatbelt",
+    "row": "BL OOS 2018-latest",
+    "col": "Benchmark Sharpe",
+    "value": "0.771"
+   },
+   {
+    "table": "seatbelt",
+    "row": "BL OOS 2018-latest",
+    "col": "Strategy MaxDD",
+    "value": "-13.4%"
+   },
+   {
+    "table": "seatbelt",
+    "row": "BL OOS 2018-latest",
+    "col": "Limit (50% of benchmark DD)",
+    "value": "-14.8%"
+   }
+  ]
+ },
+ {
+  "line": "- **Nothing here is a return enhancer.** Best pre-registered OOS CAGR is 9.2% vs SPY's 14.5%. The tests reward lower drawdown at a similar or slightly better Sharpe; that is what passed.",
+  "refs": [
+   {
+    "table": "m_OOS",
+    "row": "VT SPY vol target",
+    "col": "CAGR",
+    "value": "9.2%"
+   },
+   {
+    "table": "m_OOS",
+    "row": "SPY buy-and-hold",
+    "col": "CAGR",
+    "value": "14.5%"
+   }
+  ]
+ },
+ {
+  "line": "- **The passes rest mainly on drawdown.** The 60/40 test is passed on CAGR/MaxDD by a wide margin (B1 OOS 0.680 vs 0.432) but on Sharpe by a thin one (0.882 vs 0.835), and the Sharpe side flips for some configs once the T-bill is subtracted. The robust finding is the same as v1's: the trend filter kept B1's drawdowns to less than half of EW buy-and-hold's in 2008, 2020 and 2022 (2022: B1 -7.3% / -8.6% vs EW -16.7% / -23.2%).",
+  "refs": [
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy CAGR/MaxDD",
+    "value": "0.680"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "60/40 CAGR/MaxDD",
+    "value": "0.432"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "Strategy Sharpe",
+    "value": "0.882"
+   },
+   {
+    "table": "t6040",
+    "row": "B1 OOS 2018-latest",
+    "col": "60/40 Sharpe",
+    "value": "0.835"
+   },
+   {
+    "table": "stress",
+    "row": "2022 calendar year",
+    "col": "B1",
+    "value": "-7.3% / -8.6%"
+   },
+   {
+    "table": "stress",
+    "row": "2022 calendar year",
+    "col": "EW B&H",
+    "value": "-16.7% / -23.2%"
+   }
+  ]
+ },
+ {
+  "line": "- **T-bill interest is a modest correction, not the missing return.** Over the full period the T-bill compounded at 1.7% a year and B1 was idle 27% of the time on average, so the cash effect is a fraction of a point per year (full-period gap closed: 0.4 points). The years it mattered are the high-rate ones: 2023 B1 5.1% vs v1 B 3.3%. The BIL sensitivity shows a real T-bill ETF would have paid less than the synthetic bill in OOS (2.6% vs 2.7%), with B1's OOS CAGR 7.8% instead of 7.9%.",
+  "refs": [
+   {
+    "table": "cash",
+    "row": "Full 2006-latest",
+    "col": "T-bill CAGR",
+    "value": "1.7%"
+   },
+   {
+    "table": "cash",
+    "row": "Full 2006-latest",
+    "col": "B1 avg idle",
+    "value": "27%"
+   },
+   {
+    "table": "cash",
+    "row": "Full 2006-latest",
+    "col": "Closed (pts)",
+    "value": "0.4"
+   },
+   {
+    "table": "years",
+    "row": "2023",
+    "col": "B1",
+    "value": "5.1%"
+   },
+   {
+    "table": "years",
+    "row": "2023",
+    "col": "v1 B",
+    "value": "3.3%"
+   },
+   {
+    "table": "bil",
+    "row": "B1, idle cash in BIL (sensitivity)",
+    "col": "Cash-leg CAGR",
+    "value": "2.6%"
+   },
+   {
+    "table": "bil",
+    "row": "B1 ★ (synthetic ^IRX bill)",
+    "col": "Cash-leg CAGR",
+    "value": "2.7%"
+   },
+   {
+    "table": "bil",
+    "row": "B1, idle cash in BIL (sensitivity)",
+    "col": "CAGR",
+    "value": "7.8%"
+   },
+   {
+    "table": "bil",
+    "row": "B1 ★ (synthetic ^IRX bill)",
+    "col": "CAGR",
+    "value": "7.9%"
+   }
+  ]
+ },
+ {
+  "line": "- **Grids.** The SMA100 cells of B1 and B2 pass IS only and decay in OOS (B1 SMA100 OOS CAGR 6.5%); the SMA150 cells have the same verdicts as SMA200. VT is sensitive to its lookback: 63-day cells failing the seatbelt test in OOS: 8% / 63d, 10% / 63d and 12% / 63d (e.g. 10% / 63d OOS MaxDD -22.1%). The 1.5x cap does not improve the OOS Sharpe (0.77 vs 0.86). VT cells that pass both tests in both periods: 8% / 21d; per the rules they do not rescue the pre-registered VT.",
+  "refs": [
+   {
+    "table": "grid_b",
+    "row": "B1 SMA100",
+    "col": "OOS CAGR",
+    "value": "6.5%"
+   },
+   {
+    "table": "grid_vt",
+    "row": "VT 10% / 63d",
+    "col": "OOS MaxDD",
+    "value": "-22.1%"
+   },
+   {
+    "table": "grid_vt",
+    "row": "VT 10% / 21d, 1.5x exposure cap (sensitivity)",
+    "col": "OOS Sharpe",
+    "value": "0.77"
+   },
+   {
+    "table": "grid_vt",
+    "row": "VT 10% / 21d ★",
+    "col": "OOS Sharpe",
+    "value": "0.86"
+   }
+  ]
+ },
+ {
+  "line": "- **What this does and does not support.** A month-end SMA200 trend sleeve with cash in T-bills is a defensible drawdown-control sleeve: about 8.1% a year over the full period at a worst drawdown of -13.9%. It does not beat SPY or the EW basket on return, and its edge over 60/40 on risk-adjusted terms is small. BL is the only config that passes everything under both Sharpe conventions, but it is the most tested idea in the set (it combines two other tested configs), and this is the second round of tests on the same data. None of this is a recommendation to change the live PEAD strategy, which this repo cannot correlate against these series.",
+  "refs": [
+   {
+    "table": "m_Full",
+    "row": "B1 trend + T-bill",
+    "col": "CAGR",
+    "value": "8.1%"
+   },
+   {
+    "table": "m_Full",
+    "row": "B1 trend + T-bill",
+    "col": "MaxDD",
+    "value": "-13.9%"
+   }
+  ]
+ }
+]
