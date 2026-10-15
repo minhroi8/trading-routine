@@ -15,21 +15,24 @@
 
 ### Item 2 — validation anchor (per-trade baseline: EPS>=15%, vol>=1.5x, RS>0, 52wk-high<=45d, flat -8%)
 
-<!-- table:g0_anchor -->
-| Period | Trades (got / anchor) | Win (got / anchor) | Avg (got / anchor) | PF (got / anchor) | Result |
-|---|---|---|---|---|---|
-| IS 2022-2024 | 192 / 194 | 57.8% / 57.7% | 1.824% / 1.81% | 1.688 / 1.68 | FAIL |
-| OOS 2025 | 52 / 53 | 50.0% / 49.1% | 1.426% / 1.228% | 1.461 / 1.38 | FAIL |
-| 2026 YTD | 30 / 30 | 50.0% / 50.0% | -0.225% / -0.23% | 0.945 / 0.95 | PASS |
+The $10 entry gate is applied to the unadjusted open (pre-registration amended after the first Gate 0 stop; see the record at the end). A period passes when every committed baseline trade that still has bars matches the risk sweep's per-trade return within 0.001 pp and the trade count equals the anchor minus the trades whose ticker has no bars.
 
-Trade-by-trade check against `backtest_risk_sweep_trades_2026-07-08.csv`: 274 of 277 committed baseline trades reproduce to within 0.001 pp. The rest:
+<!-- table:g0_anchor -->
+| Period | Trades (got / anchor) | No-bars trades | Win (got / anchor) | Avg (got / anchor) | PF (got / anchor) | Result |
+|---|---|---|---|---|---|---|
+| IS 2022-2024 | 193 / 194 | 1 | 57.5% / 57.7% | 1.770% / 1.81% | 1.660 / 1.68 | PASS |
+| OOS 2025 | 52 / 53 | 1 | 50.0% / 49.1% | 1.426% / 1.228% | 1.461 / 1.38 | PASS |
+| 2026 YTD | 30 / 30 | 0 | 50.0% / 50.0% | -0.225% / -0.23% | 0.945 / 0.95 | PASS |
+
+Committed baseline trades not in the reproduction:
 
 <!-- table:g0_diag -->
-| Trade | Period | Committed return | Why it is not reproduced |
-|---|---|---|---|
-| AVB 2024-08-02 | IS (2022-2024) | 9.56% | no bars served by Yahoo today (AAPL control live) |
-| CTVA 2022-11-08 | IS (2022-2024) | -8.66% | adjusted open now 9.50, below the $10 gate |
-| SATS 2025-03-03 | OOS (2025) | -9.07% | no bars served by Yahoo today (AAPL control live) |
+| Trade | Period | Committed return | Reason | Status |
+|---|---|---|---|---|
+| AVB 2024-08-02 | IS 2022-2024 | 9.56% | no bars served by Yahoo today (AAPL control live) | dropped |
+| SATS 2025-03-03 | OOS 2025 | -9.07% | no bars served by Yahoo today (AAPL control live) | dropped |
+
+Tickers with no Yahoo history today (dropped from every arm and from random pools): `AVB, EA, EQR, SATS, WBD`.
 
 ### Item 3 — ^IRX (13-week T-bill, percent) on the trading calendar
 
@@ -44,9 +47,290 @@ Trade-by-trade check against `backtest_risk_sweep_trades_2026-07-08.csv`: 274 of
 <!-- table:g0_engine -->
 | Period | Closed trades compared | Max abs diff (pp) | Same-ticker overlaps skipped | Result |
 |---|---|---|---|---|
-| IS 2022-2024 | 191 | 3.6e-15 | 0 | PASS |
+| IS 2022-2024 | 192 | 3.6e-15 | 0 | PASS |
 | OOS 2025 | 50 | 3.6e-15 | 0 | PASS |
 | 2026 YTD | 24 | 3.6e-15 | 0 | PASS |
 
 
-**GATE 0: FAIL — stopped before any portfolio run. See the failing rows above.**
+**GATE 0: PASS** — the transport returns live AAPL bars, the per-trade baseline is reproduced trade by trade in all three periods (the trades whose tickers no longer have bars are dropped and listed above), ^IRX is usable after forward-filling, and the portfolio engine reproduces `simulate()` trade by trade when caps and costs are off.
+
+## Setup
+
+- Arms P1/P2/P3, the matched random arm, SPY and 60/40 all run through one daily mark-to-market engine from $100k per period; IS 2022-2024, OOS 2025 and 2026 YTD are separate runs and are never pooled.
+- Live constraints: 8 concurrent positions, 30% sector cap, 10% cash floor, 5 new positions per week, -8% hard stop, +10% trigger (sell 1/3, trail the rest 7%), 42-day time stop. Sizes 11% and 20% of equity. Costs 5 bp per side, 10 bp as a sensitivity. Idle cash earns ^IRX.
+- Ranking when candidates compete for room: EPS surprise, largest first (the live 1-10 score cannot be rebuilt from price and earnings data; surprise is its only graded input available for every candidate).
+- A candidate whose room under the sector cap or cash floor is smaller than the target size is trimmed to fit; below half the target size it is rejected and logged.
+- Not applied, as in the anchor: the sector-specific >20% EPS bars and the SPY<200MA bear-regime gate in `strategy.md`.
+
+### ELEVATED_BAR posture
+
+<!-- table:posture -->
+| Period | Share of trading days ELEVATED_BAR | Weekly readings | Thin-data weeks (fail-open NORMAL) |
+|---|---|---|---|
+| IS 2022-2024 | 46% | 158 | 8 |
+| OOS 2025 | 40% | 53 | 0 |
+| 2026 YTD | not reconstructible | n/a | n/a |
+
+The health metric is rebuilt every Sunday from committed base trades with a positive surprise that exited in the prior 60 days, the same rule `compute_pead_health.py` uses, and only bars on or before that Sunday. ELEVATED_BAR was in force on 46% of IS days and 40% of OOS days. The first IS weeks fail open because the committed set starts with 2022 entries.
+2026 YTD runs posture-off: the committed data has no 2026 base population and the live `pead_health.md` history starts 2026-09-20, after the 2026 candidate window. Posture-off results for IS and OOS are in the sensitivity section.
+
+## Results by period
+
+CAGR uses years = trading days / 252, so the 2026 YTD figure annualises about five months; Total is the unannualised return. Sharpe is on daily returns. Invested is the average share of equity in stocks. Rejected counts qualified candidates turned away by a cap (slots, weekly, sector, cash floor, already held). Beta, alpha (annualised) and R2 come from regressing daily returns on SPY daily returns. RND is the median of 500 matched random simulations.
+
+### IS 2022-2024 — 11% position size
+
+<!-- table:res_IS_2022-2024_11% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 3.6% | 11.2% | 0.47 | -14.3% | 33% | 101 | 77 | 0.24 | 1.4% | 0.28 |
+| P2 | 8.2% | 26.4% | 0.68 | -15.0% | 57% | 178 | 790 | 0.55 | 3.4% | 0.55 |
+| P3 | 9.5% | 31.0% | 0.81 | -17.5% | 64% | 193 | 2743 | 0.53 | 5.2% | 0.53 |
+| RND median | 0.5% | 1.4% | 0.06 | -17.2% | 33% | 105 | n/a | 0.25 | -2.0% | 0.30 |
+| SPY | 8.8% | 28.5% | 0.59 | -24.5% | 100% | n/a | n/a | 0.92 | 0.4% | 0.98 |
+| 60/40 | 3.6% | 11.1% | 0.35 | -21.0% | 100% | n/a | n/a | 0.57 | -1.9% | 0.90 |
+
+### OOS 2025 — 11% position size
+
+<!-- table:res_OOS_2025_11% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 7.0% | 6.9% | 0.96 | -7.6% | 32% | 32 | 17 | 0.12 | 4.6% | 0.11 |
+| P2 | 12.7% | 12.6% | 1.21 | -12.6% | 53% | 57 | 277 | 0.27 | 7.7% | 0.25 |
+| P3 | 10.1% | 10.0% | 0.82 | -11.0% | 64% | 70 | 946 | 0.29 | 4.7% | 0.21 |
+| RND median | -1.1% | -1.1% | -0.14 | -8.1% | 33% | 36 | n/a | 0.13 | -3.6% | 0.10 |
+| SPY | 17.1% | 17.0% | 0.92 | -18.8% | 100% | n/a | n/a | 0.95 | 0.4% | 0.99 |
+| 60/40 | 13.5% | 13.4% | 1.19 | -10.6% | 100% | n/a | n/a | 0.57 | 3.5% | 0.95 |
+
+### 2026 YTD — 11% position size
+
+<!-- table:res_2026_YTD_11% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 16.9% | 6.8% | 1.25 | -6.3% | 44% | 24 | 6 | 0.48 | 3.7% | 0.24 |
+| P2 | no row | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| P3 | no row | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| RND median | 1.9% | 0.8% | 0.20 | -6.9% | 43% | 25 | n/a | 0.28 | -5.2% | 0.16 |
+| SPY | 27.2% | 10.7% | 1.93 | -8.9% | 100% | n/a | n/a | 0.99 | 0.6% | 1.00 |
+| 60/40 | 15.2% | 6.1% | 1.65 | -6.0% | 100% | n/a | n/a | 0.65 | -1.5% | 0.95 |
+
+### IS 2022-2024 — 20% position size
+
+<!-- table:res_IS_2022-2024_20% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 1.2% | 3.6% | 0.13 | -17.3% | 39% | 68 | 110 | 0.27 | -1.5% | 0.28 |
+| P2 | 11.2% | 37.4% | 0.80 | -15.8% | 62% | 121 | 847 | 0.64 | 6.2% | 0.51 |
+| P3 | 10.9% | 36.1% | 0.78 | -17.1% | 71% | 136 | 2800 | 0.60 | 6.2% | 0.46 |
+| RND median | 1.1% | 3.4% | 0.12 | -20.6% | 38% | 72 | n/a | 0.30 | -1.7% | 0.27 |
+| SPY | 8.8% | 28.5% | 0.59 | -24.5% | 100% | n/a | n/a | 0.92 | 0.4% | 0.98 |
+| 60/40 | 3.6% | 11.1% | 0.35 | -21.0% | 100% | n/a | n/a | 0.57 | -1.9% | 0.90 |
+
+### OOS 2025 — 20% position size
+
+<!-- table:res_OOS_2025_20% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 18.0% | 17.9% | 1.80 | -7.0% | 39% | 22 | 27 | 0.15 | 15.3% | 0.08 |
+| P2 | 17.0% | 16.9% | 1.18 | -17.2% | 62% | 43 | 291 | 0.34 | 10.8% | 0.21 |
+| P3 | -0.3% | -0.3% | -0.02 | -15.7% | 69% | 49 | 967 | 0.28 | -5.5% | 0.16 |
+| RND median | -3.3% | -3.3% | -0.33 | -10.8% | 40% | 26 | n/a | 0.16 | -6.4% | 0.10 |
+| SPY | 17.1% | 17.0% | 0.92 | -18.8% | 100% | n/a | n/a | 0.95 | 0.4% | 0.99 |
+| 60/40 | 13.5% | 13.4% | 1.19 | -10.6% | 100% | n/a | n/a | 0.57 | 3.5% | 0.95 |
+
+### 2026 YTD — 20% position size
+
+<!-- table:res_2026_YTD_20% -->
+| Arm | CAGR | Total | Sharpe | MaxDD | Invested | Trades | Rejected | Beta | Alpha | R2 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P1 | 37.4% | 14.3% | 1.98 | -4.8% | 55% | 19 | 11 | 0.58 | 19.2% | 0.20 |
+| P2 | no row | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| P3 | no row | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| RND median | 3.9% | 1.6% | 0.31 | -8.2% | 49% | 17 | n/a | 0.29 | -4.0% | 0.11 |
+| SPY | 27.2% | 10.7% | 1.93 | -8.9% | 100% | n/a | n/a | 0.99 | 0.6% | 1.00 |
+| 60/40 | 15.2% | 6.1% | 1.65 | -6.0% | 100% | n/a | n/a | 0.65 | -1.5% | 0.95 |
+
+P2 and P3 have no 2026 YTD row: the committed 2026 data is only the 30 live-bar trades, so the wider candidate sets cannot be built for 2026.
+
+## Candidates turned away (Q5)
+
+Qualified candidates rejected by each cap, primary configuration (5 bp, posture as above), per calendar year. Every rejected candidate is logged with its reason in `backtesting/reports/pead_portfolio_rejects_2026-10-15.csv`.
+
+### 11% position size
+
+<!-- table:rej_11% -->
+| Arm year | Trades taken | Slots full (8) | Weekly cap | Sector cap | Cash floor | Already held | Total rejected |
+|---|---|---|---|---|---|---|---|
+| P1 2022 | 29 | 1 | 0 | 0 | 0 | 0 | 1 |
+| P1 2023 | 34 | 9 | 5 | 0 | 0 | 0 | 14 |
+| P1 2024 | 38 | 58 | 0 | 4 | 0 | 0 | 62 |
+| P1 2025 | 32 | 16 | 0 | 1 | 0 | 0 | 17 |
+| P1 2026 | 24 | 4 | 0 | 2 | 0 | 0 | 6 |
+| P2 2022 | 60 | 151 | 80 | 0 | 0 | 0 | 231 |
+| P2 2023 | 58 | 169 | 69 | 2 | 0 | 0 | 240 |
+| P2 2024 | 60 | 312 | 0 | 7 | 0 | 0 | 319 |
+| P2 2025 | 57 | 213 | 57 | 7 | 0 | 0 | 277 |
+| P3 2022 | 60 | 513 | 146 | 4 | 0 | 0 | 663 |
+| P3 2023 | 64 | 662 | 68 | 3 | 0 | 0 | 733 |
+| P3 2024 | 69 | 1319 | 22 | 6 | 0 | 0 | 1347 |
+| P3 2025 | 70 | 871 | 57 | 18 | 0 | 0 | 946 |
+
+### 20% position size
+
+<!-- table:rej_20% -->
+| Arm year | Trades taken | Slots full (8) | Weekly cap | Sector cap | Cash floor | Already held | Total rejected |
+|---|---|---|---|---|---|---|---|
+| P1 2022 | 20 | 0 | 0 | 1 | 9 | 0 | 10 |
+| P1 2023 | 23 | 0 | 1 | 10 | 14 | 0 | 25 |
+| P1 2024 | 25 | 0 | 0 | 22 | 53 | 0 | 75 |
+| P1 2025 | 22 | 0 | 0 | 8 | 19 | 0 | 27 |
+| P1 2026 | 19 | 0 | 0 | 5 | 6 | 0 | 11 |
+| P2 2022 | 43 | 0 | 30 | 21 | 197 | 0 | 248 |
+| P2 2023 | 37 | 0 | 14 | 23 | 224 | 0 | 261 |
+| P2 2024 | 41 | 0 | 0 | 37 | 301 | 0 | 338 |
+| P2 2025 | 43 | 0 | 33 | 54 | 204 | 0 | 291 |
+| P3 2022 | 43 | 0 | 35 | 126 | 519 | 0 | 680 |
+| P3 2023 | 44 | 0 | 35 | 77 | 641 | 0 | 753 |
+| P3 2024 | 49 | 0 | 0 | 202 | 1165 | 0 | 1367 |
+| P3 2025 | 49 | 0 | 42 | 117 | 808 | 0 | 967 |
+
+
+## Matched random arm (500 simulations, same engine)
+
+Each P1 candidate's ticker is replaced by a random name from the same sector and the same 20-day dollar-volume quintile on the same entry date, keeping the P1 entry date, rank and posture treatment. Share at or above P1 is the fraction of the 500 random portfolios whose Sharpe is at least P1's (a one-sided p-value).
+
+<!-- table:rnd -->
+| Period size | P1 Sharpe | RND median Sharpe | RND 5th pct | RND 95th pct | Share at or above P1 | P1 CAGR | RND median CAGR | P1 MaxDD | RND median MaxDD |
+|---|---|---|---|---|---|---|---|---|---|
+| IS 2022-2024 11% | 0.47 | 0.06 | -0.46 | 0.60 | 0.106 | 3.6% | 0.5% | -14.3% | -17.2% |
+| OOS 2025 11% | 0.96 | -0.14 | -1.19 | 1.02 | 0.064 | 7.0% | -1.1% | -7.6% | -8.1% |
+| 2026 YTD 11% | 1.25 | 0.20 | -1.96 | 2.42 | 0.218 | 16.9% | 1.9% | -6.3% | -6.9% |
+| IS 2022-2024 20% | 0.13 | 0.12 | -0.50 | 0.78 | 0.478 | 1.2% | 1.1% | -17.3% | -20.6% |
+| OOS 2025 20% | 1.80 | -0.33 | -1.50 | 0.89 | 0.008 | 18.0% | -3.3% | -7.0% | -10.8% |
+| 2026 YTD 20% | 1.98 | 0.31 | -2.02 | 2.78 | 0.120 | 37.4% | 3.9% | -4.8% | -8.2% |
+
+Match level across P1 candidates: `sector+size 76%, sector+size+-1 18%, sector only 6%`. 2026 earnings exclusions only know the 30 committed 2026 candidates' report dates, so 2026 controls may include names near their own earnings.
+
+## Market exposure vs stock selection (Q4)
+
+Annualised mean daily return split into beta times the SPY mean daily return (market part) and the regression intercept (alpha). Market share is the market part divided by the arm's annualised mean return, shown only when that mean is positive.
+
+<!-- table:q4 -->
+| Arm period size | Ann. mean return | Market part | Alpha | Beta | R2 | Market share |
+|---|---|---|---|---|---|---|
+| P1 IS 2022-2024 11% | 3.8% | 2.4% | 1.4% | 0.24 | 0.28 | 63% |
+| P1 OOS 2025 11% | 7.0% | 2.3% | 4.6% | 0.12 | 0.11 | 33% |
+| P1 2026 YTD 11% | 16.3% | 12.6% | 3.7% | 0.48 | 0.24 | 77% |
+| P2 IS 2022-2024 11% | 8.9% | 5.4% | 3.4% | 0.55 | 0.55 | 61% |
+| P2 OOS 2025 11% | 12.7% | 5.0% | 7.7% | 0.27 | 0.25 | 39% |
+| P3 IS 2022-2024 11% | 10.4% | 5.2% | 5.2% | 0.53 | 0.53 | 50% |
+| P3 OOS 2025 11% | 10.1% | 5.4% | 4.7% | 0.29 | 0.21 | 54% |
+| P1 IS 2022-2024 20% | 1.2% | 2.7% | -1.5% | 0.27 | 0.28 | 222% |
+| P1 OOS 2025 20% | 18.0% | 2.7% | 15.3% | 0.15 | 0.08 | 15% |
+| P1 2026 YTD 20% | 34.3% | 15.1% | 19.2% | 0.58 | 0.20 | 44% |
+| P2 IS 2022-2024 20% | 12.5% | 6.3% | 6.2% | 0.64 | 0.51 | 51% |
+| P2 OOS 2025 20% | 17.1% | 6.3% | 10.8% | 0.34 | 0.21 | 37% |
+| P3 IS 2022-2024 20% | 12.1% | 5.9% | 6.2% | 0.60 | 0.46 | 49% |
+| P3 OOS 2025 20% | -0.3% | 5.1% | -5.5% | 0.28 | 0.16 | n/a (mean <= 0) |
+
+## Sensitivities
+
+Same engine. 10 bp per side instead of 5 bp, and ELEVATED_BAR switched off in IS and OOS (2026 is posture-off in every row).
+
+<!-- table:sens -->
+| Arm period size | Primary Sharpe | Primary CAGR | 10bp Sharpe | 10bp CAGR | Posture-off Sharpe | Posture-off CAGR | Posture-off MaxDD |
+|---|---|---|---|---|---|---|---|
+| P1 IS 2022-2024 11% | 0.47 | 3.6% | 0.42 | 3.3% | 0.52 | 4.1% | -14.3% |
+| P1 OOS 2025 11% | 0.96 | 7.0% | 0.91 | 6.6% | 1.23 | 9.2% | -7.6% |
+| P1 2026 YTD 11% | 1.25 | 16.9% | 1.20 | 16.3% | 1.25 | 16.9% | -6.3% |
+| P2 IS 2022-2024 11% | 0.68 | 8.2% | 0.63 | 7.5% | 0.92 | 12.6% | -10.1% |
+| P2 OOS 2025 11% | 1.21 | 12.7% | 1.15 | 12.0% | 1.23 | 13.1% | -14.0% |
+| P3 IS 2022-2024 11% | 0.81 | 9.5% | 0.75 | 8.7% | 0.94 | 12.0% | -15.6% |
+| P3 OOS 2025 11% | 0.82 | 10.1% | 0.76 | 9.3% | 0.67 | 8.2% | -15.3% |
+| SPY IS 2022-2024 11% | 0.59 | 8.8% | 0.59 | 8.7% | 0.59 | 8.8% | -24.5% |
+| SPY OOS 2025 11% | 0.92 | 17.1% | 0.92 | 17.1% | 0.92 | 17.1% | -18.8% |
+| SPY 2026 YTD 11% | 1.93 | 27.2% | 1.92 | 27.1% | 1.93 | 27.2% | -8.9% |
+| 60/40 IS 2022-2024 11% | 0.35 | 3.6% | 0.35 | 3.5% | 0.35 | 3.6% | -21.0% |
+| 60/40 OOS 2025 11% | 1.19 | 13.5% | 1.18 | 13.4% | 1.19 | 13.5% | -10.6% |
+| 60/40 2026 YTD 11% | 1.65 | 15.2% | 1.63 | 15.1% | 1.65 | 15.2% | -6.0% |
+| P1 IS 2022-2024 20% | 0.13 | 1.2% | 0.15 | 1.3% | -0.10 | -0.9% | -19.9% |
+| P1 OOS 2025 20% | 1.80 | 18.0% | 1.75 | 17.5% | 2.00 | 21.1% | -7.4% |
+| P1 2026 YTD 20% | 1.98 | 37.4% | 1.93 | 36.5% | 1.98 | 37.4% | -4.8% |
+| P2 IS 2022-2024 20% | 0.80 | 11.2% | 0.82 | 11.6% | 1.07 | 16.0% | -11.9% |
+| P2 OOS 2025 20% | 1.18 | 17.0% | 1.23 | 17.6% | 1.48 | 23.6% | -17.3% |
+| P3 IS 2022-2024 20% | 0.78 | 10.9% | 0.72 | 10.0% | 0.87 | 12.6% | -14.6% |
+| P3 OOS 2025 20% | -0.02 | -0.3% | -0.17 | -2.3% | 0.61 | 9.6% | -18.5% |
+| SPY IS 2022-2024 20% | 0.59 | 8.8% | 0.59 | 8.7% | 0.59 | 8.8% | -24.5% |
+| SPY OOS 2025 20% | 0.92 | 17.1% | 0.92 | 17.1% | 0.92 | 17.1% | -18.8% |
+| SPY 2026 YTD 20% | 1.93 | 27.2% | 1.92 | 27.1% | 1.93 | 27.2% | -8.9% |
+| 60/40 IS 2022-2024 20% | 0.35 | 3.6% | 0.35 | 3.5% | 0.35 | 3.6% | -21.0% |
+| 60/40 OOS 2025 20% | 1.19 | 13.5% | 1.18 | 13.4% | 1.19 | 13.5% | -10.6% |
+| 60/40 2026 YTD 20% | 1.65 | 15.2% | 1.63 | 15.1% | 1.65 | 15.2% | -6.0% |
+
+## Pre-registered questions — verdicts
+
+Answered at 5 bp per side with the primary posture, for both position sizes. "Beats" means strictly better; for drawdown, shallower.
+
+<!-- table:verdict -->
+| Question size | Answer |
+|---|---|
+| Q1 11% | CAGR no, Sharpe yes, MaxDD yes |
+| Q2 11% | IS yes, OOS no, both no |
+| Q3 11% | IS no, OOS no, both no |
+| Q1 20% | CAGR yes, Sharpe yes, MaxDD yes |
+| Q2 20% | IS no, OOS yes, both no |
+| Q3 20% | IS no, OOS yes, both no |
+
+<!-- table:mar -->
+| Arm period size | CAGR/MaxDD |
+|---|---|
+| P1 IS 2022-2024 11% | 0.25 |
+| P1 OOS 2025 11% | 0.91 |
+| SPY IS 2022-2024 11% | 0.36 |
+| SPY OOS 2025 11% | 0.91 |
+| 60/40 IS 2022-2024 11% | 0.17 |
+| 60/40 OOS 2025 11% | 1.28 |
+| P1 IS 2022-2024 20% | 0.07 |
+| P1 OOS 2025 20% | 2.58 |
+| SPY IS 2022-2024 20% | 0.36 |
+| SPY OOS 2025 20% | 0.91 |
+| 60/40 IS 2022-2024 20% | 0.17 |
+| 60/40 OOS 2025 20% | 1.28 |
+
+### Plain-language verdicts
+
+**Q1 (11% size).** In OOS 2025, P1 made 7.0% a year against SPY's 17.1%, with Sharpe 0.96 vs 0.92 and max drawdown -7.6% vs -18.8%. Answer: CAGR no, Sharpe yes, MaxDD yes.
+**Q1 (20% size).** In OOS 2025, P1 made 18.0% a year against SPY's 17.1%, with Sharpe 1.80 vs 0.92 and max drawdown -7.0% vs -18.8%. Answer: CAGR yes, Sharpe yes, MaxDD yes.
+**Q2 (11% size).** Sharpe P1 vs 60/40: IS 0.47 vs 0.35, OOS 0.96 vs 1.19; CAGR/MaxDD IS 0.25 vs 0.17, OOS 0.91 vs 1.28. Answer: IS yes, OOS no, both no.
+**Q2 (20% size).** Sharpe P1 vs 60/40: IS 0.13 vs 0.35, OOS 1.80 vs 1.19; CAGR/MaxDD IS 0.07 vs 0.17, OOS 2.58 vs 1.28. Answer: IS no, OOS yes, both no.
+**Q3 (11% size).** Sharpe P1 vs P2: IS 0.47 vs 0.68, OOS 0.96 vs 1.21. Answer: IS no, OOS no, both no.
+**Q3 (20% size).** Sharpe P1 vs P2: IS 0.13 vs 0.80, OOS 1.80 vs 1.18. Answer: IS no, OOS yes, both no.
+Because P1 does not beat P2 on Sharpe in both periods at 11% and 20% size, the volume, relative-strength and 52-week-high filters cost more in lost trades than they add in selection at the portfolio level, on this data.
+**Q4 (11% size).** P1 IS beta 0.24 (market share 63%); P1 OOS beta 0.12 (market share 33%); P2 IS beta 0.55 (market share 61%); P2 OOS beta 0.27 (market share 39%); P3 IS beta 0.53 (market share 50%); P3 OOS beta 0.29 (market share 54%).
+**Q4 (20% size).** P1 IS beta 0.27 (market share 222%); P1 OOS beta 0.15 (market share 15%); P2 IS beta 0.64 (market share 51%); P2 OOS beta 0.34 (market share 37%); P3 IS beta 0.60 (market share 49%); P3 OOS beta 0.28 (market share n/a (mean <= 0)).
+**Q5 (11% size).** P1 IS took 101 and turned away 77; P1 OOS took 32 and turned away 17; P2 IS took 178 and turned away 790; P2 OOS took 57 and turned away 277; P3 IS took 193 and turned away 2743; P3 OOS took 70 and turned away 946. The per-year split by cap is in the Q5 table; the 8-slot cap binds only where the Slots full column is non-zero.
+**Q5 (20% size).** P1 IS took 68 and turned away 110; P1 OOS took 22 and turned away 27; P2 IS took 121 and turned away 847; P2 OOS took 43 and turned away 291; P3 IS took 136 and turned away 2800; P3 OOS took 49 and turned away 967. The per-year split by cap is in the Q5 table; the 8-slot cap binds only where the Slots full column is non-zero.
+
+No `strategy.md` change is recommended by this report.
+
+## Limitations
+
+- **Survivorship.** The universe is current S&P 500 members only, for every arm including the random control, so names that left the index are missing from both sides.
+- **2026.** The only 2026 data is the 30 committed live-bar trades, so P2 and P3 have no 2026 row, the 2026 posture cannot be rebuilt, and 2026 random controls use a weaker earnings exclusion.
+- **Costs.** No slippage beyond the 5 bp (or 10 bp) per side assumption; fills are at the open (entries) and the close (exits), with the 1/3 scale-out booked at exactly +10% as the per-trade simulator books it. Shares are fractional.
+- **Repeated testing.** This is now at least the thirteenth backtest run on this same 2022-2025 candidate set (in-sample, OOS, enhanced filters, signal health, health + 200MA, variants, ATR stop vs flat, ATR stop widened, risk sweep, ELEVATED_BAR threshold comparison, PEAD vs random, and this simulation), so OOS 2025 is no longer a clean holdout.
+- **Live score.** The live 1-10 score and its research inputs (guidance, analysts, insiders, regulatory scans) cannot be reconstructed; P1 is the mechanical live bar and ranking uses EPS surprise as a proxy.
+- **Rules not modelled.** Sector-specific >20% EPS bars, the SPY<200MA bear-regime gate, thesis-break exits and the 60-day rotation rule are not applied.
+- **Health warm-up.** The committed set starts with 2022 entries, so the first IS weeks have too few realised trades and fail open to NORMAL.
+- **Size proxy.** Random matching uses 20-day dollar volume, not market cap.
+
+## Pre-registration record
+
+Commits touching `pead_portfolio_prereg.py` (questions, arms, constants, engine):
+
+```
+7421f35 2026-10-15 18:02:33 +0000 research: PEAD portfolio prereg amendment — $10 gate on unadjusted open, anchor rule for no-bars trades
+1ec86e3 2026-10-15 17:58:55 +0000 research: PEAD portfolio sim pre-registration, engine and Gate 0 (stopped: anchor miss)
+```
+
+Outputs: `backtesting/reports/pead_portfolio_grid_2026-10-15.csv`, `backtesting/reports/pead_portfolio_trades_2026-10-15.csv`, `backtesting/reports/pead_portfolio_rejects_2026-10-15.csv`, `backtesting/reports/pead_portfolio_posture_2026-10-15.csv`, `backtesting/reports/pead_portfolio_random_2026-10-15.csv`, `backtesting/reports/pead_portfolio_claims_2026-10-15.json`.

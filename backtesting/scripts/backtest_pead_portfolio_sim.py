@@ -407,7 +407,7 @@ def main():
         json.dump(R.claims, open(CLAIMS, "w"), indent=1)
         print("GATE 0 FAILED"); sys.exit(1)
     R.w("**GATE 0: PASS** — the transport returns live AAPL bars, the per-trade baseline is "
-        "reproduced in all three periods, ^IRX is usable after forward-filling, and the "
+        "reproduced trade by trade in all three periods (the trades whose tickers no longer have bars are dropped and listed above), ^IRX is usable after forward-filling, and the "
         "portfolio engine reproduces `simulate()` trade by trade when caps and costs are off.")
     R.w("")
 
