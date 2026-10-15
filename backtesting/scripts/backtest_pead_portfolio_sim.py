@@ -57,6 +57,41 @@ EXCL_BEFORE, EXCL_AFTER = 10, 5
 REASONS = ["slots_full", "weekly_cap", "sector_cap", "cash_floor", "already_held"]
 
 rs._P2 = int(pd.Timestamp(RUN_DATE).timestamp())   # bars through the prior session
+rs.MIN_PRICE = 0.0   # the $10 gate is applied explicitly on the UNADJUSTED open
+
+
+def raw_open(ticker):
+    """Unadjusted (no dividend or split adjustment) daily open, same chart endpoint (cached)."""
+    path = os.path.join(rs.CACHE_DIR, "rawopen_" + ticker.replace("/", "_") + ".pkl")
+    if os.path.exists(path):
+        return pd.read_pickle(path)
+    sym = ticker.replace(".", "-")
+    for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
+        url = (f"https://{host}/v8/finance/chart/{sym}?period1={rs._P1}&period2={rs._P2}"
+               f"&interval=1d&events=div%2Csplits")
+        for attempt in range(4):
+            try:
+                r = rs._rq.get(url, timeout=30, headers={"User-Agent": rs._UA})
+                if r.status_code == 429:
+                    rs.time.sleep(3 * (attempt + 1)); continue
+                if r.status_code != 200:
+                    break
+                res = r.json()["chart"]["result"][0]
+                idx = (pd.to_datetime(res["timestamp"], unit="s", utc=True)
+                       .tz_convert("America/New_York").normalize().tz_localize(None))
+                ser = pd.Series(res["indicators"]["quote"][0]["open"], index=idx, dtype=float)
+                ser = ser[~ser.index.duplicated()]
+                # Yahoo's quote series is split-adjusted; undo splits to get the price
+                # actually traded on each day.
+                for sp in (res.get("events") or {}).get("splits", {}).values():
+                    d = (pd.to_datetime(sp["date"], unit="s", utc=True)
+                         .tz_convert("America/New_York").normalize().tz_localize(None))
+                    ser[ser.index < d] *= sp["numerator"] / sp["denominator"]
+                ser.to_pickle(path)
+                return ser
+            except Exception:
+                rs.time.sleep(2 * (attempt + 1))
+    return None
 
 
 # ─── report builder: every prose number is cited from a table ────────────────
@@ -138,7 +173,13 @@ def fetch_all(tickers):
         if h is None:
             missing.append(t)
             continue
-        h = h[h.index < pd.Timestamp(RUN_DATE)]
+        h = h[h.index < pd.Timestamp(RUN_DATE)].copy()
+        if t != "^IRX":
+            ro = raw_open(t)
+            if ro is None:
+                missing.append(t)
+                continue
+            h["RawOpen"] = ro.reindex(h.index)
         hists[t] = h
     return hists, missing
 
@@ -166,7 +207,7 @@ def build_matches(panel, cands, sector_of, earn_by):
         for k in stock_ks:
             t = panel.tickers[k]
             o = panel.open[i, k]
-            if not (o >= P.MIN_PRICE) or not (dv[i, k] >= rs_min_dvol()):
+            if not (o >= 0) or not (panel.raw_open[i, k] >= P.MIN_PRICE) or not (dv[i, k] >= rs_min_dvol()):
                 continue
             ed = earn_by.get(t)
             if ed is not None:
@@ -236,63 +277,57 @@ def gate0(R, cands, hists, panel, bill, irx_raw):
     # 2. validation anchor (risk-sweep baseline, exact simulate(), sweep's data end)
     R.w("### Item 2 — validation anchor (per-trade baseline: EPS>=15%, vol>=1.5x, RS>0, 52wk-high<=45d, flat -8%)")
     R.w("")
-    rows, anc = [], {}
-    p1 = cands[(cands.surprise_pct >= 15) & (cands.q == 3) & cands.f_nearearn]
+    R.w("The $10 entry gate is applied to the unadjusted open (pre-registration amended after "
+        "the first Gate 0 stop; see the record at the end). A period passes when every "
+        "committed baseline trade that still has bars matches the risk sweep's per-trade "
+        "return within 0.001 pp and the trade count equals the anchor minus the trades whose "
+        "ticker has no bars.")
+    R.w("")
     cut = pd.Timestamp(ANCHOR_DATA_END)
+    sw = pd.read_csv(os.path.join(REPORTS, "backtest_risk_sweep_trades_2026-07-08.csv"))
+    sw = sw[(sw.surprise_pct >= 15) & (sw.q == 3)].copy()
+    sw["entry_date"] = pd.to_datetime(sw.entry_date)
+    sw["period"] = sw.period.map({"IS (2022-2024)": "IS 2022-2024", "OOS (2025)": "OOS 2025",
+                                  "2026 YTD": "2026 YTD"})
+    rows, anc, drows = [], {}, []
     for lab in P.PERIODS:
-        sub = p1[p1.period == lab]
-        rets = []
+        sub = sw[sw.period == lab]
+        rets, nobars, mism = [], 0, 0
         for r in sub.itertuples():
             h = hists.get(r.ticker)
             if h is None:
+                nobars += 1
+                drows.append([f"{r.ticker} {r.entry_date.date()}", lab, f"{r.flat8_ret_pct:.2f}%",
+                              "no bars served by Yahoo today (AAPL control live)", "dropped"])
                 continue
-            res = rs.simulate(h[h.index < cut], pd.Timestamp(r.entry_date), 8.0)
-            if res is not None:
-                rets.append(res["return_pct"])
+            raw = h.loc[h.index == r.entry_date, "RawOpen"]
+            res = None
+            if len(raw) and raw.iloc[0] >= P.MIN_PRICE:
+                res = rs.simulate(h[h.index < cut], r.entry_date, 8.0)
+            if res is None or abs(res["return_pct"] - r.flat8_ret_pct) > P.ANCHOR_TRADE_TOL:
+                mism += 1
+                drows.append([f"{r.ticker} {r.entry_date.date()}", lab, f"{r.flat8_ret_pct:.2f}%",
+                              "not reproduced", "FAIL"])
+                continue
+            rets.append(res["return_pct"])
         st = anchor_stats(rets)
         tgt = P.ANCHOR[lab]
-        good = (st["n"] == tgt["n"] and abs(st["win"] - tgt["win"]) <= P.ANCHOR_TOL["win"] + 1e-9
-                and abs(st["avg"] - tgt["avg"]) <= P.ANCHOR_TOL["avg"] + 1e-9
-                and abs(st["pf"] - tgt["pf"]) <= P.ANCHOR_TOL["pf"] + 1e-9)
+        good = mism == 0 and st["n"] == tgt["n"] - nobars
         ok_all &= good
         anc[lab] = st
-        rows.append([lab, f"{st['n']} / {tgt['n']}", f"{st['win']:.1f}% / {tgt['win']}%",
+        rows.append([lab, f"{st['n']} / {tgt['n']}", str(nobars), f"{st['win']:.1f}% / {tgt['win']}%",
                      f"{st['avg']:.3f}% / {tgt['avg']}%", f"{st['pf']:.3f} / {tgt['pf']}",
                      "PASS" if good else "FAIL"])
-    R.table("g0_anchor", ["Period", "Trades (got / anchor)", "Win (got / anchor)",
+    R.table("g0_anchor", ["Period", "Trades (got / anchor)", "No-bars trades", "Win (got / anchor)",
                           "Avg (got / anchor)", "PF (got / anchor)", "Result"], rows)
-
-    # diagnosis: compare trade by trade against the sweep's committed per-trade file
-    sweep_csv = os.path.join(REPORTS, "backtest_risk_sweep_trades_2026-07-08.csv")
-    if os.path.exists(sweep_csv):
-        sw = pd.read_csv(sweep_csv)
-        sw = sw[(sw.surprise_pct >= 15) & (sw.q == 3)]
-        sw["entry_date"] = pd.to_datetime(sw.entry_date)
-        drows, same = [], 0
-        for r in sw.itertuples():
-            h = hists.get(r.ticker)
-            res = None
-            if h is not None:
-                res = rs.simulate(h[h.index < cut], r.entry_date, 8.0)
-            if res is not None and abs(res["return_pct"] - r.flat8_ret_pct) < 1e-3:
-                same += 1
-                continue
-            if h is None:
-                why = "no bars served by Yahoo today (AAPL control live)"
-            elif res is None:
-                o = h.loc[h.index == r.entry_date, "Open"]
-                why = (f"adjusted open now {o.iloc[0]:.2f}, below the $10 gate"
-                       if len(o) else "no bar on entry date")
-            else:
-                why = f"return differs: {res['return_pct']:.3f}"
-            drows.append([f"{r.ticker} {r.entry_date.date()}", str(r.period),
-                          f"{r.flat8_ret_pct:.2f}%", why])
-        R.w(f"Trade-by-trade check against `{os.path.basename(sweep_csv)}`: "
-            f"{same} of {len(sw)} committed baseline trades reproduce to within 0.001 pp. "
-            "The rest:")
+    if drows:
+        R.w("Committed baseline trades not in the reproduction:")
         R.w("")
-        R.table("g0_diag", ["Trade", "Period", "Committed return", "Why it is not reproduced"],
-                drows)
+        R.table("g0_diag", ["Trade", "Period", "Committed return", "Reason", "Status"], drows)
+    unserved = sorted(set(cands.ticker) - set(hists))
+    R.w(f"Tickers with no Yahoo history today (dropped from every arm and from random pools): "
+        f"`{', '.join(unserved)}`.")
+    R.w("")
 
     # 3. ^IRX coverage
     R.w("### Item 3 — ^IRX (13-week T-bill, percent) on the trading calendar")
@@ -312,6 +347,7 @@ def gate0(R, cands, hists, panel, bill, irx_raw):
     R.w("### Item 4 — portfolio engine vs simulate() (unconstrained, zero cost, full data)")
     R.w("")
     erows = []
+    p1 = cands[(cands.surprise_pct >= 15) & (cands.q == 3) & cands.f_nearearn]
     for lab, (s, e) in P.PERIODS.items():
         sub = p1[p1.period == lab]
         run = P.run_portfolio(panel, sub, s, e, 0.11, 0.0, np.zeros(len(panel.dates)),
