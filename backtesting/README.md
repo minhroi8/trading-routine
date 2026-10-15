@@ -41,6 +41,7 @@ location via `__file__`).
 | `backtest_health_200ma_combo.py` | `scripts/` | Combines the realized-health gate with the SPY>200MA regime filter — the overlay that ships in production. Reuses the cached candidate set. | `backtest_report_PEAD_HEALTH_200MA_COMBO.md` |
 | `backtest_variants_compare.py` | `scripts/` | Compares rule variants (drop 52-wk filter, 7% trail, bull-regime gate, …) against current rules. | `backtest_report_PEAD_VARIANTS.md`, `backtest_variants_candidates.csv` |
 | `backtest_risk_sweep_entry_stop.py` | `scripts/` | Grid parameter sweep: EPS-surprise threshold × score-cutoff (verifiable-filter proxy) × stop width (flat −8/−10/−12%, ATR-scaled), IS=2022-24 / OOS=2025 + 2026 cross-check. Reuses the committed candidate set and the S3 `simulate()` mechanics; re-fetches OHLC via the Yahoo chart API. **Diagnostic only** — confirms S3's wider-stop rejection and finds no validated entry/stop improvement. | `memory/backtest_risk_sweep_<date>.md` (report), `backtest_risk_sweep_grid_<date>.csv`, `backtest_risk_sweep_trades_<date>.csv` |
+| `backtest_etf_trend.py` | `scripts/` | ETF swing/trend research (not PEAD): pullback-in-uptrend, time-series trend, cross-sectional momentum on 16 ETFs, IS 2006-17 / OOS 2018-latest, with GATE 0 data checks in `etf_data.py`. **Research only** — not wired into any routine. | `backtesting/etf_trend_backtest_<date>.md`, `reports/etf_trend_grid_<date>.csv`, `reports/etf_trend_trades_A_<date>.csv` |
 
 ### Dependency map
 
