@@ -1,0 +1,609 @@
+[
+ {
+  "line": "The health metric is rebuilt every Sunday from committed base trades with a positive surprise that exited in the prior 60 days, the same rule `compute_pead_health.py` uses, and only bars on or before that Sunday. ELEVATED_BAR was in force on 46% of IS days and 40% of OOS days. The first IS weeks fail open because the committed set starts with 2022 entries.",
+  "refs": [
+   {
+    "table": "posture",
+    "row": "IS 2022-2024",
+    "col": "Share of trading days ELEVATED_BAR",
+    "value": "46%"
+   },
+   {
+    "table": "posture",
+    "row": "OOS 2025",
+    "col": "Share of trading days ELEVATED_BAR",
+    "value": "40%"
+   }
+  ]
+ },
+ {
+  "line": "**Q1 (11% size).** In OOS 2025, P1 made 7.0% a year against SPY's 17.1%, with Sharpe 0.96 vs 0.92 and max drawdown -7.6% vs -18.8%. Answer: CAGR no, Sharpe yes, MaxDD yes.",
+  "refs": [
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "CAGR",
+    "value": "7.0%"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "SPY",
+    "col": "CAGR",
+    "value": "17.1%"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.96"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "SPY",
+    "col": "Sharpe",
+    "value": "0.92"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "MaxDD",
+    "value": "-7.6%"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "SPY",
+    "col": "MaxDD",
+    "value": "-18.8%"
+   },
+   {
+    "table": "verdict",
+    "row": "Q1 11%",
+    "col": "Answer",
+    "value": "CAGR no, Sharpe yes, MaxDD yes"
+   }
+  ]
+ },
+ {
+  "line": "**Q1 (20% size).** In OOS 2025, P1 made 18.0% a year against SPY's 17.1%, with Sharpe 1.80 vs 0.92 and max drawdown -7.0% vs -18.8%. Answer: CAGR yes, Sharpe yes, MaxDD yes.",
+  "refs": [
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "CAGR",
+    "value": "18.0%"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "SPY",
+    "col": "CAGR",
+    "value": "17.1%"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "1.80"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "SPY",
+    "col": "Sharpe",
+    "value": "0.92"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "MaxDD",
+    "value": "-7.0%"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "SPY",
+    "col": "MaxDD",
+    "value": "-18.8%"
+   },
+   {
+    "table": "verdict",
+    "row": "Q1 20%",
+    "col": "Answer",
+    "value": "CAGR yes, Sharpe yes, MaxDD yes"
+   }
+  ]
+ },
+ {
+  "line": "**Q2 (11% size).** Sharpe P1 vs 60/40: IS 0.47 vs 0.35, OOS 0.96 vs 1.19; CAGR/MaxDD IS 0.25 vs 0.17, OOS 0.91 vs 1.28. Answer: IS yes, OOS no, both no.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.47"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "60/40",
+    "col": "Sharpe",
+    "value": "0.35"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.96"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "60/40",
+    "col": "Sharpe",
+    "value": "1.19"
+   },
+   {
+    "table": "mar",
+    "row": "P1 IS 2022-2024 11%",
+    "col": "CAGR/MaxDD",
+    "value": "0.25"
+   },
+   {
+    "table": "mar",
+    "row": "60/40 IS 2022-2024 11%",
+    "col": "CAGR/MaxDD",
+    "value": "0.17"
+   },
+   {
+    "table": "mar",
+    "row": "P1 OOS 2025 11%",
+    "col": "CAGR/MaxDD",
+    "value": "0.91"
+   },
+   {
+    "table": "mar",
+    "row": "60/40 OOS 2025 11%",
+    "col": "CAGR/MaxDD",
+    "value": "1.28"
+   },
+   {
+    "table": "verdict",
+    "row": "Q2 11%",
+    "col": "Answer",
+    "value": "IS yes, OOS no, both no"
+   }
+  ]
+ },
+ {
+  "line": "**Q2 (20% size).** Sharpe P1 vs 60/40: IS 0.13 vs 0.35, OOS 1.80 vs 1.19; CAGR/MaxDD IS 0.07 vs 0.17, OOS 2.58 vs 1.28. Answer: IS no, OOS yes, both no.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.13"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "60/40",
+    "col": "Sharpe",
+    "value": "0.35"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "1.80"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "60/40",
+    "col": "Sharpe",
+    "value": "1.19"
+   },
+   {
+    "table": "mar",
+    "row": "P1 IS 2022-2024 20%",
+    "col": "CAGR/MaxDD",
+    "value": "0.07"
+   },
+   {
+    "table": "mar",
+    "row": "60/40 IS 2022-2024 20%",
+    "col": "CAGR/MaxDD",
+    "value": "0.17"
+   },
+   {
+    "table": "mar",
+    "row": "P1 OOS 2025 20%",
+    "col": "CAGR/MaxDD",
+    "value": "2.58"
+   },
+   {
+    "table": "mar",
+    "row": "60/40 OOS 2025 20%",
+    "col": "CAGR/MaxDD",
+    "value": "1.28"
+   },
+   {
+    "table": "verdict",
+    "row": "Q2 20%",
+    "col": "Answer",
+    "value": "IS no, OOS yes, both no"
+   }
+  ]
+ },
+ {
+  "line": "**Q3 (11% size).** Sharpe P1 vs P2: IS 0.47 vs 0.68, OOS 0.96 vs 1.21. Answer: IS no, OOS no, both no.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.47"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P2",
+    "col": "Sharpe",
+    "value": "0.68"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.96"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P2",
+    "col": "Sharpe",
+    "value": "1.21"
+   },
+   {
+    "table": "verdict",
+    "row": "Q3 11%",
+    "col": "Answer",
+    "value": "IS no, OOS no, both no"
+   }
+  ]
+ },
+ {
+  "line": "**Q3 (20% size).** Sharpe P1 vs P2: IS 0.13 vs 0.80, OOS 1.80 vs 1.18. Answer: IS no, OOS yes, both no.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "0.13"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P2",
+    "col": "Sharpe",
+    "value": "0.80"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "Sharpe",
+    "value": "1.80"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P2",
+    "col": "Sharpe",
+    "value": "1.18"
+   },
+   {
+    "table": "verdict",
+    "row": "Q3 20%",
+    "col": "Answer",
+    "value": "IS no, OOS yes, both no"
+   }
+  ]
+ },
+ {
+  "line": "**Q4 (11% size).** P1 IS beta 0.24 (market share 63%); P1 OOS beta 0.12 (market share 33%); P2 IS beta 0.55 (market share 61%); P2 OOS beta 0.27 (market share 39%); P3 IS beta 0.53 (market share 50%); P3 OOS beta 0.29 (market share 54%).",
+  "refs": [
+   {
+    "table": "q4",
+    "row": "P1 IS 2022-2024 11%",
+    "col": "Beta",
+    "value": "0.24"
+   },
+   {
+    "table": "q4",
+    "row": "P1 IS 2022-2024 11%",
+    "col": "Market share",
+    "value": "63%"
+   },
+   {
+    "table": "q4",
+    "row": "P1 OOS 2025 11%",
+    "col": "Beta",
+    "value": "0.12"
+   },
+   {
+    "table": "q4",
+    "row": "P1 OOS 2025 11%",
+    "col": "Market share",
+    "value": "33%"
+   },
+   {
+    "table": "q4",
+    "row": "P2 IS 2022-2024 11%",
+    "col": "Beta",
+    "value": "0.55"
+   },
+   {
+    "table": "q4",
+    "row": "P2 IS 2022-2024 11%",
+    "col": "Market share",
+    "value": "61%"
+   },
+   {
+    "table": "q4",
+    "row": "P2 OOS 2025 11%",
+    "col": "Beta",
+    "value": "0.27"
+   },
+   {
+    "table": "q4",
+    "row": "P2 OOS 2025 11%",
+    "col": "Market share",
+    "value": "39%"
+   },
+   {
+    "table": "q4",
+    "row": "P3 IS 2022-2024 11%",
+    "col": "Beta",
+    "value": "0.53"
+   },
+   {
+    "table": "q4",
+    "row": "P3 IS 2022-2024 11%",
+    "col": "Market share",
+    "value": "50%"
+   },
+   {
+    "table": "q4",
+    "row": "P3 OOS 2025 11%",
+    "col": "Beta",
+    "value": "0.29"
+   },
+   {
+    "table": "q4",
+    "row": "P3 OOS 2025 11%",
+    "col": "Market share",
+    "value": "54%"
+   }
+  ]
+ },
+ {
+  "line": "**Q4 (20% size).** P1 IS beta 0.27 (market share 222%); P1 OOS beta 0.15 (market share 15%); P2 IS beta 0.64 (market share 51%); P2 OOS beta 0.34 (market share 37%); P3 IS beta 0.60 (market share 49%); P3 OOS beta 0.28 (market share n/a (mean <= 0)).",
+  "refs": [
+   {
+    "table": "q4",
+    "row": "P1 IS 2022-2024 20%",
+    "col": "Beta",
+    "value": "0.27"
+   },
+   {
+    "table": "q4",
+    "row": "P1 IS 2022-2024 20%",
+    "col": "Market share",
+    "value": "222%"
+   },
+   {
+    "table": "q4",
+    "row": "P1 OOS 2025 20%",
+    "col": "Beta",
+    "value": "0.15"
+   },
+   {
+    "table": "q4",
+    "row": "P1 OOS 2025 20%",
+    "col": "Market share",
+    "value": "15%"
+   },
+   {
+    "table": "q4",
+    "row": "P2 IS 2022-2024 20%",
+    "col": "Beta",
+    "value": "0.64"
+   },
+   {
+    "table": "q4",
+    "row": "P2 IS 2022-2024 20%",
+    "col": "Market share",
+    "value": "51%"
+   },
+   {
+    "table": "q4",
+    "row": "P2 OOS 2025 20%",
+    "col": "Beta",
+    "value": "0.34"
+   },
+   {
+    "table": "q4",
+    "row": "P2 OOS 2025 20%",
+    "col": "Market share",
+    "value": "37%"
+   },
+   {
+    "table": "q4",
+    "row": "P3 IS 2022-2024 20%",
+    "col": "Beta",
+    "value": "0.60"
+   },
+   {
+    "table": "q4",
+    "row": "P3 IS 2022-2024 20%",
+    "col": "Market share",
+    "value": "49%"
+   },
+   {
+    "table": "q4",
+    "row": "P3 OOS 2025 20%",
+    "col": "Beta",
+    "value": "0.28"
+   },
+   {
+    "table": "q4",
+    "row": "P3 OOS 2025 20%",
+    "col": "Market share",
+    "value": "n/a (mean <= 0)"
+   }
+  ]
+ },
+ {
+  "line": "**Q5 (11% size).** P1 IS took 101 and turned away 77; P1 OOS took 32 and turned away 17; P2 IS took 178 and turned away 790; P2 OOS took 57 and turned away 277; P3 IS took 193 and turned away 2743; P3 OOS took 70 and turned away 946. The per-year split by cap is in the Q5 table; the 8-slot cap binds only where the Slots full column is non-zero.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P1",
+    "col": "Trades",
+    "value": "101"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P1",
+    "col": "Rejected",
+    "value": "77"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "Trades",
+    "value": "32"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P1",
+    "col": "Rejected",
+    "value": "17"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P2",
+    "col": "Trades",
+    "value": "178"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P2",
+    "col": "Rejected",
+    "value": "790"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P2",
+    "col": "Trades",
+    "value": "57"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P2",
+    "col": "Rejected",
+    "value": "277"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P3",
+    "col": "Trades",
+    "value": "193"
+   },
+   {
+    "table": "res_IS_2022-2024_11%",
+    "row": "P3",
+    "col": "Rejected",
+    "value": "2743"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P3",
+    "col": "Trades",
+    "value": "70"
+   },
+   {
+    "table": "res_OOS_2025_11%",
+    "row": "P3",
+    "col": "Rejected",
+    "value": "946"
+   }
+  ]
+ },
+ {
+  "line": "**Q5 (20% size).** P1 IS took 68 and turned away 110; P1 OOS took 22 and turned away 27; P2 IS took 121 and turned away 847; P2 OOS took 43 and turned away 291; P3 IS took 136 and turned away 2800; P3 OOS took 49 and turned away 967. The per-year split by cap is in the Q5 table; the 8-slot cap binds only where the Slots full column is non-zero.",
+  "refs": [
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P1",
+    "col": "Trades",
+    "value": "68"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P1",
+    "col": "Rejected",
+    "value": "110"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "Trades",
+    "value": "22"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P1",
+    "col": "Rejected",
+    "value": "27"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P2",
+    "col": "Trades",
+    "value": "121"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P2",
+    "col": "Rejected",
+    "value": "847"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P2",
+    "col": "Trades",
+    "value": "43"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P2",
+    "col": "Rejected",
+    "value": "291"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P3",
+    "col": "Trades",
+    "value": "136"
+   },
+   {
+    "table": "res_IS_2022-2024_20%",
+    "row": "P3",
+    "col": "Rejected",
+    "value": "2800"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P3",
+    "col": "Trades",
+    "value": "49"
+   },
+   {
+    "table": "res_OOS_2025_20%",
+    "row": "P3",
+    "col": "Rejected",
+    "value": "967"
+   }
+  ]
+ }
+]
