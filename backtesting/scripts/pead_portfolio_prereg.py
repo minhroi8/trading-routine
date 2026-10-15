@@ -55,6 +55,16 @@ LIVE CONSTRAINTS (memory/strategy.md, as listed in the request)
   Not applied (not in the request's list, and not in the anchor): the
   sector-specific >20% EPS bars and the SPY<200MA bear-regime gate.
 
+$10 entry gate (amended after Gate 0, disclosed in the report): applied to the
+UNADJUSTED open, not the dividend/split-adjusted open. Yahoo re-adjusted CTVA's
+history for a 2026 corporate action, pushing its 2022 adjusted open below $10
+although it traded near $50; the live routine sees unadjusted prices. AVB and
+SATS (and EA, EQR, WBD) have no Yahoo history any more; their candidates are
+dropped from every arm and listed in the report. The anchor counts as
+reproduced when every committed baseline trade that still has bars matches the
+risk sweep's per-trade return within 0.001 pp and the trade counts equal the
+anchor minus the no-bars trades (chosen by Jack on the Gate 0 decision card).
+
 ELEVATED_BAR posture (pre_market step 1c / step 6, as the live routine applies
 it): EPS surprise > 20% for all sectors and at most 2 new positions per week.
 Health metric reconstructed point-in-time from the committed base candidates
@@ -142,6 +152,7 @@ ANCHOR = {
     "2026 YTD": dict(n=30, win=50.0, avg=-0.23, pf=0.95),
 }
 ANCHOR_TOL = dict(n=0, win=0.1, avg=0.01, pf=0.01)
+ANCHOR_TRADE_TOL = 0.001     # pp, per trade vs the sweep's committed trade file
 
 
 def arm_mask(c, arm, elevated):
@@ -185,12 +196,14 @@ class Panel:
         self.open = np.full((n, m), np.nan)
         self.close = np.full((n, m), np.nan)
         self.vol = np.full((n, m), np.nan)
+        self.raw_open = np.full((n, m), np.nan)
         for t, h in hists.items():
             k = self.col[t]
             h = h[~h.index.duplicated()].reindex(cal)
             self.open[:, k] = h["Open"].to_numpy(float)
             self.close[:, k] = h["Close"].to_numpy(float)
             self.vol[:, k] = h["Volume"].to_numpy(float)
+            self.raw_open[:, k] = (h["RawOpen"] if "RawOpen" in h else h["Open"]).to_numpy(float)
         # last valid close (for marking on days a ticker has no bar)
         self.mark = pd.DataFrame(self.close).ffill().to_numpy()
 
@@ -236,7 +249,7 @@ def weekly_posture(panel, base):
         if k is None or i is None:
             continue
         o, c = panel.open[:, k], panel.close[:, k]
-        if np.isnan(o[i]) or o[i] < MIN_PRICE:
+        if np.isnan(o[i]) or not (panel.raw_open[i, k] >= MIN_PRICE):
             continue
         res = health_trade(o, c, panel.dates, i)
         if res is None:
@@ -320,7 +333,7 @@ def run_portfolio(panel, cands, start, end, size, cost, bill, elevated,
                 reason = None
                 target = size * equity
                 amt = target
-                if k is None or np.isnan(px) or px < MIN_PRICE:
+                if k is None or np.isnan(px) or not (panel.raw_open[t, k] >= MIN_PRICE):
                     reason = "no_entry_bar"
                 elif tk in held:
                     reason = "already_held"
