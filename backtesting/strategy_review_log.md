@@ -1700,3 +1700,70 @@ Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% 
 | — | W1, S3-V1, S3-V2 | See above | ⚪ | No action |
 
 *Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
+
+
+## 2026-10-17 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-10-12 (one new entry since the 2026-10-03 review; the week of 2026-10-05 has NO entry — see N1). `memory/strategy.md` read fresh and unchanged (`DRY_RUN: false`). Read-only reconciliation: Alpaca `/v2/positions` = `[]` vs `portfolio.md` FLAT → 0/0 PASS.*
+
+### What's new this cycle
+- **N1 — Outage / missing-review finding (NEW, 1 week flagged).** The routine suite was down 2026-10-06→10-14 (9 sessions) and the Fri 2026-10-09 weekly_review never ran. Nothing was caught by any alert; it was discovered afterwards from a market_close backlog note. Book was flat, so no P&L impact — but the same outage with open positions would mean no stops managed, no reconciliation.
+- Week of 2026-10-12: 0 fills, 100% cash (4th straight all-cash week). Portfolio 0.00% vs SPY −1.95% (cash helped this week).
+- New watchlist `pending_review`: **AA (Alcoa, +23.8% EPS surprise)**. KMX still unadjudicated (3rd week). GS (+30%) was fully researched and DROPPED (~5.5/10, faded beat, PT cuts) — discipline held.
+- `pead_health` realized_health_60d improved to −0.021% (n=387); still ELEVATED_BAR, fresh (expires 2026-10-22).
+- Verified-unfixed this run: `routines/weekly_review.md:32` says 11%; `pre_market.md:99` and `market_open.md:19` also say "currently 11%" (strategy.md = 20%). `grep -c CHRONIC_WATCH routines/pre_market.md` = 0. `health_threshold_pct` still 0.0. `portfolio.md` = 393,740 bytes (up from 375,708).
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted; no new data, not re-tested |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED**; re-surfaced again as a "standing carry-forward". Not re-tested. |
+| M7 — cash-drag / SPY sleeve | 0 | See below — newly STRONG by weeks-flagged but not backtested |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** Reasons: (1) `backtesting/data_cache/` is empty and no price-data fetch was made; (2) the only newly STRONG item (M7) is a portfolio-construction question, not a single rule change to the PEAD variant engine — a naive "SPY sleeve beats cash" test is trivially true in uptrends and would not meet the Step 4 out-of-sample / beat-the-benchmark discipline without a purpose-built sleeve-plus-PEAD script. Recommend the human explicitly commission it (see M7).
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% position cap in strategy.md, opening-range entry filter (Gate 6), S4 EDGAR shelf-registration scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert. Unchanged (count: 8). *Hygiene: lessons.md still lists S4/S5/S7b as pending carry-forwards although implemented.*
+
+### 🔴 STRONG
+- **N1 — Outage detection / heartbeat (NEW; promoted straight to STRONG on the "documented real loss pattern" clause: a 9-session silent outage + a skipped weekly_review).** Human applies this; this routine does not. **Recommend:** an external dead-man's switch (e.g. a scheduled check that posts to Discord if no routine commit lands on `main` within N hours on a market day, plus a weekly check that a weekly_review entry exists per past Friday). Highest urgency of the list because the risk is unbounded once positions are open. Not backtestable.
+- **S9 — Sizing text 11% vs 20%** — now **three** files: `routines/weekly_review.md:32`, `routines/pre_market.md:99`, `routines/market_open.md:19` (market_open/pre_market are live order-sizing instructions, so this is more than cosmetic). Flagged 14+ consecutive weeks. **Fix:** change `11%` → `20%` in all three (or, if 11% is actually intended, edit strategy.md instead — strategy.md wins until then).
+- **M6 — `portfolio.md` rotation.** 393,740 bytes (+18KB in two weeks). Archive embedded audit comments to a dated file under `memory/archive/`; needs human sign-off.
+- **M7 — Cash-drag / always-on core sleeve (PROMOTED MODERATE→STRONG: now 3 distinct weeks — Sep-21, Sep-28, Oct-12).** Four straight all-cash weeks (flat since 2026-09-24). Evidence is mixed: cash helped in the SPY −1.95% week and hurt in up weeks. Candidate supply, not capital, is binding. Not auto-backtested this cycle (see above). **Options for the human:** (a) accept all-cash lulls as discipline; (b) commission a sleeve+PEAD backtest across 2022-2024 / 2025 / 2026 YTD with SPY buy-and-hold as the benchmark and 2025+2026 as out-of-sample; no strategy.md wording is endorsed until that exists.
+- **S8 — Execution micro-gates vs fresh-print entries** (12+ weeks). Blocked: no intraday-bar backtest script. Human decides.
+- **S7 — `compute_pead_health.py` transport reliability.** Overlay stayed fresh (computed 2026-10-15). Recommend committing retry/backoff. Outage (N1) strengthens the case for a loud failure alert.
+- **S2 — `CHRONIC_WATCH` flag.** Still 0 mentions in pre_market.md. Verdict unchanged: implement.
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported (2026-06-30). Realized health now −0.021% — barely below the current 0.0 threshold, so the posture would flip to NORMAL on a tiny improvement either way. Recommendation unchanged: hold until S7 is durably fixed; no new data, not re-tested.
+- **S6 — Scheduler-gap investigation.** **Re-prioritized: the Oct 6–14 outage is exactly a scheduler gap; prior "15 clean weeks" no longer holds.** Fold into N1.
+- **M5 — Candidate-supply lane** (4+ weeks). The universe-cache screen-source gap keeps recurring: ≥10 S&P-constituent names (PAYC, NET, OKTA, SNOW, ANF, GNRC, KMX, AA, …) sit `pending_review` because they are absent from `universe.md`. Fixing the screen source / adjudicating the backlog is the cheapest candidate-supply lever. Not backtestable.
+
+### 🟡 MODERATE (not backtested)
+- **K1 — Watchlist adjudication (human action, not a rule):** KMX (+59.7%, 3rd week unadjudicated) and AA (+23.8%, commodity-cyclical caveat). Setting `active` is human-only; clearing rows stops the recurring re-flag.
+- **M1** Orphan stop queue (2 wks) · **M2** Max concurrent 8→10 (1 wk, moot at 0/8) · **M3** GTC stop behavior (1 wk) · **M4** Sizing-correction process (1 wk) — unchanged.
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded by the partial profit-lock.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped: **EXHAUSTED — needs new data or manual review.** Do not re-test without a materially new out-of-sample year or a walk-forward design.
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | N1 | Heartbeat / outage detection (+ S6 scheduler gap) | 🔴 STRONG (new) | Human sets up external dead-man's switch |
+| 2 | S9 | Fix 11%→20% in weekly_review:32, pre_market:99, market_open:19 | 🔴 STRONG (14 wks) | Human edit |
+| 3 | M7 | Cash-drag / core sleeve | 🔴 STRONG (promoted, 3 wks) | Human decides; commission sleeve+PEAD backtest if interested |
+| 4 | M5 | Candidate-supply lane / universe screen-source gap | 🔴 STRONG | Fix screen source; adjudicate K1 backlog |
+| 5 | M6 | portfolio.md archive (394KB) | 🔴 STRONG | Human sign-off |
+| 6 | S7 | Harden compute_pead_health.py | 🔴 STRONG | Commit retry/fallback |
+| 7 | S2 | CHRONIC_WATCH flag | 🔴 STRONG | Implement |
+| 8 | S8 | Execution micro-gates | 🔴 STRONG | Human decision |
+| 9 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Hold until S7 fixed |
+| 10 | K1 | KMX / AA adjudication | 🟡 human action | Review pending_review rows |
+| 11–14 | M1–M4 | | 🟡 | Unchanged |
+| — | W1, S3-V1, S3-V2 | | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
