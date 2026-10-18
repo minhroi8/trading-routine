@@ -1,10 +1,10 @@
 ---
-screened_on: 2026-10-15
-expires_on: 2026-10-22
-total_passed: 261
-total_rejected: 1235
+screened_on: 2026-10-18
+expires_on: 2026-10-25
+total_passed: 274
+total_rejected: 1258
 universe_scope: S&P 1500 (S&P 500 + S&P 400 + S&P 600)
-source_500: https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv
+source_500: https://en.wikipedia.org/wiki/List_of_S%26P_500_companies
 source_400: https://en.wikipedia.org/wiki/List_of_S%26P_400_companies
 source_600: https://en.wikipedia.org/wiki/List_of_S%26P_600_companies
 ---
@@ -33,264 +33,277 @@ Pre-computed list of tickers that pass `memory/strategy.md` universe filters:
 
 | ticker | last_price | avg_dollar_volume_20d | sector | cap_tier | earnings_date_next | screened_on |
 |--------|------------|-----------------------|--------|----------|--------------------|-------------|
-| A | $173.94 | $23,468,897 | Health Care | large | unknown | 2026-10-15 |
-| AAL | $11.79 | $28,739,192 | Industrials | mid | unknown | 2026-10-15 |
-| AAPL | $343.01 | $377,830,615 | Information Technology | large | unknown | 2026-10-15 |
-| ABBV | $283.55 | $47,191,946 | Health Care | large | unknown | 2026-10-15 |
-| ABNB | $167.15 | $38,871,520 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| ABT | $102.99 | $41,490,333 | Health Care | large | unknown | 2026-10-15 |
-| ACN | $214.99 | $70,027,571 | Information Technology | large | unknown | 2026-10-15 |
-| ADBE | $240.78 | $38,127,442 | Information Technology | large | unknown | 2026-10-15 |
-| ADI | $403.56 | $42,265,055 | Information Technology | large | unknown | 2026-10-15 |
-| ADP | $280.48 | $25,343,252 | Industrials | large | unknown | 2026-10-15 |
-| ADSK | $231.21 | $28,194,716 | Information Technology | large | unknown | 2026-10-15 |
-| AKAM | $91.66 | $28,002,893 | Information Technology | large | unknown | 2026-10-15 |
-| ALL | $236.15 | $31,260,160 | Financials | large | unknown | 2026-10-15 |
-| AMAT | $446.63 | $133,242,217 | Information Technology | large | unknown | 2026-10-15 |
-| AMD | $570.96 | $341,095,197 | Information Technology | large | unknown | 2026-10-15 |
-| AMGN | $426.27 | $49,370,773 | Health Care | large | unknown | 2026-10-15 |
-| AMT | $179.47 | $23,948,314 | Real Estate | large | unknown | 2026-10-15 |
-| AMZN | $254.18 | $279,808,904 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| ANET | $195.44 | $49,531,948 | Information Technology | large | unknown | 2026-10-15 |
-| AON | $275.35 | $31,279,255 | Financials | large | unknown | 2026-10-15 |
-| APH | $82.66 | $46,047,536 | Information Technology | large | unknown | 2026-10-15 |
-| APO | $113.39 | $24,327,312 | Financials | large | unknown | 2026-10-15 |
-| APP | $262.28 | $58,993,336 | Information Technology | large | unknown | 2026-10-15 |
-| AVGO | $346.34 | $240,077,058 | Information Technology | large | unknown | 2026-10-15 |
-| AXP | $306.82 | $41,670,271 | Financials | large | unknown | 2026-10-15 |
-| AZO | $2912.18 | $62,836,768 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| BA | $184.58 | $64,839,599 | Industrials | large | unknown | 2026-10-15 |
-| BAC | $51.41 | $148,049,782 | Financials | large | unknown | 2026-10-15 |
-| BKNG | $160.68 | $91,784,823 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| BKR | $55.38 | $20,547,404 | Energy | large | unknown | 2026-10-15 |
-| BLK | $1074.88 | $33,930,686 | Financials | large | unknown | 2026-10-15 |
-| BMY | $59.28 | $53,793,440 | Health Care | large | unknown | 2026-10-15 |
-| BRK.B | $526.55 | $81,418,445 | Financials | large | unknown | 2026-10-15 |
-| BSX | $43.01 | $57,113,595 | Health Care | large | unknown | 2026-10-15 |
-| BURL | $263.20 | $26,543,370 | Consumer Discretionary | mid | unknown | 2026-10-15 |
-| BX | $106.19 | $26,306,870 | Financials | large | unknown | 2026-10-15 |
-| C | $122.26 | $55,035,402 | Financials | large | unknown | 2026-10-15 |
-| CASY | $653.25 | $21,797,490 | Consumer Staples | large | unknown | 2026-10-15 |
-| CAT | $748.38 | $82,048,549 | Industrials | large | unknown | 2026-10-15 |
-| CB | $350.30 | $23,142,193 | Financials | large | unknown | 2026-10-15 |
-| CBOE | $300.97 | $21,298,486 | Financials | large | unknown | 2026-10-15 |
-| CCL | $25.98 | $38,469,131 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| CDE | $14.99 | $24,409,207 | Materials | mid | unknown | 2026-10-15 |
-| CDNS | $329.51 | $44,592,884 | Information Technology | large | unknown | 2026-10-15 |
-| CEG | $279.66 | $43,707,430 | Utilities | large | unknown | 2026-10-15 |
-| CI | $289.55 | $20,319,905 | Health Care | large | unknown | 2026-10-15 |
-| CIEN | $359.42 | $53,567,850 | Information Technology | large | unknown | 2026-10-15 |
-| CL | $92.82 | $23,524,698 | Consumer Staples | large | unknown | 2026-10-15 |
-| CMCSA | $21.06 | $39,106,028 | Communication Services | large | unknown | 2026-10-15 |
-| CME | $285.62 | $24,539,909 | Financials | large | unknown | 2026-10-15 |
-| CMG | $30.52 | $42,020,574 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| CMI | $526.00 | $31,258,606 | Industrials | large | unknown | 2026-10-15 |
-| CNP | $39.69 | $21,317,695 | Utilities | large | unknown | 2026-10-15 |
-| COF | $194.40 | $34,026,090 | Financials | large | unknown | 2026-10-15 |
-| COHR | $263.24 | $80,954,240 | Information Technology | large | unknown | 2026-10-15 |
-| COIN | $172.87 | $47,371,284 | Financials | large | unknown | 2026-10-15 |
-| COP | $142.33 | $35,260,841 | Energy | large | unknown | 2026-10-15 |
-| COR | $336.10 | $21,216,194 | Health Care | large | unknown | 2026-10-15 |
-| COST | $982.38 | $87,732,399 | Consumer Staples | large | unknown | 2026-10-15 |
-| CRH | $79.19 | $21,774,275 | Materials | large | unknown | 2026-10-15 |
-| CRL | $301.90 | $21,168,896 | Health Care | large | unknown | 2026-10-15 |
-| CRM | $236.03 | $86,053,117 | Information Technology | large | unknown | 2026-10-15 |
-| CRWD | $249.35 | $78,174,497 | Information Technology | large | unknown | 2026-10-15 |
-| CSCO | $113.67 | $77,462,693 | Information Technology | large | unknown | 2026-10-15 |
-| CSX | $48.31 | $41,042,951 | Industrials | large | unknown | 2026-10-15 |
-| CTSH | $62.51 | $20,135,954 | Information Technology | large | unknown | 2026-10-15 |
-| CTVA | $13.40 | $21,635,355 | Materials | large | unknown | 2026-10-15 |
-| CVNA | $58.03 | $26,982,444 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| CVS | $90.44 | $47,996,319 | Health Care | large | unknown | 2026-10-15 |
-| CVX | $222.09 | $65,017,575 | Energy | large | unknown | 2026-10-15 |
-| D | $62.81 | $24,183,548 | Utilities | large | unknown | 2026-10-15 |
-| DAL | $76.66 | $30,401,587 | Industrials | large | unknown | 2026-10-15 |
-| DASH | $183.93 | $46,829,747 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| DDOG | $269.29 | $43,994,894 | Information Technology | large | unknown | 2026-10-15 |
-| DE | $651.12 | $44,375,862 | Industrials | large | unknown | 2026-10-15 |
-| DELL | $507.38 | $107,095,754 | Information Technology | large | unknown | 2026-10-15 |
-| DHI | $133.65 | $23,815,617 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| DHR | $224.74 | $59,343,782 | Health Care | large | unknown | 2026-10-15 |
-| DIS | $109.01 | $45,126,754 | Communication Services | large | unknown | 2026-10-15 |
-| DKS | $136.98 | $22,491,586 | Consumer Discretionary | mid | unknown | 2026-10-15 |
-| DT | $63.58 | $26,177,771 | Information Technology | mid | unknown | 2026-10-15 |
-| DUK | $119.65 | $22,066,229 | Utilities | large | unknown | 2026-10-15 |
-| DVN | $49.92 | $37,846,646 | Energy | large | unknown | 2026-10-15 |
-| ELV | $428.10 | $27,509,775 | Health Care | large | unknown | 2026-10-15 |
-| EMR | $160.97 | $20,569,028 | Industrials | large | unknown | 2026-10-15 |
-| EOG | $154.17 | $20,262,902 | Energy | large | unknown | 2026-10-15 |
-| EQIX | $995.82 | $29,889,253 | Real Estate | large | unknown | 2026-10-15 |
-| EQT | $52.77 | $25,490,150 | Energy | large | unknown | 2026-10-15 |
-| ETN | $408.71 | $48,535,314 | Industrials | large | unknown | 2026-10-15 |
-| EXPE | $274.77 | $34,041,882 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| F | $12.05 | $22,069,163 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| FANG | $197.55 | $31,249,334 | Energy | large | unknown | 2026-10-15 |
-| FAST | $52.02 | $24,921,709 | Industrials | large | unknown | 2026-10-15 |
-| FCX | $69.61 | $39,588,557 | Materials | large | unknown | 2026-10-15 |
-| FDX | $291.22 | $21,689,367 | Industrials | large | unknown | 2026-10-15 |
-| FICO | $719.53 | $36,589,656 | Information Technology | large | unknown | 2026-10-15 |
-| FITB | $49.67 | $33,052,364 | Financials | large | unknown | 2026-10-15 |
-| FIX | $1541.13 | $32,026,652 | Industrials | large | unknown | 2026-10-15 |
-| FN | $393.28 | $23,568,265 | Information Technology | mid | unknown | 2026-10-15 |
-| FTNT | $184.11 | $22,369,629 | Information Technology | large | unknown | 2026-10-15 |
-| GD | $334.64 | $22,286,462 | Industrials | large | unknown | 2026-10-15 |
-| GE | $307.05 | $55,160,201 | Industrials | large | unknown | 2026-10-15 |
-| GEN | $23.80 | $20,910,371 | Information Technology | large | unknown | 2026-10-15 |
-| GEV | $941.67 | $83,784,608 | Industrials | large | unknown | 2026-10-15 |
-| GILD | $153.56 | $35,506,733 | Health Care | large | unknown | 2026-10-15 |
-| GIS | $32.14 | $21,544,150 | Consumer Staples | large | unknown | 2026-10-15 |
-| GLW | $140.93 | $47,299,835 | Information Technology | large | unknown | 2026-10-15 |
-| GM | $83.02 | $42,719,766 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| GOOG | $343.76 | $137,281,612 | Communication Services | large | unknown | 2026-10-15 |
-| GOOGL | $347.78 | $261,718,887 | Communication Services | large | unknown | 2026-10-15 |
-| GS | $878.69 | $86,165,268 | Financials | large | unknown | 2026-10-15 |
-| GWW | $1330.09 | $22,981,859 | Industrials | large | unknown | 2026-10-15 |
-| HAL | $32.84 | $21,284,469 | Energy | large | unknown | 2026-10-15 |
-| HBAN | $15.10 | $25,989,900 | Financials | large | unknown | 2026-10-15 |
-| HCA | $470.46 | $27,406,206 | Health Care | large | unknown | 2026-10-15 |
-| HD | $295.47 | $77,602,770 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| HLT | $328.01 | $33,302,508 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| HON | $207.66 | $20,165,410 | Industrials | large | unknown | 2026-10-15 |
-| HOOD | $101.09 | $64,070,548 | Financials | large | unknown | 2026-10-15 |
-| HPE | $63.17 | $59,790,478 | Information Technology | large | unknown | 2026-10-15 |
-| HPQ | $30.46 | $29,132,636 | Information Technology | large | unknown | 2026-10-15 |
-| HUM | $427.92 | $36,688,540 | Health Care | large | unknown | 2026-10-15 |
-| HWM | $217.46 | $33,337,991 | Industrials | large | unknown | 2026-10-15 |
-| IBM | $228.00 | $41,866,633 | Information Technology | large | unknown | 2026-10-15 |
-| ICE | $155.12 | $23,400,774 | Financials | large | unknown | 2026-10-15 |
-| INTC | $98.11 | $293,606,712 | Information Technology | large | unknown | 2026-10-15 |
-| INTU | $310.51 | $48,807,914 | Information Technology | large | unknown | 2026-10-15 |
-| IQV | $262.10 | $23,313,721 | Health Care | large | unknown | 2026-10-15 |
-| IR | $77.93 | $20,988,203 | Industrials | large | unknown | 2026-10-15 |
-| ISRG | $420.32 | $41,558,978 | Health Care | large | unknown | 2026-10-15 |
-| JBL | $293.92 | $31,804,073 | Information Technology | large | unknown | 2026-10-15 |
-| JCI | $152.43 | $23,494,580 | Industrials | large | unknown | 2026-10-15 |
-| JNJ | $253.91 | $73,953,168 | Health Care | large | unknown | 2026-10-15 |
-| JPM | $335.29 | $100,671,586 | Financials | large | unknown | 2026-10-15 |
-| KDP | $33.13 | $25,069,535 | Consumer Staples | large | unknown | 2026-10-15 |
-| KEYS | $357.33 | $21,415,960 | Information Technology | large | unknown | 2026-10-15 |
-| KKR | $85.53 | $25,549,769 | Financials | large | unknown | 2026-10-15 |
-| KLAC | $178.74 | $63,071,013 | Information Technology | large | unknown | 2026-10-15 |
-| KMI | $33.38 | $26,436,194 | Energy | large | unknown | 2026-10-15 |
-| KO | $91.81 | $90,361,172 | Consumer Staples | large | unknown | 2026-10-15 |
-| KR | $63.09 | $31,423,508 | Consumer Staples | large | unknown | 2026-10-15 |
-| KVUE | $18.00 | $24,934,266 | Consumer Staples | large | unknown | 2026-10-15 |
-| LEN | $73.53 | $22,710,181 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| LIN | $492.81 | $50,528,607 | Materials | large | unknown | 2026-10-15 |
-| LITE | $896.58 | $158,320,429 | Information Technology | large | unknown | 2026-10-15 |
-| LLY | $1210.90 | $104,865,624 | Health Care | large | unknown | 2026-10-15 |
-| LMT | $522.10 | $21,317,857 | Industrials | large | unknown | 2026-10-15 |
-| LOW | $188.35 | $22,515,334 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| LRCX | $286.72 | $117,600,431 | Information Technology | large | unknown | 2026-10-15 |
-| MA | $603.29 | $82,474,118 | Financials | large | unknown | 2026-10-15 |
-| MAR | $371.95 | $21,169,784 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| MCD | $238.25 | $50,028,416 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| MCHP | $71.27 | $25,224,439 | Information Technology | large | unknown | 2026-10-15 |
-| MCK | $978.24 | $32,945,006 | Health Care | large | unknown | 2026-10-15 |
-| MDLZ | $62.59 | $29,596,767 | Consumer Staples | large | unknown | 2026-10-15 |
-| MDT | $94.25 | $131,131,043 | Health Care | large | unknown | 2026-10-15 |
-| META | $738.24 | $554,674,213 | Communication Services | large | unknown | 2026-10-15 |
-| MLM | $470.71 | $25,497,410 | Materials | large | unknown | 2026-10-15 |
-| MMM | $164.35 | $20,029,813 | Industrials | large | unknown | 2026-10-15 |
-| MNST | $44.23 | $28,747,628 | Consumer Staples | large | unknown | 2026-10-15 |
-| MO | $73.16 | $29,680,391 | Consumer Staples | large | unknown | 2026-10-15 |
-| MPC | $484.80 | $47,405,980 | Energy | large | unknown | 2026-10-15 |
-| MPWR | $1242.09 | $44,415,862 | Information Technology | large | unknown | 2026-10-15 |
-| MRK | $147.50 | $53,135,118 | Health Care | large | unknown | 2026-10-15 |
-| MRNA | $225.56 | $96,900,470 | Health Care | large | unknown | 2026-10-15 |
-| MRSH | $178.43 | $22,283,884 | Financials | large | unknown | 2026-10-15 |
-| MS | $181.58 | $57,356,068 | Financials | large | unknown | 2026-10-15 |
-| MSFT | $534.04 | $375,515,561 | Information Technology | large | unknown | 2026-10-15 |
-| MSI | $451.36 | $20,001,850 | Information Technology | large | unknown | 2026-10-15 |
-| MTD | $1610.69 | $22,268,162 | Health Care | large | unknown | 2026-10-15 |
-| MTSI | $291.50 | $23,102,067 | Information Technology | mid | unknown | 2026-10-15 |
-| MTZ | $194.37 | $23,866,224 | Industrials | mid | unknown | 2026-10-15 |
-| MU | $914.32 | $616,515,205 | Information Technology | large | unknown | 2026-10-15 |
-| NEE | $78.41 | $62,703,851 | Utilities | large | unknown | 2026-10-15 |
-| NEM | $111.53 | $26,616,863 | Materials | large | unknown | 2026-10-15 |
-| NFLX | $70.58 | $135,392,510 | Communication Services | large | unknown | 2026-10-15 |
-| NKE | $35.32 | $74,582,063 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| NOC | $495.63 | $28,170,266 | Industrials | large | unknown | 2026-10-15 |
-| NOW | $139.93 | $57,418,934 | Information Technology | large | unknown | 2026-10-15 |
-| NTAP | $222.25 | $30,117,530 | Information Technology | large | unknown | 2026-10-15 |
-| NVDA | $221.49 | $650,881,822 | Information Technology | large | unknown | 2026-10-15 |
-| NXPI | $220.87 | $25,089,964 | Information Technology | large | unknown | 2026-10-15 |
-| O | $55.18 | $28,198,226 | Real Estate | large | unknown | 2026-10-15 |
-| OKTA | $211.84 | $36,233,419 | Information Technology | mid | unknown | 2026-10-15 |
-| ON | $73.33 | $37,367,015 | Information Technology | large | unknown | 2026-10-15 |
-| ORCL | $130.56 | $125,907,634 | Information Technology | large | unknown | 2026-10-15 |
-| OXY | $61.42 | $39,140,589 | Energy | large | unknown | 2026-10-15 |
-| PANW | $374.90 | $80,012,366 | Information Technology | large | unknown | 2026-10-15 |
-| PCAR | $108.58 | $20,519,937 | Industrials | large | unknown | 2026-10-15 |
-| PCG | $13.16 | $29,590,647 | Utilities | large | unknown | 2026-10-15 |
-| PEG | $70.57 | $21,338,362 | Utilities | large | unknown | 2026-10-15 |
-| PEP | $129.34 | $53,284,494 | Consumer Staples | large | unknown | 2026-10-15 |
-| PFE | $29.23 | $44,640,971 | Health Care | large | unknown | 2026-10-15 |
-| PG | $156.56 | $44,987,101 | Consumer Staples | large | unknown | 2026-10-15 |
-| PGR | $213.59 | $41,960,357 | Financials | large | unknown | 2026-10-15 |
-| PH | $956.78 | $27,448,263 | Industrials | large | unknown | 2026-10-15 |
-| PLD | $130.56 | $21,062,176 | Real Estate | large | unknown | 2026-10-15 |
-| PLTR | $200.97 | $103,032,972 | Information Technology | large | unknown | 2026-10-15 |
-| PM | $205.60 | $34,430,410 | Consumer Staples | large | unknown | 2026-10-15 |
-| PSX | $297.35 | $54,384,951 | Energy | large | unknown | 2026-10-15 |
-| PTC | $193.59 | $42,023,415 | Information Technology | large | unknown | 2026-10-15 |
-| PWR | $660.59 | $35,896,239 | Industrials | large | unknown | 2026-10-15 |
-| PYPL | $56.12 | $26,079,563 | Financials | large | unknown | 2026-10-15 |
-| QCOM | $172.71 | $66,621,709 | Information Technology | large | unknown | 2026-10-15 |
-| RCL | $274.35 | $50,075,070 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| REGN | $778.86 | $28,406,984 | Health Care | large | unknown | 2026-10-15 |
-| ROST | $230.66 | $23,002,620 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| RTX | $186.43 | $30,680,997 | Industrials | large | unknown | 2026-10-15 |
-| SBUX | $93.31 | $38,198,513 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| SCHW | $96.78 | $42,248,201 | Financials | large | unknown | 2026-10-15 |
-| SHW | $324.51 | $23,112,858 | Materials | large | unknown | 2026-10-15 |
-| SLB | $48.54 | $42,293,143 | Energy | large | unknown | 2026-10-15 |
-| SMCI | $35.80 | $58,793,401 | Information Technology | large | unknown | 2026-10-15 |
-| SMTC | $160.29 | $30,607,178 | Information Technology | mid | unknown | 2026-10-15 |
-| SNDK | $1403.36 | $312,672,439 | Information Technology | large | unknown | 2026-10-15 |
-| SNPS | $479.92 | $54,762,556 | Information Technology | large | unknown | 2026-10-15 |
-| SO | $89.37 | $23,529,120 | Utilities | large | unknown | 2026-10-15 |
-| SPGI | $408.61 | $32,958,218 | Financials | large | unknown | 2026-10-15 |
-| STT | $166.79 | $22,365,301 | Financials | large | unknown | 2026-10-15 |
-| STX | $713.12 | $159,958,968 | Information Technology | large | unknown | 2026-10-15 |
-| SWKS | $76.89 | $26,478,154 | Information Technology | large | unknown | 2026-10-15 |
-| SYK | $281.68 | $41,016,966 | Health Care | large | unknown | 2026-10-15 |
-| T | $23.09 | $54,544,675 | Communication Services | large | unknown | 2026-10-15 |
-| TDG | $1109.12 | $25,562,106 | Industrials | large | unknown | 2026-10-15 |
-| TEL | $210.30 | $20,434,534 | Information Technology | large | unknown | 2026-10-15 |
-| TER | $359.29 | $36,862,178 | Information Technology | large | unknown | 2026-10-15 |
-| TFC | $45.59 | $25,447,404 | Financials | large | unknown | 2026-10-15 |
-| TGT | $155.22 | $28,702,790 | Consumer Staples | large | unknown | 2026-10-15 |
-| TJX | $142.83 | $63,980,371 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| TLN | $358.28 | $25,402,633 | Utilities | mid | unknown | 2026-10-15 |
-| TMO | $673.27 | $93,109,914 | Health Care | large | unknown | 2026-10-15 |
-| TMUS | $157.84 | $51,024,632 | Communication Services | large | unknown | 2026-10-15 |
-| TSCO | $32.74 | $21,652,420 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| TSLA | $367.41 | $239,227,148 | Consumer Discretionary | large | unknown | 2026-10-15 |
-| TT | $471.30 | $39,646,022 | Industrials | large | unknown | 2026-10-15 |
-| TTWO | $201.23 | $27,495,314 | Communication Services | large | unknown | 2026-10-15 |
-| TXN | $280.71 | $59,909,422 | Information Technology | large | unknown | 2026-10-15 |
-| UAL | $98.90 | $23,275,267 | Industrials | large | unknown | 2026-10-15 |
-| UBER | $69.31 | $48,664,616 | Industrials | large | unknown | 2026-10-15 |
-| UNH | $395.69 | $91,943,535 | Health Care | large | unknown | 2026-10-15 |
-| UNP | $286.55 | $33,721,110 | Industrials | large | unknown | 2026-10-15 |
-| URI | $1034.24 | $35,168,712 | Industrials | large | unknown | 2026-10-15 |
-| USB | $56.29 | $32,532,860 | Financials | large | unknown | 2026-10-15 |
-| UTHR | $540.05 | $31,050,033 | Health Care | mid | unknown | 2026-10-15 |
-| V | $391.42 | $91,242,791 | Financials | large | unknown | 2026-10-15 |
-| VLO | $459.90 | $67,937,507 | Energy | large | unknown | 2026-10-15 |
-| VRT | $222.84 | $56,203,380 | Industrials | large | unknown | 2026-10-15 |
-| VRTX | $500.06 | $26,418,207 | Health Care | large | unknown | 2026-10-15 |
-| VST | $151.77 | $43,351,956 | Utilities | large | unknown | 2026-10-15 |
-| VZ | $44.42 | $65,137,886 | Communication Services | large | unknown | 2026-10-15 |
-| WAT | $436.92 | $23,331,342 | Health Care | large | unknown | 2026-10-15 |
-| WBD | $30.97 | $102,720,922 | Communication Services | large | unknown | 2026-10-15 |
-| WDC | $364.06 | $141,277,435 | Information Technology | large | unknown | 2026-10-15 |
-| WELL | $232.22 | $38,457,497 | Real Estate | large | unknown | 2026-10-15 |
-| WFC | $80.89 | $74,576,945 | Financials | large | unknown | 2026-10-15 |
-| WM | $215.73 | $21,486,606 | Industrials | large | unknown | 2026-10-15 |
-| WMB | $72.81 | $27,815,583 | Energy | large | unknown | 2026-10-15 |
-| WMT | $116.20 | $88,196,144 | Consumer Staples | large | unknown | 2026-10-15 |
-| XEL | $75.39 | $24,767,177 | Utilities | large | unknown | 2026-10-15 |
-| XOM | $176.97 | $62,589,644 | Energy | large | unknown | 2026-10-15 |
-| YUM | $146.68 | $22,138,271 | Consumer Discretionary | large | unknown | 2026-10-15 |
+| A | $172.97 | 23,850,223 | Unknown | large | unknown | 2026-10-18 |
+| AAL | $11.88 | 29,348,096 | Industrials | mid | unknown | 2026-10-18 |
+| AAPL | $343.39 | 387,572,513 | Information Technology | large | unknown | 2026-10-18 |
+| ABBV | $285.46 | 53,648,954 | Health Care | large | unknown | 2026-10-18 |
+| ABNB | $173.68 | 41,774,341 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| ABT | $104.88 | 41,677,569 | Health Care | large | unknown | 2026-10-18 |
+| ACN | $229.68 | 76,061,594 | Information Technology | large | unknown | 2026-10-18 |
+| ADBE | $245.25 | 39,647,680 | Information Technology | large | unknown | 2026-10-18 |
+| ADI | $395.32 | 44,594,661 | Information Technology | large | unknown | 2026-10-18 |
+| ADP | $289.01 | 26,059,551 | Industrials | large | unknown | 2026-10-18 |
+| ADSK | $239.98 | 29,253,830 | Information Technology | large | unknown | 2026-10-18 |
+| AKAM | $87.84 | 29,925,212 | Information Technology | large | unknown | 2026-10-18 |
+| ALL | $247.94 | 31,683,102 | Unknown | large | unknown | 2026-10-18 |
+| AMAT | $409.25 | 138,359,542 | Information Technology | large | unknown | 2026-10-18 |
+| AMD | $528.77 | 341,951,663 | Information Technology | large | unknown | 2026-10-18 |
+| AMGN | $432.63 | 48,672,299 | Health Care | large | unknown | 2026-10-18 |
+| AMT | $185.21 | 24,094,483 | Real Estate | large | unknown | 2026-10-18 |
+| AMZN | $249.92 | 294,052,399 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| ANET | $177.02 | 51,871,014 | Information Technology | large | unknown | 2026-10-18 |
+| AON | $292.58 | 31,707,384 | Financials | large | unknown | 2026-10-18 |
+| APH | $79.37 | 47,654,963 | Information Technology | large | unknown | 2026-10-18 |
+| APO | $110.83 | 25,417,799 | Financials | large | unknown | 2026-10-18 |
+| APP | $266.24 | 57,795,489 | Unknown | large | unknown | 2026-10-18 |
+| AVGO | $328.69 | 246,780,634 | Information Technology | large | unknown | 2026-10-18 |
+| AXP | $313.62 | 39,735,454 | Unknown | large | unknown | 2026-10-18 |
+| AZO | $3121.19 | 61,428,513 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| BA | $190.07 | 62,944,837 | Industrials | large | unknown | 2026-10-18 |
+| BAC | $51.23 | 156,462,754 | Financials | large | unknown | 2026-10-18 |
+| BE | $221.25 | 100,199,927 | Unknown | large | unknown | 2026-10-18 |
+| BKNG | $163.42 | 92,473,438 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| BKR | $55.70 | 20,295,768 | Unknown | large | unknown | 2026-10-18 |
+| BLK | $1133.32 | 39,732,551 | Unknown | large | unknown | 2026-10-18 |
+| BMY | $59.83 | 52,486,181 | Health Care | large | unknown | 2026-10-18 |
+| BNY | $143.37 | 27,266,572 | Unknown | large | unknown | 2026-10-18 |
+| BRK.B | $532.03 | 73,939,368 | Financials | large | unknown | 2026-10-18 |
+| BSX | $44.38 | 55,498,896 | Health Care | large | unknown | 2026-10-18 |
+| BURL | $262.58 | 27,956,885 | Unknown | mid | unknown | 2026-10-18 |
+| BX | $106.64 | 27,815,414 | Financials | large | unknown | 2026-10-18 |
+| C | $124.26 | 55,399,478 | Financials | large | unknown | 2026-10-18 |
+| CASY | $689.37 | 22,436,317 | Consumer Staples | large | unknown | 2026-10-18 |
+| CAT | $730.84 | 86,271,017 | Industrials | large | unknown | 2026-10-18 |
+| CB | $359.77 | 24,013,083 | Financials | large | unknown | 2026-10-18 |
+| CBOE | $315.09 | 22,799,344 | Unknown | large | unknown | 2026-10-18 |
+| CCL | $25.90 | 40,005,174 | Unknown | large | unknown | 2026-10-18 |
+| CDE | $15.46 | 24,735,993 | Unknown | mid | unknown | 2026-10-18 |
+| CDNS | $319.61 | 48,394,468 | Unknown | large | unknown | 2026-10-18 |
+| CEG | $271.36 | 44,299,372 | Unknown | large | unknown | 2026-10-18 |
+| CFG | $63.35 | 20,032,858 | Financials | large | unknown | 2026-10-18 |
+| CI | $302.33 | 21,948,465 | Health Care | large | unknown | 2026-10-18 |
+| CIEN | $332.98 | 53,253,935 | Unknown | large | unknown | 2026-10-18 |
+| CL | $94.10 | 25,637,050 | Consumer Staples | large | unknown | 2026-10-18 |
+| CMCSA | $21.91 | 37,591,080 | Unknown | large | unknown | 2026-10-18 |
+| CME | $293.97 | 24,566,107 | Financials | large | unknown | 2026-10-18 |
+| CMG | $29.87 | 43,903,126 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| CMI | $531.16 | 33,381,989 | Industrials | large | unknown | 2026-10-18 |
+| CNP | $40.55 | 21,998,398 | Unknown | large | unknown | 2026-10-18 |
+| COF | $201.77 | 36,102,435 | Financials | large | unknown | 2026-10-18 |
+| COHR | $233.00 | 82,798,417 | Unknown | large | unknown | 2026-10-18 |
+| COIN | $173.18 | 44,951,819 | Unknown | large | unknown | 2026-10-18 |
+| COP | $146.51 | 34,837,918 | Energy | large | unknown | 2026-10-18 |
+| COR | $340.81 | 22,241,633 | Unknown | large | unknown | 2026-10-18 |
+| COST | $989.34 | 94,089,647 | Consumer Staples | large | unknown | 2026-10-18 |
+| CRH | $83.65 | 22,666,691 | Unknown | large | unknown | 2026-10-18 |
+| CRL | $300.23 | 21,507,056 | Health Care | large | unknown | 2026-10-18 |
+| CRM | $240.77 | 79,963,677 | Information Technology | large | unknown | 2026-10-18 |
+| CRWD | $227.30 | 79,219,203 | Information Technology | large | unknown | 2026-10-18 |
+| CSCO | $107.39 | 78,190,543 | Information Technology | large | unknown | 2026-10-18 |
+| CSX | $48.70 | 40,396,336 | Industrials | large | unknown | 2026-10-18 |
+| CTSH | $66.04 | 21,348,422 | Information Technology | large | unknown | 2026-10-18 |
+| CTVA | $12.88 | 20,755,440 | Materials | mid | unknown | 2026-10-18 |
+| CVNA | $58.85 | 28,599,456 | Unknown | large | unknown | 2026-10-18 |
+| CVS | $92.39 | 48,971,002 | Health Care | large | unknown | 2026-10-18 |
+| CVX | $224.99 | 64,555,586 | Energy | large | unknown | 2026-10-18 |
+| D | $63.56 | 25,572,091 | Utilities | large | unknown | 2026-10-18 |
+| DAL | $75.37 | 30,066,884 | Industrials | large | unknown | 2026-10-18 |
+| DASH | $189.12 | 46,117,096 | Unknown | large | unknown | 2026-10-18 |
+| DDOG | $247.03 | 44,581,957 | Unknown | large | unknown | 2026-10-18 |
+| DE | $641.46 | 46,087,534 | Industrials | large | unknown | 2026-10-18 |
+| DELL | $451.44 | 120,199,656 | Information Technology | large | unknown | 2026-10-18 |
+| DHI | $139.38 | 23,570,220 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| DHR | $229.01 | 59,114,529 | Health Care | large | unknown | 2026-10-18 |
+| DIS | $110.59 | 45,224,528 | Communication Services | large | unknown | 2026-10-18 |
+| DKS | $144.31 | 24,467,330 | Consumer Discretionary | mid | unknown | 2026-10-18 |
+| DT | $61.12 | 25,601,106 | Unknown | mid | unknown | 2026-10-18 |
+| DUK | $121.48 | 22,971,917 | Utilities | large | unknown | 2026-10-18 |
+| DVN | $50.73 | 36,529,862 | Energy | large | unknown | 2026-10-18 |
+| ELV | $428.56 | 28,993,749 | Unknown | large | unknown | 2026-10-18 |
+| EMR | $161.41 | 21,567,756 | Industrials | large | unknown | 2026-10-18 |
+| EOG | $158.06 | 21,524,129 | Energy | large | unknown | 2026-10-18 |
+| EQIX | $986.02 | 32,218,985 | Real Estate | large | unknown | 2026-10-18 |
+| EQT | $54.33 | 26,007,952 | Unknown | large | unknown | 2026-10-18 |
+| ETN | $391.20 | 50,442,464 | Industrials | large | unknown | 2026-10-18 |
+| EW | $86.61 | 20,332,430 | Health Care | large | unknown | 2026-10-18 |
+| EXPE | $289.01 | 35,508,139 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| F | $12.42 | 21,974,369 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| FANG | $204.03 | 29,240,593 | Unknown | large | unknown | 2026-10-18 |
+| FAST | $51.02 | 26,875,700 | Industrials | large | unknown | 2026-10-18 |
+| FCX | $69.50 | 40,589,702 | Materials | large | unknown | 2026-10-18 |
+| FDX | $293.55 | 21,573,895 | Industrials | large | unknown | 2026-10-18 |
+| FERG | $231.75 | 20,048,875 | Unknown | large | unknown | 2026-10-18 |
+| FICO | $770.96 | 38,157,114 | Information Technology | large | unknown | 2026-10-18 |
+| FITB | $50.39 | 33,343,417 | Financials | large | unknown | 2026-10-18 |
+| FIX | $1438.35 | 36,154,232 | Unknown | large | unknown | 2026-10-18 |
+| FN | $363.42 | 23,429,717 | Unknown | mid | unknown | 2026-10-18 |
+| FTNT | $169.10 | 21,793,356 | Information Technology | large | unknown | 2026-10-18 |
+| GD | $344.17 | 21,742,080 | Industrials | large | unknown | 2026-10-18 |
+| GE | $313.99 | 55,098,688 | Industrials | large | unknown | 2026-10-18 |
+| GEN | $24.14 | 20,791,467 | Information Technology | large | unknown | 2026-10-18 |
+| GEV | $920.54 | 88,140,840 | Industrials | large | unknown | 2026-10-18 |
+| GILD | $156.22 | 35,371,667 | Health Care | large | unknown | 2026-10-18 |
+| GIS | $33.12 | 22,292,028 | Consumer Staples | large | unknown | 2026-10-18 |
+| GLW | $131.96 | 47,062,305 | Information Technology | large | unknown | 2026-10-18 |
+| GM | $83.96 | 41,342,380 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| GOOG | $336.95 | 132,552,968 | Communication Services | large | unknown | 2026-10-18 |
+| GOOGL | $340.62 | 251,377,929 | Communication Services | large | unknown | 2026-10-18 |
+| GS | $880.50 | 82,607,669 | Financials | large | unknown | 2026-10-18 |
+| GWW | $1330.52 | 23,652,850 | Industrials | large | unknown | 2026-10-18 |
+| HAL | $33.51 | 20,579,563 | Energy | large | unknown | 2026-10-18 |
+| HBAN | $15.27 | 24,561,237 | Financials | large | unknown | 2026-10-18 |
+| HCA | $458.68 | 27,924,941 | Health Care | large | unknown | 2026-10-18 |
+| HD | $309.64 | 84,376,601 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| HLT | $345.01 | 35,056,306 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| HON | $211.45 | 20,151,029 | Industrials | large | unknown | 2026-10-18 |
+| HOOD | $98.89 | 63,049,289 | Unknown | large | unknown | 2026-10-18 |
+| HPE | $55.13 | 67,841,588 | Information Technology | large | unknown | 2026-10-18 |
+| HPQ | $30.01 | 28,123,602 | Information Technology | large | unknown | 2026-10-18 |
+| HUM | $413.06 | 37,711,065 | Health Care | large | unknown | 2026-10-18 |
+| HWM | $220.84 | 35,154,780 | Industrials | large | unknown | 2026-10-18 |
+| IBM | $232.12 | 39,316,088 | Information Technology | large | unknown | 2026-10-18 |
+| ICE | $161.62 | 24,488,956 | Financials | large | unknown | 2026-10-18 |
+| ILMN | $262.52 | 49,825,256 | Health Care | large | unknown | 2026-10-18 |
+| INTC | $89.77 | 287,464,111 | Information Technology | large | unknown | 2026-10-18 |
+| INTU | $325.20 | 49,120,492 | Information Technology | large | unknown | 2026-10-18 |
+| IQV | $266.89 | 22,798,128 | Health Care | large | unknown | 2026-10-18 |
+| IR | $77.81 | 21,003,504 | Industrials | large | unknown | 2026-10-18 |
+| ISRG | $426.91 | 40,922,096 | Health Care | large | unknown | 2026-10-18 |
+| JBL | $278.30 | 33,856,115 | Unknown | large | unknown | 2026-10-18 |
+| JCI | $145.50 | 25,860,126 | Industrials | large | unknown | 2026-10-18 |
+| JNJ | $255.53 | 79,133,715 | Health Care | large | unknown | 2026-10-18 |
+| JPM | $339.66 | 101,699,620 | Financials | large | unknown | 2026-10-18 |
+| KDP | $34.63 | 25,726,196 | Consumer Staples | large | unknown | 2026-10-18 |
+| KEYS | $331.21 | 23,511,224 | Information Technology | large | unknown | 2026-10-18 |
+| KKR | $86.05 | 26,999,207 | Unknown | large | unknown | 2026-10-18 |
+| KLAC | $165.74 | 66,791,659 | Information Technology | large | unknown | 2026-10-18 |
+| KMI | $34.19 | 25,212,302 | Energy | large | unknown | 2026-10-18 |
+| KO | $93.86 | 95,446,064 | Consumer Staples | large | unknown | 2026-10-18 |
+| KR | $63.62 | 30,433,346 | Consumer Staples | large | unknown | 2026-10-18 |
+| KVUE | $18.90 | 25,159,025 | Unknown | large | unknown | 2026-10-18 |
+| LEN | $77.10 | 23,091,033 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| LHX | $248.43 | 20,105,215 | Industrials | large | unknown | 2026-10-18 |
+| LIN | $498.57 | 51,410,166 | Materials | large | unknown | 2026-10-18 |
+| LITE | $823.01 | 168,103,527 | Unknown | large | unknown | 2026-10-18 |
+| LLY | $1257.32 | 116,800,117 | Health Care | large | unknown | 2026-10-18 |
+| LMT | $552.22 | 21,789,184 | Industrials | large | unknown | 2026-10-18 |
+| LOW | $197.30 | 25,408,637 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| LRCX | $263.91 | 123,178,050 | Information Technology | large | unknown | 2026-10-18 |
+| MA | $617.51 | 87,991,082 | Financials | large | unknown | 2026-10-18 |
+| MAR | $388.12 | 23,008,992 | Unknown | large | unknown | 2026-10-18 |
+| MCD | $242.91 | 52,098,357 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| MCHP | $73.84 | 29,836,608 | Information Technology | large | unknown | 2026-10-18 |
+| MCK | $1005.29 | 32,504,903 | Health Care | large | unknown | 2026-10-18 |
+| MCO | $485.00 | 20,880,431 | Financials | large | unknown | 2026-10-18 |
+| MDLZ | $63.92 | 32,169,734 | Consumer Staples | large | unknown | 2026-10-18 |
+| MDT | $94.77 | 134,334,693 | Health Care | large | unknown | 2026-10-18 |
+| META | $709.42 | 566,297,293 | Communication Services | large | unknown | 2026-10-18 |
+| MLM | $500.87 | 25,999,815 | Materials | large | unknown | 2026-10-18 |
+| MMM | $164.68 | 20,460,459 | Industrials | large | unknown | 2026-10-18 |
+| MNST | $45.74 | 30,699,808 | Consumer Staples | large | unknown | 2026-10-18 |
+| MO | $75.10 | 32,545,922 | Consumer Staples | large | unknown | 2026-10-18 |
+| MPC | $478.21 | 46,036,164 | Energy | large | unknown | 2026-10-18 |
+| MPWR | $1210.45 | 43,992,133 | Information Technology | large | unknown | 2026-10-18 |
+| MRK | $145.96 | 55,914,719 | Health Care | large | unknown | 2026-10-18 |
+| MRNA | $217.55 | 102,675,706 | Health Care | large | unknown | 2026-10-18 |
+| MRSH | $188.60 | 24,450,401 | Unknown | large | unknown | 2026-10-18 |
+| MRVL | $227.73 | 133,531,470 | Unknown | large | unknown | 2026-10-18 |
+| MS | $180.57 | 58,789,171 | Financials | large | unknown | 2026-10-18 |
+| MSFT | $528.99 | 381,947,407 | Information Technology | large | unknown | 2026-10-18 |
+| MSI | $463.25 | 20,909,758 | Information Technology | large | unknown | 2026-10-18 |
+| MTD | $1621.41 | 20,851,496 | Health Care | large | unknown | 2026-10-18 |
+| MTSI | $262.08 | 23,496,598 | Unknown | mid | unknown | 2026-10-18 |
+| MTZ | $191.09 | 21,467,444 | Unknown | mid | unknown | 2026-10-18 |
+| MU | $878.78 | 645,995,383 | Information Technology | large | unknown | 2026-10-18 |
+| NEE | $79.78 | 68,044,575 | Utilities | large | unknown | 2026-10-18 |
+| NEM | $118.60 | 27,367,723 | Materials | large | unknown | 2026-10-18 |
+| NFLX | $70.55 | 135,711,249 | Communication Services | large | unknown | 2026-10-18 |
+| NKE | $37.12 | 74,835,190 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| NOC | $519.97 | 29,569,118 | Industrials | large | unknown | 2026-10-18 |
+| NOW | $141.98 | 62,821,021 | Information Technology | large | unknown | 2026-10-18 |
+| NTAP | $203.79 | 30,912,592 | Information Technology | large | unknown | 2026-10-18 |
+| NVDA | $214.12 | 676,688,399 | Information Technology | large | unknown | 2026-10-18 |
+| NXPI | $229.52 | 27,287,036 | Unknown | large | unknown | 2026-10-18 |
+| O | $56.09 | 28,280,740 | Real Estate | large | unknown | 2026-10-18 |
+| OKTA | $187.19 | 39,387,642 | Information Technology | mid | unknown | 2026-10-18 |
+| ON | $72.00 | 36,175,571 | Information Technology | large | unknown | 2026-10-18 |
+| ORCL | $128.22 | 131,337,724 | Information Technology | large | unknown | 2026-10-18 |
+| OXY | $62.39 | 40,906,968 | Energy | large | unknown | 2026-10-18 |
+| P | $124.01 | 36,685,223 | Unknown | large | unknown | 2026-10-18 |
+| PANW | $341.94 | 81,297,644 | Unknown | large | unknown | 2026-10-18 |
+| PCG | $13.08 | 29,678,601 | Utilities | large | unknown | 2026-10-18 |
+| PEG | $71.50 | 21,461,099 | Utilities | large | unknown | 2026-10-18 |
+| PEP | $131.50 | 52,366,353 | Consumer Staples | large | unknown | 2026-10-18 |
+| PFE | $29.57 | 46,363,426 | Health Care | large | unknown | 2026-10-18 |
+| PG | $159.34 | 48,142,465 | Consumer Staples | large | unknown | 2026-10-18 |
+| PGR | $218.56 | 42,131,962 | Financials | large | unknown | 2026-10-18 |
+| PH | $963.66 | 30,733,925 | Industrials | large | unknown | 2026-10-18 |
+| PLD | $125.75 | 23,822,886 | Real Estate | large | unknown | 2026-10-18 |
+| PLTR | $186.03 | 110,134,151 | Unknown | large | unknown | 2026-10-18 |
+| PM | $204.93 | 39,368,157 | Consumer Staples | large | unknown | 2026-10-18 |
+| PNC | $217.41 | 21,801,883 | Financials | large | unknown | 2026-10-18 |
+| PSX | $293.39 | 53,073,026 | Energy | large | unknown | 2026-10-18 |
+| PTC | $192.92 | 45,179,502 | Information Technology | large | unknown | 2026-10-18 |
+| PWR | $631.62 | 37,978,608 | Industrials | large | unknown | 2026-10-18 |
+| PYPL | $56.70 | 27,531,493 | Financials | large | unknown | 2026-10-18 |
+| QCOM | $172.08 | 62,407,530 | Information Technology | large | unknown | 2026-10-18 |
+| RCL | $277.57 | 51,131,341 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| RDDT | $156.14 | 25,683,485 | Unknown | large | unknown | 2026-10-18 |
+| REGN | $791.25 | 29,153,803 | Health Care | large | unknown | 2026-10-18 |
+| ROST | $236.92 | 23,280,564 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| RTX | $193.95 | 30,671,679 | Industrials | large | unknown | 2026-10-18 |
+| SBUX | $97.52 | 39,947,561 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| SCHW | $91.95 | 45,644,657 | Financials | large | unknown | 2026-10-18 |
+| SHW | $334.99 | 25,118,457 | Materials | large | unknown | 2026-10-18 |
+| SLB | $49.51 | 42,575,174 | Energy | large | unknown | 2026-10-18 |
+| SMCI | $31.63 | 55,097,002 | Information Technology | large | unknown | 2026-10-18 |
+| SMTC | $136.73 | 31,552,342 | Information Technology | mid | unknown | 2026-10-18 |
+| SNDK | $1299.04 | 316,512,299 | Unknown | large | unknown | 2026-10-18 |
+| SNPS | $454.75 | 59,177,139 | Information Technology | large | unknown | 2026-10-18 |
+| SO | $91.17 | 24,405,611 | Utilities | large | unknown | 2026-10-18 |
+| SPGI | $429.50 | 35,272,821 | Financials | large | unknown | 2026-10-18 |
+| STT | $165.74 | 23,175,252 | Financials | large | unknown | 2026-10-18 |
+| STX | $639.19 | 177,257,957 | Information Technology | large | unknown | 2026-10-18 |
+| SWKS | $79.68 | 26,323,784 | Information Technology | large | unknown | 2026-10-18 |
+| SYK | $294.69 | 42,941,849 | Health Care | large | unknown | 2026-10-18 |
+| T | $23.43 | 56,506,418 | Communication Services | large | unknown | 2026-10-18 |
+| TDG | $1138.61 | 25,457,662 | Industrials | large | unknown | 2026-10-18 |
+| TEL | $212.52 | 21,182,117 | Information Technology | large | unknown | 2026-10-18 |
+| TER | $324.91 | 38,823,121 | Information Technology | large | unknown | 2026-10-18 |
+| TFC | $47.08 | 29,113,789 | Financials | large | unknown | 2026-10-18 |
+| TGT | $154.27 | 29,923,287 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| TJX | $147.32 | 61,160,645 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| TLN | $354.73 | 26,618,558 | Unknown | mid | unknown | 2026-10-18 |
+| TMO | $690.12 | 91,594,008 | Health Care | large | unknown | 2026-10-18 |
+| TMUS | $159.07 | 45,548,489 | Communication Services | large | unknown | 2026-10-18 |
+| TRGP | $294.78 | 20,018,933 | Unknown | large | unknown | 2026-10-18 |
+| TSCO | $33.16 | 24,111,545 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| TSLA | $354.65 | 243,526,769 | Consumer Discretionary | large | unknown | 2026-10-18 |
+| TT | $458.74 | 43,332,905 | Industrials | large | unknown | 2026-10-18 |
+| TTWO | $205.28 | 27,338,662 | Communication Services | large | unknown | 2026-10-18 |
+| TWLO | $244.45 | 50,920,696 | Unknown | large | unknown | 2026-10-18 |
+| TXN | $276.55 | 57,915,521 | Information Technology | large | unknown | 2026-10-18 |
+| UAL | $96.11 | 23,355,626 | Industrials | large | unknown | 2026-10-18 |
+| UBER | $70.34 | 49,412,220 | Unknown | large | unknown | 2026-10-18 |
+| UNH | $401.45 | 107,740,803 | Health Care | large | unknown | 2026-10-18 |
+| UNP | $289.07 | 36,304,274 | Industrials | large | unknown | 2026-10-18 |
+| URI | $1030.46 | 36,703,013 | Industrials | large | unknown | 2026-10-18 |
+| USB | $58.73 | 36,155,230 | Financials | large | unknown | 2026-10-18 |
+| UTHR | $533.35 | 31,592,545 | Health Care | mid | unknown | 2026-10-18 |
+| V | $402.66 | 99,504,240 | Financials | large | unknown | 2026-10-18 |
+| VEEV | $310.92 | 23,905,340 | Unknown | large | unknown | 2026-10-18 |
+| VLO | $444.70 | 64,684,122 | Energy | large | unknown | 2026-10-18 |
+| VRT | $206.42 | 58,470,994 | Unknown | large | unknown | 2026-10-18 |
+| VRTX | $499.78 | 29,284,183 | Health Care | large | unknown | 2026-10-18 |
+| VST | $152.05 | 46,602,348 | Utilities | large | unknown | 2026-10-18 |
+| VZ | $44.78 | 65,010,860 | Communication Services | large | unknown | 2026-10-18 |
+| WAT | $436.95 | 24,925,895 | Health Care | large | unknown | 2026-10-18 |
+| WDC | $331.87 | 151,107,502 | Information Technology | large | unknown | 2026-10-18 |
+| WELL | $234.82 | 39,285,860 | Real Estate | large | unknown | 2026-10-18 |
+| WFC | $83.88 | 89,448,366 | Financials | large | unknown | 2026-10-18 |
+| WM | $227.00 | 22,934,069 | Industrials | large | unknown | 2026-10-18 |
+| WMB | $71.28 | 31,198,996 | Energy | large | unknown | 2026-10-18 |
+| WMT | $118.80 | 93,448,294 | Consumer Staples | large | unknown | 2026-10-18 |
+| XEL | $76.32 | 26,296,659 | Utilities | large | unknown | 2026-10-18 |
+| XOM | $179.01 | 64,348,756 | Energy | large | unknown | 2026-10-18 |
+| YUM | $150.48 | 21,493,387 | Consumer Discretionary | large | unknown | 2026-10-18 |
