@@ -1767,3 +1767,69 @@ Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% 
 | — | W1, S3-V1, S3-V2 | | ⚪ | No action |
 
 *Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
+
+
+## 2026-10-24 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-10-19 (one new entry since the 2026-10-17 review). `memory/strategy.md` read fresh and unchanged (`DRY_RUN: false`). Read-only reconciliation: Alpaca `/v2/positions` = `[]` vs `portfolio.md` FLAT → 0/0 PASS.*
+
+### What's new this cycle
+- Week of 2026-10-19: 0 fills, 100% cash (5th straight all-cash week; flat since the DELL exit 2026-09-24). Portfolio 0.00% vs SPY −0.46% (cash helped again).
+- `realized_health_60d` worsened to −0.447% (n=373) from −0.021%. Still ELEVATED_BAR, fresh (expires 2026-10-25).
+- BE (+34-40% EPS) cleared the >20% bar but was dropped on a negative reaction. CLF added to `pending_review`. The `pending_review` backlog is now ~22 names, all human-gated.
+- Verified-unfixed this run: `11%` still in `routines/weekly_review.md:32`, `pre_market.md:99`, `market_open.md:19` (strategy.md = 20%). `grep -c CHRONIC_WATCH routines/pre_market.md` = 0. `health_threshold_pct` = 0.0. No heartbeat/dead-man's-switch exists in the repo. `portfolio.md` = 420,713 bytes (up from 393,740).
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted; no new data, not re-tested |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED — needs new data or manual review.** Re-surfaced again as a "standing carry-forward". Not re-tested. |
+| M7 — cash-drag / SPY sleeve | 0 | Not a single-rule change to the PEAD engine; needs a purpose-built script (human to commission) |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** `backtesting/data_cache/` is empty, no new STRONG item is a single-rule daily-bar change, and the only backtested candidate (S1) has no new data.
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% position cap in strategy.md, opening-range entry filter (Gate 6), S4 EDGAR shelf scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert (count: 8, unchanged).
+
+### 🔴 STRONG
+- **N1 — Outage detection / heartbeat (2 weeks flagged, top operational risk).** The Oct 6→14 silent outage is still unaddressed. Human applies this; this routine does not. **Recommend:** an external dead-man's switch that alerts if no routine commit lands on `main` on a market day, plus a weekly check that a weekly_review entry exists per Friday. Not backtestable.
+- **K1/W2 — `pending_review` backlog adjudication (human action; escalated).** About 22 non-universe names are frozen. This is now effectively the whole candidate supply (see M5/M7). Setting a ticker `active` is human-only. **Recommend** one triage pass: activate the clear S&P-constituent screen-source gaps (PAYC, NET, OKTA, SNOW, AFRM, ANF, KMX, GNRC, EL), and drop the stale or out-of-scope names. Activation only lets pre_market score them. BE shows the gate still rejects fades.
+- **S9 — Sizing text 11% vs 20%** in `weekly_review.md:32`, `pre_market.md:99`, `market_open.md:19`. Flagged 14+ weeks. The latter two are live order-sizing instructions. **Fix:** change `11%` → `20%` in all three (or edit strategy.md if 11% is intended). strategy.md wins until then.
+- **M5 — Candidate-supply lane / universe screen-source gap** (5+ weeks). Fix the screen source for S&P constituents missing from `universe.md`. Not backtestable.
+- **M7 — Cash-drag / always-on core sleeve** (4 distinct weeks incl. Oct-19). Cash helped in the last two down-tape weeks and hurt in up weeks. Options: (a) accept all-cash lulls; (b) commission a sleeve+PEAD backtest over 2022-2024 / 2025 / 2026 YTD with SPY buy-and-hold as the benchmark and 2025+2026 as out-of-sample. No strategy.md wording is endorsed without it.
+- **M6 — `portfolio.md` rotation.** 420,713 bytes, growing about 5-10KB per session. Archive embedded audit comments to `memory/archive/`. Needs human sign-off.
+- **S7 — Harden `compute_pead_health.py`** (retry/backoff, loud alert if `computed_on` fails to advance). The overlay stayed fresh this cycle.
+- **S2 — `CHRONIC_WATCH` flag.** Still 0 mentions. Recommend implementing.
+- **S8 — Execution micro-gates vs fresh-print entries.** Blocked: no intraday-bar backtest script. Human decides.
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported (2026-06-30), not re-tested. Realized health is −0.447%, which would be NORMAL posture at −1.0%. The edge is weakening, so the case for applying it is weaker this week. Hold until S7 is fixed.
+- **S6 — Scheduler gap.** Folded into N1.
+
+### 🟡 MODERATE (not backtested)
+- **M1** Orphan stop queue (2 wks) · **M2** Max concurrent 8→10 (moot at 0/8) · **M3** GTC stop behavior · **M4** Sizing-correction process. Unchanged.
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded by the partial profit-lock.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped: **EXHAUSTED — needs new data or manual review.**
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | N1 | Heartbeat / outage detection | 🔴 STRONG | Human sets up dead-man's switch |
+| 2 | K1 | Adjudicate ~22-name pending_review backlog | 🔴 STRONG (human action) | Human triage pass |
+| 3 | S9 | 11%→20% in 3 routine files | 🔴 STRONG | Human edit |
+| 4 | M5 | Universe screen-source gap | 🔴 STRONG | Fix screen source |
+| 5 | M7 | Cash-drag / core sleeve | 🔴 STRONG | Decide; commission sleeve backtest |
+| 6 | M6 | portfolio.md archive (421KB) | 🔴 STRONG | Human sign-off |
+| 7 | S7 | Harden compute_pead_health.py | 🔴 STRONG | Commit retry/alert |
+| 8 | S2 | CHRONIC_WATCH | 🔴 STRONG | Implement |
+| 9 | S8 | Execution micro-gates | 🔴 STRONG | Human decision |
+| 10 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Hold |
+| 11–14 | M1–M4 | | 🟡 | Unchanged |
+| — | W1, S3-V1, S3-V2 | | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
