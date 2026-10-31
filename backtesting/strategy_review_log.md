@@ -1833,3 +1833,73 @@ Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% 
 | — | W1, S3-V1, S3-V2 | | ⚪ | No action |
 
 *Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
+
+---
+
+## 2026-10-31 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-10-26 (one new entry since the 2026-10-24 review). `memory/strategy.md` read fresh and unchanged (`DRY_RUN: false`). Read-only reconciliation: Alpaca `/v2/positions` = [VRT 77 @ $243.32] vs `portfolio.md` VRT 77 @ $243.32 → 1/1 PASS.*
+
+### What's new this cycle
+- Week of 2026-10-26: the all-cash streak ended. VRT (Industrials, +21.4% EPS surprise, streak ≥3) was bought 2026-10-29 at 19.44% of equity. It is -4.3% to -4.4% unrealized (stop $223.85, ~3.9% below the mark). Portfolio -0.83% vs SPY -0.54%.
+- `realized_health_60d` = -0.432% (n=344), ELEVATED_BAR, fresh (expires 2026-11-01).
+- **The 11% vs 20% sizing discrepancy is now material.** VRT's 19.44% sizing is compliant with strategy.md (20%) but breaches the 11% still cited in `routines/weekly_review.md:32`, `pre_market.md:99`, `market_open.md:19`. Verified unfixed this run. `CHRONIC_WATCH` count in pre_market.md = 0. `health_threshold_pct` = 0.0. `portfolio.md` = 448,598 bytes (up from 420,713).
+- New proposal N2 (1 week): lower per-position cap for high-beta / high-ATR single names.
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted; no new data, not re-tested |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED — needs new data or manual review.** The VRT drawdown re-raises it (the DELL precedent). Not re-tested; a single open position is an anecdote, not new data. |
+| N2 — per-position cap for high-ATR names | 0 | MODERATE (1 week); not backtested |
+| M7 — cash-drag / SPY sleeve | 0 | Needs a purpose-built script (human to commission) |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** `backtesting/data_cache/` is empty. No STRONG item is a single-rule daily-bar change that is not EXHAUSTED. S1 has no new data.
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% position cap in strategy.md, opening-range entry filter, S4 EDGAR shelf scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert, and an immediate stop after fill (VRT stop placed 17s after the fill, so M1's orphan-stop concern did not recur).
+
+### 🔴 STRONG
+- **S9 — Sizing text 11% vs 20% (15+ weeks, NOW MATERIAL; top item).** `weekly_review.md:32`, `pre_market.md:99` and `market_open.md:19` still say 11%. VRT was sized at 19.44%. strategy.md wins per CLAUDE.md, so the entry was compliant. **Human applies this; this routine does not.** Confirm the intended cap. If 20% is intended, change `11%` → `20%` in all three files. If 11% is intended, edit strategy.md "Max position size at entry" and treat VRT as ~8 pts oversized.
+- **N1 — Outage detection / heartbeat (3 weeks flagged).** This is more urgent now that the book is no longer flat. Recommend an external dead-man's switch alerting if no routine commit lands on `main` on a market day. Not backtestable.
+- **K1/W2 — `pending_review` backlog adjudication (human action).** About 22 names are frozen. The funnel produced exactly one qualifier (VRT) in ~30 sessions. Recommend one triage pass (activate PAYC, NET, OKTA, SNOW, AFRM, ANF, KMX, GNRC, EL; drop stale names).
+- **M5 — Universe screen-source gap** (6+ weeks). Not backtestable.
+- **M7 — Cash-drag / core sleeve** (5 weeks). Unchanged. Commission a sleeve+PEAD backtest if wanted: 2022-2024 in-sample, 2025 and 2026 out-of-sample, SPY buy-and-hold as benchmark. No wording endorsed.
+- **M6 — `portfolio.md` rotation.** 448,598 bytes, growing. Archive embedded audit comments with human sign-off.
+- **S7 — Harden `compute_pead_health.py`** (retry/backoff, loud alert if `computed_on` fails to advance).
+- **S2 — `CHRONIC_WATCH` flag.** Still 0 mentions.
+- **S8 — Execution micro-gates.** Blocked: no intraday-bar script.
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported on 2026-06-30, not re-tested. Realized health is -0.432%, which would give NORMAL posture at -1.0%. VRT's early drawdown argues for holding. Hold until S7 is fixed.
+- **S6 — Scheduler gap.** Folded into N1.
+
+### 🟡 MODERATE (not backtested)
+- **N2 — Lower per-position cap / ATR-scaled sizing for high-beta single names (1 week).** A 19% position dropped 4.3% in 2 sessions. Evidence that would promote it: a second week flagged, or a closed high-ATR loss. Related to the exhausted S3-V2, so any test must be a sizing rule, not another stop variant.
+- **M1** Orphan stop queue (concern did not recur) · **M2** Max concurrent 8→10 (moot at 1/8) · **M3** GTC stop behavior · **M4** Sizing-correction process (folds into S9).
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded by the partial profit-lock.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped: **EXHAUSTED — needs new data or manual review.**
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | S9 | 11%→20% in 3 routine files (VRT at 19.44%) | 🔴 STRONG | Human confirms cap, edits files |
+| 2 | N1 | Heartbeat / outage detection | 🔴 STRONG | Human sets up dead-man's switch |
+| 3 | K1 | Adjudicate ~22-name pending_review backlog | 🔴 STRONG (human action) | Human triage pass |
+| 4 | M5 | Universe screen-source gap | 🔴 STRONG | Fix screen source |
+| 5 | M7 | Cash-drag / core sleeve | 🔴 STRONG | Decide; commission backtest |
+| 6 | M6 | portfolio.md archive (449KB) | 🔴 STRONG | Human sign-off |
+| 7 | S7 | Harden compute_pead_health.py | 🔴 STRONG | Commit retry/alert |
+| 8 | S2 | CHRONIC_WATCH | 🔴 STRONG | Implement |
+| 9 | S8 | Execution micro-gates | 🔴 STRONG | Human decision |
+| 10 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Hold |
+| 11 | N2 | High-ATR name sizing cap | 🟡 | Wait for evidence |
+| 12–15 | M1–M4 | | 🟡 | Unchanged |
+| — | W1, S3-V1, S3-V2 | | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
