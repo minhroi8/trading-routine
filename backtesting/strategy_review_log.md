@@ -1903,3 +1903,74 @@ Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% 
 | — | W1, S3-V1, S3-V2 | | ⚪ | No action |
 
 *Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
+
+---
+
+## 2026-11-07 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-11-02 (one new entry since the 2026-10-31 review). `memory/strategy.md` read fresh and unchanged (`DRY_RUN: false`). Read-only reconciliation: Alpaca `/v2/positions` = [] vs `portfolio.md` FLAT (0/0) → PASS.*
+
+### What's new this cycle
+- Week of 2026-11-02: VRT (opened 2026-10-29 at ~19.4% of equity) was stopped out Mon Nov-2 at -8.01% (-$1,500.95) after 4 trading days. Thesis was intact, so it was a pure mechanical stop on an AI-capex risk-off tape. Portfolio -0.70% vs SPY -2.69% (+1.99 pts), but the outperformance was largely accidental.
+- **🚨 `market_open` produced zero commits Mon–Fri.** pre_market queued REGN + LLY buy plans on four sessions and none executed. The execution arm was silently dark while every other routine committed green. This is the concrete failure that N1 (heartbeat) was written to catch, and it is now realized, not hypothetical.
+- Book is FLAT (100% cash, equity $94,946.98). PEAD health flipped to NORMAL (+0.358%, n=291, fresh until 2026-11-08). Regime is BULL but razor-thin (SPY $733.43 vs 200MA $730.12).
+- Unchanged carry-forwards verified this run: `11%` still in `weekly_review.md:32`, `pre_market.md:99`, `market_open.md:19`; `CHRONIC_WATCH` count in pre_market.md = 0; `portfolio.md` = 461,901 bytes (up from 448,598).
+- N2 (lower cap / ATR-scaled sizing for high-ATR names) is now flagged in 2 distinct weeks (Oct-26, Nov-2).
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted; no new data. Posture is now NORMAL at realized health +0.358%, so the proposal is moot at current readings. Not re-tested. |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED — needs new data or manual review.** The VRT stop-out (second DELL-style shake-out) re-raises it. Two closed trades are anecdotes, not a new test period. Not re-tested. |
+| N2 — per-position cap for high-ATR names | 0 | MODERATE (2 weeks); not backtested |
+| M7 — cash-drag / SPY sleeve | 0 | Needs a purpose-built script (human to commission) |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** `backtesting/data_cache/` is empty. No STRONG item is a single-rule daily-bar change that is not EXHAUSTED, and S1 has no new data.
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule (correctly not triggered Nov-6), partial profit-lock at +10%, 20% position cap in strategy.md, opening-range entry filter, S4 EDGAR shelf scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert, immediate stop after fill (VRT stop executed mechanically at -8.01%).
+
+### 🔴 STRONG
+- **N1 — Outage detection / heartbeat (4 weeks flagged; NOW REALIZED, top item).** market_open was dark all of Nov 2–6. Human applies this; this routine does not. **Recommend (a)** verify the market_open scheduled task is enabled and firing (check the scheduler and last-run status), and **(b)** an external dead-man's switch that alerts if any expected routine has no commit on `main` within its window on a market day, with a LOUD alert specifically when market_open is missing on a day whose `plan.md` has a non-empty planned-buys/sells table. Not backtestable.
+- **S9 — Sizing text 11% vs 20% (16+ weeks).** `weekly_review.md:32`, `pre_market.md:99`, `market_open.md:19` still say 11%. It matters now because REGN/LLY plans are queued and market_open will size from the 11% text if the human fixes the scheduler. strategy.md (20%) wins per CLAUDE.md. **Fix:** change `11%` → `20%` in all three, or edit strategy.md if 11% is intended. Human applies this; this routine does not.
+- **K1/W2 — `pending_review` backlog adjudication (human action).** About 22 names are frozen. Recommend one triage pass (activate PAYC, NET, OKTA, SNOW, AFRM, ANF, KMX, GNRC, EL; drop stale names).
+- **M5 — Universe screen-source gap** (7+ weeks). Not backtestable.
+- **M7 — Cash-drag / core sleeve** (6 weeks). Cash helped in this correction week, but partly by accident (the execution routine never ran). Commission a sleeve+PEAD backtest if wanted: 2022-2024 in-sample, 2025 and 2026 YTD out-of-sample, SPY buy-and-hold as benchmark. No wording endorsed.
+- **M6 — `portfolio.md` rotation.** 461,901 bytes, growing. Archive embedded audit comments with human sign-off. Also backfill `commit_sha <pending>` on the VRT rows in trade_log.md.
+- **S7 — Harden `compute_pead_health.py`** (retry/backoff, loud alert if `computed_on` fails to advance). The overlay stayed fresh this cycle.
+- **S2 — `CHRONIC_WATCH` flag.** Still 0 mentions.
+- **S8 — Execution micro-gates.** Blocked: no intraday-bar script.
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported (2026-06-30), not re-tested, currently moot (posture NORMAL). Hold.
+- **S6 — Scheduler gap.** Folded into N1; the market_open outage is its concrete instance.
+
+### 🟡 MODERATE (not backtested)
+- **N2 — Lower per-position cap / ATR-scaled sizing for high-beta single names (2 weeks).** VRT at ~19.4% was stopped at -8% within 4 sessions with an intact thesis. This sits on the line with STRONG (documented real-money loss), but the loss is also covered by the exhausted S3-V2, and the sample is two closed trades. Evidence that would promote it: a third flagged week, or a purpose-built sizing backtest commissioned by the human (must be a sizing rule, not another stop variant).
+- **M1** Orphan stop queue (did not recur) · **M2** Max concurrent 8→10 (moot at 0/8) · **M3** GTC stop behavior · **M4** Sizing-correction process (folds into S9).
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded by the partial profit-lock.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped: **EXHAUSTED — needs new data or manual review.**
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | N1 | Heartbeat / fix market_open scheduler | 🔴 STRONG | Human checks scheduler now; adds dead-man's switch |
+| 2 | S9 | 11%→20% in 3 routine files | 🔴 STRONG | Human edit (before market_open resumes) |
+| 3 | K1 | Adjudicate ~22-name pending_review backlog | 🔴 STRONG (human action) | Human triage pass |
+| 4 | M5 | Universe screen-source gap | 🔴 STRONG | Fix screen source |
+| 5 | M7 | Cash-drag / core sleeve | 🔴 STRONG | Decide; commission backtest |
+| 6 | M6 | portfolio.md archive (462KB) | 🔴 STRONG | Human sign-off |
+| 7 | S7 | Harden compute_pead_health.py | 🔴 STRONG | Commit retry/alert |
+| 8 | S2 | CHRONIC_WATCH | 🔴 STRONG | Implement |
+| 9 | S8 | Execution micro-gates | 🔴 STRONG | Human decision |
+| 10 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Hold (moot) |
+| 11 | N2 | High-ATR name sizing cap | 🟡 | Wait for evidence |
+| 12–15 | M1–M4 | | 🟡 | Unchanged |
+| — | W1, S3-V1, S3-V2 | | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
