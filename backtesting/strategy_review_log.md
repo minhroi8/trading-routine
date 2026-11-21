@@ -2047,3 +2047,71 @@ Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% 
 | — | W1, S3-V1, S3-V2 | | ⚪ | No action |
 
 *Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
+
+---
+
+## 2026-11-21 — Weekly Strategy Review
+
+*Source: `memory/lessons.md` through the week of 2026-11-16 (one new entry since the 2026-11-14 review). `memory/strategy.md` read fresh and unchanged (`DRY_RUN: false`). Read-only reconciliation: Alpaca `/v2/positions` = [] vs `portfolio.md` FLAT (0 live rows) → PASS. Equity $94,946.98, 100% cash.*
+
+### What's new this cycle
+- Week of 2026-11-16: book 100% cash all week. Portfolio 0.00% vs SPY −8.43% (+8.43 pts). SPY crashed ~8% and flipped to **BEAR** (Nov-18 close below the 200MA, −2.3% below by Nov-19). PEAD posture ELEVATED_BAR (realized_health_60d −0.358%, n=163). Effective cap: 2 new/week, >20% EPS bar for all sectors.
+- **🚨 market_open made ZERO commits Mon–Fri (Nov 16–20), verified again from `git log` this run.** The last `market_open:` commit is 2026-11-13. Over the last three weeks it ran on **1 of 15 sessions**. REGN was planned on all 5 sessions and never executed. The "10th consecutive defer" wording in midday/portfolio.md is wrong: this week's misses were the routine not running, not Gate 6e decisions.
+- Cash-drag evidence now covers three weeks: +2.0 (Nov 2–6), −2.6 (Nov 9–13), +8.4 pts (Nov 16–20). The all-cash posture is a directional bet whose sign follows the tape.
+- Carry-forwards re-verified this run: `11%` still in `routines/weekly_review.md:32`, `routines/pre_market.md:99`, `routines/market_open.md:19`. `CHRONIC_WATCH` count in pre_market.md = 0. `portfolio.md` = **499,299 bytes** (up from 478,763, ~+20KB/week). `backtesting/data_cache/` holds only `.gitkeep`. `pead_health.md` still `health_threshold_pct: 0.0`.
+
+### Anti-overfitting counters (Gate 3)
+
+| Proposal | Times backtested | Status |
+|----------|-----------------:|--------|
+| S1 — ELEVATED_BAR threshold −1.0% | 1 (2026-06-30, OOS-supported, not applied) | Not exhausted. At −0.358%, S1 **would set posture to NORMAL**. No new test period, so not re-tested. |
+| S3-V1 — ATR stop tighter/capped | 1 (2026-06-25) REJECTED | Not re-tested |
+| S3-V2 — ATR stop wider/uncapped | 2 (2026-07-04, 2026-07-08) | **EXHAUSTED — needs new data or manual review.** Not re-tested. |
+| N2 — per-position cap for high-ATR names | 0 | MODERATE (2 weeks); not backtested |
+| M7 — cash-drag / SPY sleeve | 0 | Needs a purpose-built script (human to commission) |
+| S8 — execution micro-gates | 0 | Needs intraday-bar backtest infra (none exists) |
+| All others | 0 | Procedural or not daily-bar-backtestable |
+
+**No formal backtest was run this cycle.** The STRONG items fall into the same groups as last week. Procedural: N1, S9, K1, M5, M6, S7, S2. Needs missing tooling: S8 (intraday bars), M7 (sleeve script). EXHAUSTED: S3-V2. OOS-tested with no new period since: S1.
+
+### ✅ Already implemented
+Same-day weekly-slot cap, macro deferral rule, partial profit-lock at +10%, 20% position cap in strategy.md, SPY 200MA regime gate (fired correctly on the Nov-18 bear flip), opening-range entry filter, S4 EDGAR shelf scan, S5 BIS export-control scan, S7b PEAD-stall Discord alert, immediate stop after fill.
+
+### 🔴 STRONG
+- **N1 — market_open trigger BROKEN + heartbeat (6 weeks flagged; full-week outage again, 1/15 sessions over 3 weeks).** It should now be treated as broken, not intermittent. Human applies this; this routine does not. **Recommend:** (a) open the market_open scheduled task and check whether it is enabled, what its cron/time zone is, and what its last-run status is (does not fire vs. fires and dies before committing), then repair or recreate it; (b) add a dead-man's switch: midday checks for a same-day `market_open:` commit and posts a LOUD Discord alert if there is none, especially when `plan.md` has a non-empty planned-buys/sells table; (c) correct the midday/portfolio.md wording so a missing run is not logged as "deferred by chase-guard." With the book flat this was harmless. With an open position needing a stop or trail at the open, it would be dangerous.
+- **S8 — Execution micro-gates vs momentum leaders (14+ weeks).** REGN has ~10 planned-not-entered sessions, but this week's misses belong to N1, not Gate 6e. Fix N1 first so S8 can be judged on real gate decisions. Option (c), defer-count→drop, still needs no backtest. Options (a) starter entry and (b) limit-into-weakness are blocked on intraday-bar infra. No strategy.md wording is endorsed.
+- **M7 — Cash-drag / core sleeve (8 weeks; three weeks of two-sided evidence, +2.0 / −2.6 / +8.4 pts).** Commission a sleeve+PEAD backtest if wanted (2022-2024 in-sample, 2025 and 2026 YTD out-of-sample, SPY buy-and-hold benchmark). No wording endorsed.
+- **S9 — Sizing text 11% vs 20% (18+ weeks).** Three routine files still say 11%. Daily plans size to 20% per strategy.md, which wins. **Fix:** change `11%` → `20%` in all three, or edit strategy.md if 11% is intended. Human applies this.
+- **M6 — `portfolio.md` rotation.** Now ~499KB, close to 0.5MB and already past the single-read limit. Archive the embedded audit comments with human sign-off. Also backfill `commit_sha <pending>` on the VRT rows.
+- **K1/W2 — `pending_review` backlog (~22-28 names; human triage).**
+- **S1 — ELEVATED_BAR threshold −1.0%.** OOS-supported (2026-06-30), not applied. At −0.358% it would set posture to NORMAL. Under the current BEAR regime the >20%-all-sectors bar and 2/week cap apply anyway, so applying S1 would change nothing in practice until SPY recovers above its 200MA. Change: `HEALTH_THRESHOLD` 0.0 → −1.0 in `compute_pead_health.py`. Human decision.
+- **M5** Universe screen-source gap (9+ weeks) · **S7** Harden `compute_pead_health.py` (overlay fresh) · **S2** `CHRONIC_WATCH` (0 mentions; moot while flat) · **S6** folded into N1.
+
+### 🟡 MODERATE (not backtested)
+- **N2 — High-ATR name sizing cap (2 weeks: Oct-26, Nov-2; not re-flagged).** Promote on a third flagged week or a human-commissioned sizing backtest.
+- **M1** Orphan stop queue · **M2** Max concurrent 8→10 (moot at 0/8) · **M3** GTC stop behavior · **M4** Sizing-correction process (folds into S9).
+
+### ⚪ WEAK / EXHAUSTED
+- **W1** Trailing-stop pre-alert at +8%: superseded.
+- **S3-V1** ATR stop tighter/capped: REJECTED (2026-06-25).
+- **S3-V2** ATR stop wider/uncapped: **EXHAUSTED — needs new data or manual review.**
+
+### Ranked summary
+
+| Rank | ID | Proposal | Tier | Recommended action |
+|-----:|----|----------|------|--------------------|
+| 1 | N1 | market_open trigger broken (1/15 sessions) + heartbeat | 🔴 STRONG | Human inspects/repairs scheduled task NOW; midday commit-check alert |
+| 2 | S8 | Micro-gates vs momentum leaders | 🔴 STRONG | After N1 fix; defer-count→drop needs no backtest |
+| 3 | M7 | Cash-drag / core sleeve | 🔴 STRONG | Decide; commission backtest |
+| 4 | S9 | 11%→20% in 3 routine files | 🔴 STRONG | Human edit |
+| 5 | M6 | portfolio.md archive (499KB) | 🔴 STRONG | Human sign-off |
+| 6 | K1 | pending_review backlog | 🔴 STRONG (human action) | Triage pass |
+| 7 | S1 | ELEVATED_BAR threshold −1.0% | 🔴 STRONG (OOS-supported) | Would flip to NORMAL; no effect under BEAR regime |
+| 8 | M5 | Universe screen-source gap | 🔴 STRONG | Fix screen source |
+| 9 | S7 | Harden compute_pead_health.py | 🔴 STRONG | Commit retry/alert |
+| 10 | S2 | CHRONIC_WATCH | 🔴 STRONG | Implement |
+| 11 | N2 | High-ATR name sizing cap | 🟡 | Wait for evidence |
+| 12–15 | M1–M4 | | 🟡 | Unchanged |
+| — | W1, S3-V1, S3-V2 | | ⚪ | No action |
+
+*Recommendations only. This routine did not edit `memory/strategy.md` or any live routine file.*
