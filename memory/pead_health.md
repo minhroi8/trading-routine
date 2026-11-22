@@ -1,12 +1,12 @@
 ---
-computed_on: 2026-11-15
-expires_on: 2026-11-22
+computed_on: 2026-11-22
+expires_on: 2026-11-29
 posture: ELEVATED_BAR
-spy_close: 754.37
-spy_200ma: 729.32
-spy_above_200ma: true
-realized_health_60d_pct: -0.358
-health_sample_n: 163
+spy_close: 689.81
+spy_200ma: 730.29
+spy_above_200ma: false
+realized_health_60d_pct: -3.468
+health_sample_n: 175
 health_threshold_pct: 0.0
 health_ok: false
 window_days: 60
@@ -36,11 +36,11 @@ When **ELEVATED_BAR**, `pre_market` raises the EPS-surprise threshold to >20% fo
 | Field | Value |
 |-------|-------|
 | Posture | **ELEVATED_BAR** |
-| Realized health (trailing 60d) | -0.358% |
-| Health sample size | 163 |
+| Realized health (trailing 60d) | -3.468% |
+| Health sample size | 175 |
 | Health OK (>= 0.0%) | false |
-| SPY close | 754.37 |
-| SPY 200MA | 729.32 |
-| SPY > 200MA (info; enforced via strategy.md) | true |
+| SPY close | 689.81 |
+| SPY 200MA | 730.29 |
+| SPY > 200MA (info; enforced via strategy.md) | false |
 
 Validated in `backtest_report_PEAD_HEALTH_200MA_COMBO.md`: combining realized health with the SPY-200MA regime gave the best risk-adjusted result (PF 1.60 → 1.99) and the strongest regime discrimination (+57 pts). Threshold is 0 (untuned). Known limitation: realized health lags at regime TURNS, so the posture can stay ELEVATED_BAR a little into a fresh recovery.
